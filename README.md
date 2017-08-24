@@ -280,7 +280,7 @@ const newPkg = sortPkg(pkg, options);
 You can also see the available options in the terminal by running:
 
 ```
-yarn package-sort --help
+yarn sort-package --help
 ```
 
 ## Integrating
@@ -311,3 +311,9 @@ An effective integration of this plugin could look like this:
 ```
 
 It combines ['lint-staged'](https://github.com/okonet/lint-staged), ['husky'](https://github.com/typicode/husky), and ['sort-package'](https://github.com/camacho/sort-package) together to ensure the `package.json` is automatically sorted if it changes using, and provides an easy [npm script](https://docs.npmjs.com/misc/scripts).
+
+The sort can also be run by hand:
+
+```sh
+yarn format:pkg
+```
