@@ -4,7 +4,7 @@
 
 And manually going through and organizing the file seems as painful as doing formatting checks by hand in PRs.
 
-`sort-package` solves these problems by allowing the file to be sorted in a consistent and automated manner.
+`format-package` solves these problems by allowing the file to be sorted and formatted in a consistent and automated manner.
 
 It is configurable to allow teams to pick the order that work best for them, and includes `transformations` that can be applied to a value in the `package.json` (such as logically [sorting scripts](https://github.com/camacho/sort-scripts)).
 
@@ -33,7 +33,7 @@ It is configurable to allow teams to pick the order that work best for them, and
 ### Install
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["--save-dev"]) -->
 ```sh
-npm install --save-dev sort-package
+npm install --save-dev format-package
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
@@ -42,13 +42,13 @@ npm install --save-dev sort-package
 This module provides a simple CLI:
 
 ```sh
-./node_modules/.bin/sort-package --help
+./node_modules/.bin/format-package --help
 ```
 
 If combined with [Yarn](https://yarnpkg.com/), it can be run as:
 
 ```sh
-yarn sort-package --help
+yarn format-package --help
 ```
 
 It can also be used as part of an [npm script](https://docs.npmjs.com/misc/scripts):
@@ -56,10 +56,10 @@ It can also be used as part of an [npm script](https://docs.npmjs.com/misc/scrip
 ```json
 {
   "scripts": {
-    "format:pkg": "sort-package -w"
+    "format:pkg": "format-package -w"
   },
   "devDependencies": {
-    "sort-package": "latest"
+    "format-package": "latest"
   }
 }
 ```
@@ -70,27 +70,27 @@ yarn format:pkg
 
 ### Module
 
-The module exports a default `sort` function that takes the contents of `package.json` and a [map of options](#options).
+The module exports a default `format` function that takes the contents of `package.json` and a [map of options](#options).
 
 It returns an ordered array with a few additional helper functions - `toJSON` and `toObject`.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
-const sortPkg = require('sort-package');
+const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 const options = {};
 
-const newPkg = sortPkg(pkg, options);
+const formattedPkg = format(pkg, options);
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-From there, it is easy to write the new sorted package back to `package.json`:
+From there, it is easy to write the new formatted package back to `package.json`:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
 const fs = require('fs');
 
-fs.writeFile('<path-to-package.json>', newPkg.toJSON(), err => {
+fs.writeFile('<path-to-package.json>', formattedPkg.toJSON(), err => {
   if (err) throw err;
 });
 ```
@@ -100,16 +100,16 @@ It is possible to switch back and forth between an Array and keyed object:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
-const sortPkg = require('sort-package');
+const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 
-const newPkg = sortPkg(pkg);
-const pkgObj = newPkg.toObject();
-const pkgArray = pkgObj.toArray();
+const formattedPkg = format(pkg);
+const formattedObj = formattedPkg.toObject();
+const formattedArray = formattedObj.toArray();
 
-console.log(newPkg); // [['name', 'package-sort'], ['version', '1.0.0']]
-console.log(pkgObj); // { name: 'package-sort', version: '1.0.0' }
-console.log(pkgArray); // [['name', 'package-sort'], ['version', '1.0.0']]
+console.log(formattedPkg); // [['name', 'format-package'], ['version', '1.0.0']]
+console.log(formattedObj); // { name: 'format-package', version: '1.0.0' }
+console.log(formattedArray); // [['name', 'format-package'], ['version', '1.0.0']]
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
@@ -120,19 +120,20 @@ There are two options: **order** and **transformations**.
 Options are expected to be passed in as a map:
 
 ```js
-const sortPkg = require('sort-package');
+const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 const options = { order: [], transformations: {} };
-console.log(sortPkg(pkg, options).toJSON())
+console.log(format(pkg, options).toJSON())
 ```
 
 ### Defaults
 
-The `sort-package` module also exports its defaults to help configure the sort:
+The `format-package` module also exports its defaults to help with configuration:
 
 ```js
-const sortPkg = require('sort-pkg');
-const { order: defaultOrder } = sortPkg;
+const format = require('sort-pkg');
+const pkg = require('<path-to-package.json>');
+const { { defaults: { order: defaultOrder } } = format;
 
 // Move `...rest` to the bottom of the default order list
 const restIndex = defaultOrder.indexOf(sort, '...rest');
@@ -140,7 +141,7 @@ let order = [...defaultOrder];
 if (restIndex !=== -1) order.splice(restIndex, 1);
 order.push('...rest');
 
-console.log(sortPkg(pkg, { order }).toJSON())
+console.log(format(pkg, { order }).toJSON())
 ```
 
 ### `order`
@@ -160,7 +161,11 @@ The default order is:
   "private",
   "engines",
   "repository",
+  "bugs",
+  "homepage",
   "author",
+  "bin",
+  "main",
   "config",
   "scripts",
   "lint-staged",
@@ -179,7 +184,7 @@ The `...rest` value is considered special. It marks the location where the remai
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
-const sortPkg = require('sort-package');
+const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 const options = {
   order: [
@@ -195,8 +200,8 @@ const options = {
   ],
 };
 
-const newPkg = sortPkg(pkg, options);
-console.log(newPkg.map(([k]) => k));
+const formattedPkg = format(pkg, options);
+console.log(formattedPkg.map(([k]) => k));
 /*
 [ 'name',
 'version',
@@ -248,7 +253,7 @@ Additional transformations or overrides can be passed in:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
-const sortPkg = require('sort-package');
+const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 const options = {
   transformations: {
@@ -262,7 +267,7 @@ const options = {
   },
 };
 
-const newPkg = sortPkg(pkg, options);
+const formattedPkg = format(pkg, options);
 ```
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
@@ -270,7 +275,7 @@ const newPkg = sortPkg(pkg, options);
 
 | **Option** | **Description** | **Default** |
 | -----------| --------------- | ----------- |
-| `-p` | Starting path to look up the directory tree for the nearest `package.json` file to be sorted. Relative paths are resolved relative to the process `cwd` | `process.cwd()` |
+| `-p` | Starting path to look up the directory tree for the nearest `package.json` file to be formatted. Relative paths are resolved relative to the process `cwd` | `process.cwd()` |
 | `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
 | `-w` | Write the output to the location of the found `package.json` | **false** |
 | `-q` | Only print on errors | **false** |
@@ -280,7 +285,7 @@ const newPkg = sortPkg(pkg, options);
 You can also see the available options in the terminal by running:
 
 ```
-yarn sort-package --help
+yarn format-package --help
 ```
 
 ## Integrating
@@ -290,19 +295,19 @@ An effective integration of this plugin could look like this:
 ```json
 {
   "scripts": {
-    "format:pkg": "sort-package -w",
+    "format:pkg": "format-package -w",
     "precommit": "lint-staged",
     "prepublish": "format:pkg"
   },
   "lint-staged": {
     "package.json": [
-      "sort-package -w -q",
+      "format-package -w -q",
       "git add"
     ]
   },
   "devDependencies": {
     "lint-staged": "latest",
-    "sort-package": "latest"
+    "format-package": "latest"
   },
   "optionalDependencies": {
     "husky": "latest"
@@ -310,9 +315,12 @@ An effective integration of this plugin could look like this:
 }
 ```
 
-It combines ['lint-staged'](https://github.com/okonet/lint-staged), ['husky'](https://github.com/typicode/husky), and ['sort-package'](https://github.com/camacho/sort-package) together to ensure the `package.json` is automatically sorted if it changes using, and provides an easy [npm script](https://docs.npmjs.com/misc/scripts).
+This configuration combines:
+* [lint-staged](https://github.com/okonet/lint-staged) for automatically running tasks on staged files
+* ['husky'](https://github.com/typicode/husky) for githook integrations
+* ['format-package'](https://github.com/camacho/format-package) to format `package.json`
 
-The sort can also be run by hand:
+Together, these modules ensure the `package.json` file is automatically formatted if it changes and provides an easy [npm script](https://docs.npmjs.com/misc/scripts) for manual use:
 
 ```sh
 yarn format:pkg

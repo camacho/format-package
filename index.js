@@ -3,7 +3,7 @@ const orderPackageKeys = require('./lib/orderKeys');
 const transformValues = require('./lib/transformValues');
 const safetyCheck = require('./lib/safety');
 
-function orderPackage(pkg, options = {}) {
+function formatPackage(pkg, options = {}) {
   const { order, transformations } = Object.assign({}, defaults, options);
 
   const orderedKeys = orderPackageKeys(pkg, order);
@@ -25,9 +25,9 @@ function orderPackage(pkg, options = {}) {
   return collection;
 }
 
-orderPackage.defaults = {
+formatPackage.defaults = {
   order: defaults.order.slice(),
   transformations: Object.assign({}, defaults.transformations),
 };
 
-module.exports = orderPackage;
+module.exports = formatPackage;

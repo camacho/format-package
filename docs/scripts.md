@@ -5,11 +5,11 @@
 |--------|-------------|
 | `docs` | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
 | `format` | format the application code |
-| `format:js` | `prettier --single-quote --trailing-comma es5 --write "{records,scripts,.bin}/**/*.js"` |
-| `format:pkg` | `./.bin/index.js -w -p package.json` |
+| `format:js` | format JS using [prettier](https://github.com/prettier/prettier) |
+| `format:pkg` | format package.json |
 | `lint` | lint the application code |
 | `precommit` | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each commit to make sure the code are properly formatted and docs are up to date |
-| `prepublish` | `yarn precommit && yarn prepush` |
+| `prepublish` | Ensure docs and code is up to date |
 | `prepush` | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each push to ensure the code passes tests |
 | `test` | run unit tests for the application |
 <!-- AUTO-GENERATED-CONTENT:END -->
