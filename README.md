@@ -131,7 +131,7 @@ console.log(format(pkg, options).toJSON())
 The `format-package` module also exports its defaults to help with configuration:
 
 ```js
-const format = require('sort-pkg');
+const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 const { { defaults: { order: defaultOrder } } = format;
 

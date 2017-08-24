@@ -63,7 +63,7 @@ if (!options.quiet) {
   console.log();
   console.log(nextPkg);
   console.log();
-  console.log('Package.json sorted successfully');
+  console.log('Package.json formatted successfully');
 }
 
 if (options.write) {
