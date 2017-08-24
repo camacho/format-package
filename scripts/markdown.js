@@ -2,6 +2,7 @@
 
 /* eslint-disable import/no-extraneous-dependencies */
 const path = require('path');
+const execa = require('execa');
 
 const markdownMagic = require('markdown-magic');
 const SCRIPTS = require('markdown-magic-package-scripts');
@@ -26,4 +27,14 @@ const config = {
 
 const target = process.argv[2] || globs;
 
-markdownMagic(target, config);
+function stageChanges(err, output) {
+  if (err) throw err;
+
+  const files = output.map(data => data.outputFilePath).filter(file => !!file);
+
+  if (!files.length) return;
+
+  execa.sync('git', ['add', ...files]);
+}
+
+markdownMagic(target, config, stageChanges);

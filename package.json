@@ -1,9 +1,8 @@
 {
   "name": "sort-package",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Sensible, automated sorting of package.json",
   "license": "MIT",
-  "main": "index.js",
   "engines": {
     "node": "^8.4.0",
     "yarn": ">=0.27.5"
@@ -13,30 +12,21 @@
     "url": "git+https://github.com/camacho/sort-package.git"
   },
   "author": "Patrick <patrick@daftdevelopers.com>",
-  "bugs": {
-    "url": "https://github.com/camacho/sort-package/issues"
-  },
-  "homepage": "https://github.com/camacho/sort-package#readme",
   "scripts": {
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
     "format:js": "prettier --single-quote --trailing-comma es5 --write \"{records,scripts,.bin}/**/*.js\"",
     "format:pkg": "./.bin/index.js -w -p package.json",
     "lint": "eslint \"{records,scripts,.bin}/**/*.js\" --fix",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn docs",
     "prepublish": "yarn precommit && yarn prepush",
     "prepush": "yarn test",
     "test": "jest"
   },
-  "bin": ".bin/index.js",
   "lint-staged": {
     "*.js": [
       "prettier --single-quote --trailing-comma es5 --write",
       "eslint --fix",
-      "git add"
-    ],
-    "*.md": [
-      "yarn docs",
       "git add"
     ],
     "package.json": [
@@ -44,6 +34,12 @@
       "git add"
     ]
   },
+  "bin": ".bin/index.js",
+  "bugs": {
+    "url": "https://github.com/camacho/sort-package/issues"
+  },
+  "homepage": "https://github.com/camacho/sort-package#readme",
+  "main": "index.js",
   "dependencies": {
     "chalk": "^2.1.0",
     "findup": "^0.1.5",
@@ -57,6 +53,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
+    "execa": "^0.8.0",
     "jest": "^20.0.4",
     "lint-staged": "^4.0.3",
     "markdown-magic": "^0.1.17",
