@@ -1,7 +1,7 @@
 {
   "name": "sort-package",
-  "version": "1.2.2",
-  "description": "Sensible, automated sorting of package.json",
+  "version": "1.3.0",
+  "description": "Sensible sorting of package.json",
   "license": "MIT",
   "engines": {
     "node": "^8.4.0",

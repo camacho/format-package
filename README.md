@@ -1,20 +1,25 @@
 # Sort Package
 
-I'm one of those people who really likes having my `package.json` in a particular order. I think the consistency also helps teams, but I don't like doing these types of tasks manually, and would rather have them automated and in code so teams can configure them to their needs.
+`package.json` files are notorious for becoming large and overwhelming. When working in teams, this can make it hard to know how to structure the file or where to find certain configurations or scripts - especially since everyone has their own preferences.
 
-So, this is my attempt to provide a consistent ordering utility that is sensical and configurable.
+And manually going through and organizing the file seems as painful as doing formatting checks by hand in PRs.
+
+`sort-package` solves these problems by allowing the file to be sorted in a consistent and automated manner.
+
+It is configurable to allow teams to pick the order that work best for them, and includes `transformations` that can be applied to a value in the `package.json` (such as logically [sorting scripts](https://github.com/camacho/sort-scripts)).
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC) -->
 - [Requirements](#requirements)
-- [Install](#install)
 - [Getting started](#getting-started)
-  * [As a module](#as-a-module)
-  * [As a command line tool](#as-a-command-line-tool)
+  * [Install](#install)
+  * [Command Line](#command-line)
+  * [Module](#module)
 - [Options](#options)
-  * [Transformations](#transformations)
-  * [Order](#order)
+  * [Defaults](#defaults)
+  * [`order`](#order)
+  * [`transformations`](#transformations)
   * [CLI](#cli)
-- [Using in a project](#using-in-a-project)
+- [Integrating](#integrating)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Requirements
@@ -23,18 +28,51 @@ So, this is my attempt to provide a consistent ordering utility that is sensical
 * **yarn**: >=0.27.5
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Install
+## Getting started
+
+### Install
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["--save-dev"]) -->
 ```sh
 npm install --save-dev sort-package
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Getting started
+### Command Line
 
-### As a module
+This module provides a simple CLI:
 
-The module exports a default `sort` function that takes an object, options, and returns an ordered array:
+```sh
+./node_modules/.bin/sort-package --help
+```
+
+If combined with [Yarn](https://yarnpkg.com/), it can be run as:
+
+```sh
+yarn sort-package --help
+```
+
+It can also be used as part of an [npm script](https://docs.npmjs.com/misc/scripts):
+
+```json
+{
+  "scripts": {
+    "format:pkg": "sort-package -w"
+  },
+  "devDependencies": {
+    "sort-package": "latest"
+  }
+}
+```
+
+```sh
+yarn format:pkg
+```
+
+### Module
+
+The module exports a default `sort` function that takes the contents of `package.json` and a [map of options](#options).
+
+It returns an ordered array with a few additional helper functions - `toJSON` and `toObject`.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
@@ -75,91 +113,39 @@ console.log(pkgArray); // [['name', 'package-sort'], ['version', '1.0.0']]
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-### As a command line tool
-
-It is most useful to use this module as part of a `package.json` script:
-
-```json
-{
-  "scripts": {
-    "format:pkg": "sort-package -w"
-  },
-  "devDependencies": {
-    "sort-package": "latest"
-  }
-}
-```
-
 ## Options
 
-There are only two options for the module: **Order** and **transformers**
+There are two options: **order** and **transformations**.
 
-### Transformations
+Options are expected to be passed in as a map:
 
-Transformations is a map of `package.json` keys to functions that return the value to be stored.
-
-The default transformations order `scripts` in a sensical way, and sort dependencies by name.
-
-<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/transformations.js) -->
-<!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
-```js
-const sortScripts = require('sort-scripts');
-const { sort: sortObj } = require('../utils/object');
-
-const transformations = {
-  scripts(key, value) {
-    return sortScripts(value)
-      .reduce((obj, [name, script]) => {
-        obj[name] = script;
-        return obj;
-      }, {});
-  },
-  dependencies(key, value) {
-    return sortObj(value);
-  },
-  devDependencies(key, value) {
-    return sortObj(value)
-  },
-  peerDependencies(key, value) {
-    return sortObj(value)
-  },
-  optionalDependencies(key, value) {
-    return sortObj(value)
-  },
-  engines(key, value) {
-    return sortObj(value)
-  }
-}
-
-module.exports = transformations;
-```
-<!-- AUTO-GENERATED-CONTENT:END *-->
-
-Additional transformations or overrides can be passed in:
-
-<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
 const sortPkg = require('sort-package');
 const pkg = require('<path-to-package.json>');
-const options = {
-  transformations: {
-    // This reverses all the keys in dependencies
-    dependencies(key, value) {
-      return Object.keys(value).sort().reverse().reduce((obj, k) => {
-        obj[k] = value[k];
-        return obj;
-      }, {});
-    },
-  },
-};
-
-const newPkg = sortPkg(pkg, options);
+const options = { order: [], transformations: {} };
+console.log(sortPkg(pkg, options).toJSON())
 ```
-<!-- AUTO-GENERATED-CONTENT:END *-->
 
-### Order
+### Defaults
 
-The most meaningful part of this utility is a defined array of keys that are used to order the file.
+The `sort-package` module also exports its defaults to help configure the sort:
+
+```js
+const sortPkg = require('sort-pkg');
+const { order: defaultOrder } = sortPkg;
+
+// Move `...rest` to the bottom of the default order list
+const restIndex = defaultOrder.indexOf(sort, '...rest');
+let order = [...defaultOrder];
+if (restIndex !=== -1) order.splice(restIndex, 1);
+order.push('...rest');
+
+console.log(sortPkg(pkg, { order }).toJSON())
+```
+
+### `order`
+
+The most meaningful part of this utility is an ordered array of keys that are used to order the contents of `package.json`.
 
 The default order is:
 
@@ -189,8 +175,7 @@ The default order is:
 
 The `...rest` value is considered special. It marks the location where the remaining `package.json` keys that are not found in this ordered list will be placed in alphabetical order.
 
-**Note:** if a `'...rest'` string is not found in the provided order list, it will be appended to the bottom.
-
+**Note:** if a `...rest` string is not found in the provided order list, it will be appended to the bottom.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
@@ -208,15 +193,6 @@ const options = {
     'optionalDependencies',
     '...rest',
   ],
-  transformations: {
-    // This reverses all the keys in dependencies
-    dependencies(key, value) {
-      return Object.keys(value).sort().reverse().reduce((obj, k) => {
-        obj[k] = value[k];
-        return obj;
-      }, {});
-    },
-  },
 };
 
 const newPkg = sortPkg(pkg, options);
@@ -242,6 +218,54 @@ console.log(newPkg.map(([k]) => k));
 ```
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
+### `transformations`
+
+`transformations` is a map of `package.json` keys to functions that return a value to be written to `package.json`.
+
+The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
+
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/transformations.js) -->
+<!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
+```js
+const sortScripts = require('sort-scripts');
+
+const transformations = {
+  scripts(key, value) {
+    return sortScripts(value).reduce((obj, [name, script]) => {
+      obj[name] = script;
+      return obj;
+    }, {});
+  },
+};
+
+module.exports = transformations;
+```
+<!-- AUTO-GENERATED-CONTENT:END *-->
+
+**Notes:** Any `package.json` property that is an object **and** does not have a defined transformation will be alphabetically sorted.
+
+Additional transformations or overrides can be passed in:
+
+<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+```js
+const sortPkg = require('sort-package');
+const pkg = require('<path-to-package.json>');
+const options = {
+  transformations: {
+    // This reverses all the keys in dependencies
+    dependencies(key, value) {
+      return Object.keys(value).sort().reverse().reduce((obj, k) => {
+        obj[k] = value[k];
+        return obj;
+      }, {});
+    },
+  },
+};
+
+const newPkg = sortPkg(pkg, options);
+```
+<!-- AUTO-GENERATED-CONTENT:END *-->
+
 ### CLI
 
 | **Option** | **Description** | **Default** |
@@ -252,21 +276,27 @@ console.log(newPkg.map(([k]) => k));
 | `-q` | Only print on errors | **false** |
 | `-h` | Print help menu | |
 
-## Using in a project
 
-In my opinion, the best setup for this tool would look something like this:
+You can also see the available options in the terminal by running:
+
+```
+yarn package-sort --help
+```
+
+## Integrating
+
+An effective integration of this plugin could look like this:
 
 ```json
 {
   "scripts": {
-    "format:pkg": "sort-package -w -q",
+    "format:pkg": "sort-package -w",
     "precommit": "lint-staged",
     "prepublish": "format:pkg"
   },
-  "bin": ".bin/index.js",
   "lint-staged": {
     "package.json": [
-      "sort-package -w",
+      "sort-package -w -q",
       "git add"
     ]
   },
