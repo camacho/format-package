@@ -1,6 +1,6 @@
 {
   "name": "sort-package",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Sensible, automated sorting of package.json",
   "license": "MIT",
   "main": "index.js",
@@ -35,6 +35,10 @@
       "eslint --fix",
       "git add"
     ],
+    "*.md": [
+      "yarn docs",
+      "git add"
+    ],
     "package.json": [
       "format:pkg",
       "git add"
@@ -53,7 +57,6 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
-    "execa": "^0.8.0",
     "jest": "^20.0.4",
     "lint-staged": "^4.0.3",
     "markdown-magic": "^0.1.17",

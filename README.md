@@ -250,6 +250,7 @@ console.log(newPkg.map(([k]) => k));
 | `-p` | Starting path to look up the directory tree for the nearest `package.json` file to be sorted. Relative paths are resolved relative to the process `cwd` | `process.cwd()` |
 | `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
 | `-w` | Write the output to the location of the found `package.json` | **false** |
+| `-q` | Only print on errors | **false** |
 | `-h` | Print help menu | |
 
 ## Using in a project
@@ -259,7 +260,7 @@ In my opinion, the best setup for this tool would look something like this:
 ```json
 {
   "scripts": {
-    "format:pkg": "sort-package -w",
+    "format:pkg": "sort-package -w -q",
     "precommit": "lint-staged",
     "prepublish": "format:pkg"
   },

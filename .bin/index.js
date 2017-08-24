@@ -36,6 +36,13 @@ const options = yargs
       describe: 'Flag to write the output of ordering to the package.json file',
       type: 'boolean',
     },
+    q: {
+      alias: 'quiet',
+      demandOption: false,
+      default: false,
+      describe: 'Flag to make the script only output on error',
+      type: 'boolean',
+    },
   })
   .help().argv;
 
@@ -52,14 +59,18 @@ const pkg = JSON.parse(pkgContents);
 
 const nextPkg = order(pkg, config).toJSON();
 
-console.log();
-console.log(nextPkg);
-console.log();
-console.log('Package.json sorted successfully');
+if (!options.quiet) {
+  console.log();
+  console.log(nextPkg);
+  console.log();
+  console.log('Package.json sorted successfully');
+}
 
 if (options.write) {
   fs.writeFile(pkgPath, [nextPkg, '\n'].join(''), err => {
     if (err) throw err;
-    console.log(`Written to ${path.relative(cwd, pkgPath)}`);
+    if (!options.quiet) {
+      console.log(`Written to ${path.relative(cwd, pkgPath)}`);
+    }
   });
 }
