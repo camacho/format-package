@@ -1,4 +1,4 @@
-# Sort Package
+# Format Package
 
 `package.json` files are notorious for becoming large and overwhelming. When working in teams, this can make it hard to know how to structure the file or where to find certain configurations or scripts - especially since everyone has their own preferences.
 
