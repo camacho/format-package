@@ -24,8 +24,8 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 ## Requirements
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
-* **node**: ^8.4.0
-* **yarn**: >=0.27.5
+* **node**: ^6.9.0
+* **yarn**: >=0.27.0
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Getting started

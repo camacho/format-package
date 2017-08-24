@@ -25,6 +25,9 @@ function orderPackage(pkg, options = {}) {
   return collection;
 }
 
-Object.assign(orderPackage, { ...defaults });
+orderPackage.defaults = {
+  order: defaults.order.slice(),
+  transformations: Object.assign({}, defaults.transformations),
+};
 
 module.exports = orderPackage;
