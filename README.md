@@ -14,6 +14,7 @@ So, this is my attempt to provide a consistent ordering utility that is sensical
   * [Transformations](#transformations)
   * [Order](#order)
   * [CLI](#cli)
+- [Using in a project](#using-in-a-project)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Requirements
@@ -108,7 +109,7 @@ const { sort: sortObj } = require('../utils/object');
 const transformations = {
   scripts(key, value) {
     return sortScripts(value)
-      .reduce((obj, name, script) => {
+      .reduce((obj, [name, script]) => {
         obj[name] = script;
         return obj;
       }, {});
@@ -250,3 +251,33 @@ console.log(newPkg.map(([k]) => k));
 | `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
 | `-w` | Write the output to the location of the found `package.json` | **false** |
 | `-h` | Print help menu | |
+
+## Using in a project
+
+In my opinion, the best setup for this tool would look something like this:
+
+```json
+{
+  "scripts": {
+    "format:pkg": "sort-package -w",
+    "precommit": "lint-staged",
+    "prepublish": "format:pkg"
+  },
+  "bin": ".bin/index.js",
+  "lint-staged": {
+    "package.json": [
+      "sort-package -w",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "lint-staged": "latest",
+    "sort-package": "latest"
+  },
+  "optionalDependencies": {
+    "husky": "latest"
+  }
+}
+```
+
+It combines ['lint-staged'](https://github.com/okonet/lint-staged), ['husky'](https://github.com/typicode/husky), and ['sort-package'](https://github.com/camacho/sort-package) together to ensure the `package.json` is automatically sorted if it changes using, and provides an easy [npm script](https://docs.npmjs.com/misc/scripts).

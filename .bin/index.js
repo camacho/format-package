@@ -58,8 +58,8 @@ console.log();
 console.log('Package.json sorted successfully');
 
 if (options.write) {
-  fs.writeFile(pkgPath, nextPkg, err => {
+  fs.writeFile(pkgPath, [nextPkg, '\n'].join(''), err => {
     if (err) throw err;
-    console.log(`Written to ${path.relative(cwd, pkgPath) }`);
+    console.log(`Written to ${path.relative(cwd, pkgPath)}`);
   });
 }

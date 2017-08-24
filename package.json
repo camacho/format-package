@@ -1,6 +1,6 @@
 {
   "name": "sort-package",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Sensible, automated sorting of package.json",
   "license": "MIT",
   "main": "index.js",
@@ -24,6 +24,7 @@
     "format:pkg": "./.bin/index.js -w -p package.json",
     "lint": "eslint \"{records,scripts,.bin}/**/*.js\" --fix",
     "precommit": "lint-staged && yarn docs",
+    "prepublish": "yarn precommit && yarn prepush",
     "prepush": "yarn test",
     "test": "jest"
   },
@@ -35,7 +36,7 @@
       "git add"
     ],
     "package.json": [
-      "./.bin/index.js -w",
+      "format:pkg",
       "git add"
     ]
   },
