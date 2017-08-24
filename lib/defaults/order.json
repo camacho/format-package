@@ -1,0 +1,19 @@
+[
+  "name",
+  "version",
+  "description",
+  "license",
+  "main",
+  "engines",
+  "repository",
+  "author",
+  "bugs",
+  "homepage",
+  "scripts",
+  "jest",
+  "...rest",
+  "dependencies",
+  "peerDependencies",
+  "devDependencies",
+  "optionalDependencies"
+]
