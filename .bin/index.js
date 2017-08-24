@@ -47,7 +47,7 @@ const options = yargs
   .help().argv;
 
 if (options.configPath) {
-  config = require(path.resolve(cwd, options.config));
+  config = require(path.resolve(cwd, options.configPath));
 }
 
 if (options.package) {
