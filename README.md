@@ -34,7 +34,7 @@ npm install --save-dev sort-package
 
 ### As a module
 
-The module exports a default `order` function that takes an object, options, and returns an ordered array:
+The module exports a default `sort` function that takes an object, options, and returns an ordered array:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
