@@ -33,7 +33,7 @@
  | [markdown-magic-dependency-table@^1.2.2](https://github.com/camacho/markdown-magic-dependency-table#readme) | Generate table of information about dependencies automatically in markdown | 1.2.2 | dev | 
  | [markdown-magic-directory-tree@^1.2.1](https://github.com/camacho/markdown-magic-directory-tree#readme) | Print an archy tree for markdown file | 1.2.1 | dev | 
  | [markdown-magic-engines@^1.0.1](https://github.com/camacho/markdown-magic-engines#readme) | Render engine requirements in Markdown files via Markdown Magic | 1.0.1 | dev | 
- | [markdown-magic-install-command@^1.2.1](https://github.com/camacho/markdown-magic-install-command#readme) | Print install command for markdown file | 1.2.1 | dev | 
+ | [markdown-magic-install-command@^1.3.0](https://github.com/camacho/markdown-magic-install-command#readme) | Print install command for markdown file | 1.3.0 | dev | 
  | [markdown-magic-package-scripts@^1.2.0](https///github.com:camacho/markdown-magic-package-scripts) | Print list of scripts in package.json with descriptions | 1.2.0 | dev | 
  | [markdown-magic-prettier@^1.0.3](https://github.com/camacho/markdown-magic-prettier#readme) | Prettify JS blocks | 1.0.3 | dev | 
  | [npm-run-all@^4.0.2](https://github.com/mysticatea/npm-run-all) | A CLI tool to run multiple npm-scripts in parallel or sequential. | 4.0.2 | dev | 

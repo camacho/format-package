@@ -31,9 +31,9 @@ It is configurable to allow teams to pick the order that work best for them, and
 ## Getting started
 
 ### Install
-<!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["--save-dev"]) -->
+<!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 ```sh
-npm install --save-dev format-package
+yarn install -D format-package
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
