@@ -44,7 +44,7 @@
     "codecov": "^2.3.0",
     "findup": "^0.1.5",
     "sort-scripts": "^1.0.0",
-    "yargs": "^8.0.2"
+    "yargs": "^9.0.1"
   },
   "devDependencies": {
     "ajv": "^5.2.2",

@@ -1,5 +1,7 @@
 # Format Package [![codecov](https://codecov.io/gh/camacho/format-package/branch/master/graph/badge.svg)](https://codecov.io/gh/camacho/format-package)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/camacho/format-package.svg)](https://greenkeeper.io/)
+
 `package.json` files are notorious for becoming large and overwhelming. When working in teams, this can make it hard to know how to structure the file or where to find certain configurations or scripts - especially since everyone has their own preferences.
 
 And manually going through and organizing the file seems as painful as doing formatting checks by hand in PRs.
