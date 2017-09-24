@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Fixtures Formatting basic.json produces an expected output 1`] = `
+"{
+  \\"name\\": \\"format-package\\",
+  \\"description\\": \\"Sensible formatting and ordering of package.json\\",
+  \\"license\\": \\"MIT\\",
+  \\"repository\\": {
+    \\"type\\": \\"git\\",
+    \\"url\\": \\"https://github.com/camacho/format-package.git\\"
+  },
+  \\"bugs\\": {
+    \\"url\\": \\"https://github.com/camacho/format-package/issues\\"
+  },
+  \\"homepage\\": \\"https://github.com/camacho/format-package#readme\\",
+  \\"author\\": \\"Patrick <patrick@daftdevelopers.com>\\",
+  \\"bin\\": \\"lib/cli/index.js\\",
+  \\"main\\": \\"lib/index.js\\",
+  \\"dependencies\\": {
+    \\"chalk\\": \\"^2.1.0\\",
+    \\"codecov\\": \\"^2.3.0\\",
+    \\"find-up\\": \\"^0.1.5\\",
+    \\"sort-scripts\\": \\"^1.0.0\\",
+    \\"yargs\\": \\"^9.0.1\\"
+  },
+  \\"devDependencies\\": {
+    \\"eslint\\": \\"^4.6.0\\",
+    \\"prettier\\": \\"^1.7.0\\"
+  }
+}
+"
+`;

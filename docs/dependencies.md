@@ -11,7 +11,7 @@
 | -------------- | --------------- | ----------- | -------- |
  | [chalk@^2.1.0](https://github.com/chalk/chalk) | Terminal string styling done right | 2.1.0 | production | 
  | [codecov@^2.3.0](https://github.com/codecov/codecov-node) | Uploading report to Codecov: https://codecov.io | 2.3.0 | production | 
- | [findup@^0.1.5](https://github.com/Filirom1/findup) | Walk up ancester's dir up to root | 0.1.5 | production | 
+ | [find-up@^0.1.5](https://github.com/sindresorhus/find-up) | Find a file by walking up parent directories | 2.1.0 | production | 
  | [sort-scripts@^1.0.0](https://github.com/camacho/sort-scripts#readme) | Sort a map of scripts in a logical order | 1.0.0 | production | 
  | [yargs@^9.0.1](http://yargs.js.org/) | yargs the modern, pirate-themed, successor to optimist. | 9.0.1 | production | 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -26,6 +26,7 @@
  | [eslint-config-prettier@^2.6.0](https://github.com/prettier/eslint-config-prettier) | Turns off all rules that are unnecessary or might conflict with Prettier. | 2.6.0 | dev | 
  | [eslint-plugin-import@^2.7.0](https://github.com/benmosher/eslint-plugin-import) | Import with sanity. | 2.7.0 | dev | 
  | [execa@^0.8.0](https://github.com/sindresorhus/execa) | A better `child_process` | 0.8.0 | dev | 
+ | [glob@^7.1.2](https://github.com/isaacs/node-glob) | a little globber | 7.1.2 | dev | 
  | [husky@^0.14.3](https://github.com/typicode/husky) | Prevents bad commit or push (git hooks, pre-commit/precommit, pre-push/prepush, post-merge/postmerge and all that stuff...) | 0.14.3 | dev | 
  | [install-deps-postmerge@^1.0.2](https://github.com/camacho/install-deps-postmerge#readme) | Install package.json dependencies using npm or yarn as git post merge hook | 1.0.2 | dev | 
  | [jest@^21.1.0](http://facebook.github.io/jest/) | Delightful JavaScript Testing. | 21.1.0 | dev | 

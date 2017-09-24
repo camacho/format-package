@@ -9,7 +9,7 @@
     "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 8,
     "sourceType": "module"
   },
   "rules": {
@@ -57,7 +57,7 @@
     {
       "files": [
         "**/**.{spec}.js",
-        "__mocks__/**/**.js"
+        "__tests__/**/**.js"
       ],
       "rules": {
         "no-console": 0,

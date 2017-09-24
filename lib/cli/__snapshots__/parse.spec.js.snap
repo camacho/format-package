@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`argv parses args with yargs 1`] = `
+exports[`parse parses args with yargs 1`] = `
 Array [
   Array [
     "format [file]",
@@ -10,7 +10,7 @@ Array [
 ]
 `;
 
-exports[`argv parses args with yargs 2`] = `
+exports[`parse parses args with yargs 2`] = `
 Object {
   "c": Object {
     "alias": "config",

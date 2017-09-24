@@ -1,10 +1,10 @@
 {
   "name": "format-package",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
-    "node": ">=6.9.0"
+    "node": ">=7.6.0"
   },
   "repository": {
     "type": "git",
@@ -51,7 +51,7 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "codecov": "^2.3.0",
-    "findup": "^0.1.5",
+    "find-up": "^0.1.5",
     "sort-scripts": "^1.0.0",
     "yargs": "^9.0.1"
   },
@@ -62,6 +62,7 @@
     "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-import": "^2.7.0",
     "execa": "^0.8.0",
+    "glob": "^7.1.2",
     "husky": "^0.14.3",
     "install-deps-postmerge": "^1.0.2",
     "jest": "^21.1.0",

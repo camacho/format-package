@@ -2,18 +2,18 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/camacho/format-package.svg)](https://greenkeeper.io/)
 
-`package.json` files are notorious for becoming large and overwhelming. When working in teams, this can make it hard to know how to structure the file or where to find certain configurations or scripts - especially since everyone has their own preferences.
+<!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
+```sh
+yarn install -D format-package
+```
+<!-- AUTO-GENERATED-CONTENT:END -->
 
-And manually going through and organizing the file seems as painful as doing formatting checks by hand in PRs.
+<!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true) -->
+<details>
+<summary>Table of Contents</summary>
 
-`format-package` solves these problems by allowing the file to be sorted and formatted in a consistent and automated manner.
-
-It is configurable to allow teams to pick the order that work best for them, and includes `transformations` that can be applied to a value in the `package.json` (such as logically [sorting scripts](https://github.com/camacho/sort-scripts)).
-
-<!-- AUTO-GENERATED-CONTENT:START (TOC) -->
-- [Requirements](#requirements)
 - [Getting started](#getting-started)
-  * [Install](#install)
+- [Requirements](#requirements)
   * [Command Line](#command-line)
   * [Module](#module)
 - [Options](#options)
@@ -23,20 +23,23 @@ It is configurable to allow teams to pick the order that work best for them, and
   * [`formatter`](#formatter)
   * [CLI](#cli)
 - [Integrating](#integrating)
+
+</details>
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Requirements
-<!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
-* **node**: >=6.9.0
-<!-- AUTO-GENERATED-CONTENT:END -->
+`package.json` files are notorious for becoming large and overwhelming. When working in teams, this can make it hard to know how to structure the file or where to find certain configurations or scripts - especially since everyone has their own preferences.
+
+And manually going through and organizing the file seems as painful as doing formatting checks by hand in PRs.
+
+`format-package` solves these problems by allowing the file to be sorted and formatted in a consistent and automated manner.
+
+It is configurable to allow teams to pick the order that work best for them, and includes `transformations` that can be applied to a value in the `package.json` (such as logically [sorting scripts](https://github.com/camacho/sort-scripts)).
 
 ## Getting started
 
-### Install
-<!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
-```sh
-yarn install -D format-package
-```
+## Requirements
+<!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
+* **node**: >=7.6.0
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
@@ -72,28 +75,29 @@ yarn format:pkg
 
 ### Module
 
-The module exports a default `format` function that takes the contents of `package.json` and a [set of options](#options).
+The module exports an *asynchronous* `format` function that takes the contents of `package.json` and a [set of options](#options).
 
 It returns a newly sorted and formatted `package.json` string.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
+#!/usr/bin/env node
+
+const fs = require('fs');
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
-const options = {};
 
-const formattedPkg = format(pkg, options);
-```
-<!-- AUTO-GENERATED-CONTENT:END -->
+async function formatPackage(pkg) {
+  const formattedPkg = await format(pkg, options);
 
-From there, it is easy to write the new formatted package back to `package.json`:
+  fs.writeFile('<path-to-package.json>', formattedPkg, err => {
+    if (err) throw err;
+  });
+}
 
-<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-```js
-const fs = require('fs');
-
-fs.writeFile('<path-to-package.json>', formattedPkg, err => {
-  if (err) throw err;
+formatPackage(pkg).catch(err => {
+  console.error(err);
+  process.exit(1);
 });
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -105,13 +109,13 @@ There are three options:
 * **transformations** (*Object*)
 * **formatter** (*Function*)
 
-Options are expected to be passed in as a map:
+Options are expected to be passed in as a keyed object:
 
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
-const options = { order: [], transformations: {} };
-console.log(format(pkg, options).toJSON())
+const options = { order: [], transformations: {}, formatter: v => v.toString() };
+format(pkg, options).then(formattedPkg => console.log(formattedPkg))
 ```
 
 ### Defaults
@@ -129,7 +133,7 @@ let order = [...defaultOrder];
 if (restIndex !=== -1) order.splice(restIndex, 1);
 order.push('...rest');
 
-console.log(format(pkg, { order }).toJSON())
+format(pkg, { order }).then(formattedPkg => console.log(formattedPkg))
 ```
 
 ### `order`
@@ -190,8 +194,9 @@ const options = {
   ],
 };
 
-const formattedPkg = format(pkg, options);
-console.log(Object.keys(JSON.parse(formattedPkg)));
+format(pkg, options).then(formattedPkg =>
+  Object.keys(JSON.parse(formattedPkg))
+);
 /*
 [ 'name',
 'version',
@@ -215,7 +220,7 @@ console.log(Object.keys(JSON.parse(formattedPkg)));
 
 ### `transformations`
 
-`transformations` is a map of `package.json` keys to functions that return a **key and value** to be written to `package.json`.
+`transformations` is a map of `package.json` keys and corresponding *synchronous* or *asynchronous* functions that take a **key** and **value** and return a **key** and **value** to be written to `package.json`.
 
 The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
 
@@ -265,13 +270,15 @@ const options = {
   },
 };
 
-const formattedPkg = format(pkg, options);
+format(pkg, options);
 ```
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `formatter`
 
-A custom formatter can be supplied that will process the resulting object before writing to file.
+The formatter is the function used to prepare the contents before being returned.
+
+A custom *synchronous* or *asynchronous* formatter can be supplied that will process the resulting package contents.
 
 By default, `JSON.stringify` is used:
 
@@ -294,9 +301,12 @@ const formatPkg = require('format-package');
 const prettier = require('prettier');
 const pkg = require('./package.json');
 
-prettier.resolveConfig('./package.json').then(options => {
-  formatPkg(pkg, { formatter: content => prettier.format(content, options) });
-});
+const formatter = async content => {
+  const options = await prettier.resolveConfig('./package.json');
+  return prettier.format(content, options);
+};
+
+formatPkg(pkg, { formatter });
 ```
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
@@ -304,10 +314,10 @@ prettier.resolveConfig('./package.json').then(options => {
 
 | **Option** | **Alias** | **Description** | **Default** |
 | -----------| --------- | -------------- | ----------- |
-| `--config` | `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
-| `--write` | `-w` | Write the output to the location of the found `package.json` | **false** |
-| `--verbose` | `-v` | Print the output of the formatting | **false** |
-| `--help` | `-h` | Print help menu | |
+| `config` | `c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
+| `write` | `w` | Write the output to the location of the found `package.json` | **false** |
+| `verbose` | `v` | Print the output of the formatting | **false** |
+| `help` | `h` | Print help menu | |
 
 
 You can also see the available options in the terminal by running:
