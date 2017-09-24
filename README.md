@@ -251,13 +251,16 @@ const options = {
   transformations: {
     // This reverses all the keys in dependencies
     dependencies(key, value) {
-      return Object.keys(value)
-        .sort()
-        .reverse()
-        .reduce((obj, k) => {
-          obj[k] = value[k];
-          return obj;
-        }, {});
+      return [
+        key,
+        Object.keys(value)
+          .sort()
+          .reverse()
+          .reduce((obj, k) => {
+            obj[k] = value[k];
+            return obj;
+          }, {}),
+      ];
     },
   },
 };
