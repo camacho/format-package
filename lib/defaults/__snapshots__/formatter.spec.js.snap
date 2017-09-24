@@ -3,5 +3,6 @@
 exports[`formatter prints the object with spacing 1`] = `
 "{
   \\"foo\\": \\"bar\\"
-}"
+}
+"
 `;

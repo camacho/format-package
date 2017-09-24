@@ -4,7 +4,8 @@ exports[`format formats the output 1`] = `
 "{
   \\"name\\": \\"test\\",
   \\"foo\\": \\"bar\\"
-}"
+}
+"
 `;
 
 exports[`format takes options 1`] = `"{\\"name\\":\\"test\\"}"`;
