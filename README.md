@@ -1,4 +1,4 @@
-# Format Package
+# Format Package [![codecov](https://codecov.io/gh/camacho/format-package/branch/master/graph/badge.svg)](https://codecov.io/gh/camacho/format-package)
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/camacho/format-package.svg)](https://greenkeeper.io/)
 
@@ -191,7 +191,7 @@ const options = {
 };
 
 const formattedPkg = format(pkg, options);
-console.log(formattedPkg.map(([k]) => k));
+console.log(Object.keys(JSON.parse(formattedPkg)));
 /*
 [ 'name',
 'version',
@@ -299,12 +299,12 @@ prettier.resolveConfig('./package.json').then(options => {
 
 ### CLI
 
-| **Option** | **Description** | **Default** |
-| -----------| --------------- | ----------- |
-| `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
-| `-w` | Write the output to the location of the found `package.json` | **false** |
-| `-v` | Print the output of the formatting | **false** |
-| `-h` | Print help menu | |
+| **Option** | **Alias** | **Description** | **Default** |
+| -----------| --------- | -------------- | ----------- |
+| `--config` | `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
+| `--write` | `-w` | Write the output to the location of the found `package.json` | **false** |
+| `--verbose` | `-v` | Print the output of the formatting | **false** |
+| `--help` | `-h` | Print help menu | |
 
 
 You can also see the available options in the terminal by running:
@@ -326,7 +326,7 @@ An effective integration of this plugin could look like this:
   },
   "lint-staged": {
     "package.json": [
-      "format-package -w -q",
+      "format-package -w",
       "git add"
     ]
   },
