@@ -13,7 +13,7 @@ yarn add -D format-package
 <summary>Table of Contents</summary>
 
 - [Getting started](#getting-started)
-- [Requirements](#requirements)
+  * [Requirements](#requirements)
   * [Command Line](#command-line)
   * [Module](#module)
 - [Options](#options)
@@ -27,6 +27,8 @@ yarn add -D format-package
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
 
+## Getting started
+
 `package.json` files are notorious for becoming large and overwhelming. When working in teams, this can make it hard to know how to structure the file or where to find certain configurations or scripts - especially since everyone has their own preferences.
 
 And manually going through and organizing the file seems as painful as doing formatting checks by hand in PRs.
@@ -35,9 +37,7 @@ And manually going through and organizing the file seems as painful as doing for
 
 It is configurable to allow teams to pick the order that work best for them, and includes `transformations` that can be applied to a value in the `package.json` (such as logically [sorting scripts](https://github.com/camacho/sort-scripts)).
 
-## Getting started
-
-## Requirements
+### Requirements
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 * **node**: >=7.6.0
 <!-- AUTO-GENERATED-CONTENT:END -->
