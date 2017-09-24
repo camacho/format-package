@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`format formats the output 1`] = `
+"{
+  \\"name\\": \\"test\\",
+  \\"foo\\": \\"bar\\"
+}"
+`;
+
+exports[`format takes options 1`] = `"{\\"name\\":\\"test\\"}"`;

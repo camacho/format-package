@@ -18,6 +18,7 @@ It is configurable to allow teams to pick the order that work best for them, and
   * [Defaults](#defaults)
   * [`order`](#order)
   * [`transformations`](#transformations)
+  * [`formatter`](#formatter)
   * [CLI](#cli)
 - [Integrating](#integrating)
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -25,7 +26,6 @@ It is configurable to allow teams to pick the order that work best for them, and
 ## Requirements
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 * **node**: >=6.9.0
-* **yarn**: >=0.27.0
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Getting started
@@ -72,7 +72,7 @@ yarn format:pkg
 
 The module exports a default `format` function that takes the contents of `package.json` and a [map of options](#options).
 
-It returns an ordered array with a few additional helper functions - `toJSON` and `toObject`.
+It returns a formatted string with a few additional helper functions - `toJSON` and `toObject`.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
@@ -90,32 +90,18 @@ From there, it is easy to write the new formatted package back to `package.json`
 ```js
 const fs = require('fs');
 
-fs.writeFile('<path-to-package.json>', formattedPkg.toJSON(), err => {
+fs.writeFile('<path-to-package.json>', formattedPkg, err => {
   if (err) throw err;
 });
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-It is possible to switch back and forth between an Array and keyed object:
-
-<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
-
-const formattedPkg = format(pkg);
-const formattedObj = formattedPkg.toObject();
-const formattedArray = formattedObj.toArray();
-
-console.log(formattedPkg); // [['name', 'format-package'], ['version', '1.0.0']]
-console.log(formattedObj); // { name: 'format-package', version: '1.0.0' }
-console.log(formattedArray); // [['name', 'format-package'], ['version', '1.0.0']]
-```
-<!-- AUTO-GENERATED-CONTENT:END -->
-
 ## Options
 
-There are two options: **order** and **transformations**.
+There are three options:
+* **order** (*Array*)
+* **transformations** (*Object*)
+* **formatter** (*Function*)
 
 Options are expected to be passed in as a map:
 
@@ -166,6 +152,8 @@ The default order is:
   "author",
   "bin",
   "main",
+  "module",
+  "browser",
   "config",
   "scripts",
   "lint-staged",
@@ -225,7 +213,7 @@ console.log(formattedPkg.map(([k]) => k));
 
 ### `transformations`
 
-`transformations` is a map of `package.json` keys to functions that return a value to be written to `package.json`.
+`transformations` is a map of `package.json` keys to functions that return a **key and value** to be written to `package.json`.
 
 The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
 
@@ -235,11 +223,13 @@ The default transformations map has a `scripts` method that sorts the scripts in
 const sortScripts = require('sort-scripts');
 
 const transformations = {
-  scripts(key, value) {
-    return sortScripts(value).reduce((obj, [name, script]) => {
-      obj[name] = script;
-      return obj;
-    }, {});
+  scripts(key, prevValue) {
+    const nextValue = sortScripts(prevValue).reduce(
+      (obj, [name, value]) => Object.assign({}, obj, { [name]: value }),
+      {}
+    );
+
+    return [key, nextValue];
   },
 };
 
@@ -259,10 +249,13 @@ const options = {
   transformations: {
     // This reverses all the keys in dependencies
     dependencies(key, value) {
-      return Object.keys(value).sort().reverse().reduce((obj, k) => {
-        obj[k] = value[k];
-        return obj;
-      }, {});
+      return Object.keys(value)
+        .sort()
+        .reverse()
+        .reduce((obj, k) => {
+          obj[k] = value[k];
+          return obj;
+        }, {});
     },
   },
 };
@@ -271,14 +264,44 @@ const formattedPkg = format(pkg, options);
 ```
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
+### `formatter`
+
+A custom formatter can be supplied that will process the resulting object before writing to file.
+
+By default, `JSON.stringify` is used:
+
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/formatter.js) -->
+<!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
+```js
+function formatter(obj) {
+  return JSON.stringify(obj, null, 2);
+}
+
+module.exports = formatter;
+```
+<!-- AUTO-GENERATED-CONTENT:END *-->
+
+An alternative would be to use [`prettier`](https://github.com/prettier/prettier):
+
+<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+```js
+const formatPkg = require('format-package');
+const prettier = require('prettier');
+const pkg = require('./package.json');
+
+prettier.resolveConfig('./package.json').then(options => {
+  formatPkg(pkg, { formatter: content => prettier.format(content, options) });
+});
+```
+<!-- AUTO-GENERATED-CONTENT:END *-->
+
 ### CLI
 
 | **Option** | **Description** | **Default** |
 | -----------| --------------- | ----------- |
-| `-p` | Starting path to look up the directory tree for the nearest `package.json` file to be formatted. Relative paths are resolved relative to the process `cwd` | `process.cwd()` |
 | `-c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
 | `-w` | Write the output to the location of the found `package.json` | **false** |
-| `-q` | Only print on errors | **false** |
+| `-v` | Print the output of the formatting | **false** |
 | `-h` | Print help menu | |
 
 
@@ -317,10 +340,10 @@ An effective integration of this plugin could look like this:
 
 This configuration combines:
 * [lint-staged](https://github.com/okonet/lint-staged) for automatically running tasks on staged files
-* ['husky'](https://github.com/typicode/husky) for githook integrations
-* ['format-package'](https://github.com/camacho/format-package) to format `package.json`
+* [husky](https://github.com/typicode/husky) for githook integrations
+* [format-package](https://github.com/camacho/format-package) to format `package.json`
 
-Together, these modules ensure the `package.json` file is automatically formatted if it changes and provides an easy [npm script](https://docs.npmjs.com/misc/scripts) for manual use:
+Together, these modules ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
 
 ```sh
 yarn format:pkg

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object alphabetize loops over an array 1`] = `
+Array [
+  Object {
+    "baz": Object {
+      "qux": "foo",
+    },
+    "foo": "bar",
+  },
+]
+`;
+
+exports[`object alphabetize recursively loops over an object 1`] = `
+Object {
+  "baz": Object {
+    "qux": "foo",
+  },
+  "foo": "bar",
+}
+`;

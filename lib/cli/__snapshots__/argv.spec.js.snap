@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`argv parses args with yargs 1`] = `
+Array [
+  Array [
+    "format [file]",
+    "*",
+  ],
+  "Format closest package.json file",
+]
+`;
+
+exports[`argv parses args with yargs 2`] = `
+Object {
+  "c": Object {
+    "alias": "config",
+    "demandOption": false,
+    "describe": "Location of a config file",
+    "type": "string",
+  },
+  "v": Object {
+    "alias": "verbose",
+    "default": false,
+    "demandOption": false,
+    "describe": "Flag to make the script print the formatted result",
+    "type": "boolean",
+  },
+  "w": Object {
+    "alias": "write",
+    "default": false,
+    "demandOption": false,
+    "describe": "Flag to write the output of ordering to the package.json file",
+    "type": "boolean",
+  },
+}
+`;

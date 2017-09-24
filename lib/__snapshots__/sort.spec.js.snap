@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sort allows any key to be used to denote the "rest" 1`] = `
+Array [
+  "baz",
+  "foo",
+  "bar",
+  "qux",
+]
+`;
+
+exports[`sort appends extra keys to the end in alphabetical order if no "rest" is found 1`] = `
+Array [
+  "qux",
+  "bar",
+  "baz",
+  "foo",
+]
+`;
+
+exports[`sort orders relevant keys 1`] = `
+Array [
+  "foo",
+  "bar",
+  "qux",
+  "baz",
+]
+`;

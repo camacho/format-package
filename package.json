@@ -1,37 +1,36 @@
 {
   "name": "format-package",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
-    "node": ">=6.9.0",
-    "yarn": ">=0.27.0"
+    "node": ">=6.9.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/camacho/format-package.git"
+    "url": "https://github.com/camacho/format-package.git"
   },
   "bugs": {
     "url": "https://github.com/camacho/format-package/issues"
   },
   "homepage": "https://github.com/camacho/format-package#readme",
   "author": "Patrick <patrick@daftdevelopers.com>",
-  "bin": ".bin/index.js",
-  "main": "index.js",
+  "bin": "lib/cli/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
-    "format:js": "prettier --single-quote --trailing-comma es5 --write \"{records,scripts,.bin}/**/*.js\"",
-    "format:pkg": "./.bin/index.js -w -p package.json",
-    "lint": "eslint \"{records,scripts,.bin}/**/*.js\" --fix",
+    "format:js": "prettier --write \"{lib,scripts,.bin}/**/*.js\"",
+    "format:pkg": "./lib/cli/index.js -w -p package.json",
+    "lint": "eslint \"{lib,scripts,.bin}/**/*.js\" --fix",
+    "postmerge": "install-deps-postmerge",
     "precommit": "lint-staged && yarn docs",
-    "prepublish": "yarn precommit && yarn prepush",
     "prepush": "yarn test",
     "test": "jest"
   },
   "lint-staged": {
     "*.js": [
-      "prettier --single-quote --trailing-comma es5 --write",
+      "prettier --write",
       "eslint --fix",
       "git add"
     ],
@@ -40,34 +39,31 @@
       "git add"
     ]
   },
-  "bundle-size": [],
   "dependencies": {
     "chalk": "^2.1.0",
+    "codecov": "^2.3.0",
     "findup": "^0.1.5",
     "sort-scripts": "^1.0.0",
     "yargs": "^8.0.2"
   },
   "devDependencies": {
-    "eslint": "^4.5.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-config-prettier": "^2.3.0",
+    "ajv": "^5.2.2",
+    "eslint": "^4.6.0",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.3.0",
     "execa": "^0.8.0",
-    "jest": "^20.0.4",
+    "husky": "^0.14.3",
+    "install-deps-postmerge": "^1.0.2",
+    "jest": "^21.1.0",
     "lint-staged": "^4.0.3",
     "markdown-magic": "^0.1.17",
     "markdown-magic-dependency-table": "^1.2.2",
-    "markdown-magic-directory-tree": "^1.2.1",
     "markdown-magic-engines": "^1.0.1",
     "markdown-magic-install-command": "^1.3.0",
     "markdown-magic-package-scripts": "^1.2.0",
     "markdown-magic-prettier": "^1.0.3",
     "npm-run-all": "^4.0.2",
-    "prettier": "^1.5.3"
-  },
-  "optionalDependencies": {
-    "husky": "^0.14.3"
+    "prettier": "^1.7.0"
   }
 }

@@ -1,9 +1,76 @@
 {
   "extends": [
-    "airbnb",
+    "airbnb-base",
     "prettier"
   ],
+  "env": {
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
   "rules": {
-    "no-param-reassign": 0
-  }
+    "no-param-reassign": 2,
+    "no-console": 2,
+    "import/no-unresolved": [
+      2,
+      {
+        "commonjs": true,
+        "amd": false
+      }
+    ],
+    "import/no-amd": 2,
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/no-absolute-path": 2,
+    "import/no-dynamic-require": 2,
+    "import/no-webpack-loader-syntax": 2,
+    "import/no-deprecated": 2,
+    "import/no-mutable-exports": 2,
+    "import/no-duplicates": 2,
+    "import/newline-after-import": 2,
+    "import/no-unassigned-import": 2,
+    "import/no-extraneous-dependencies": [
+      2,
+      {
+        "devDependencies": false,
+        "optionalDependencies": true,
+        "peerDependencies": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "lib/cli/**/**.js"
+      ],
+      "rules": {
+        "no-console": 0,
+        "import/no-dynamic-require": 0,
+        "import/no-unassigned-import": 0,
+        "global-require": 0
+      }
+    },
+    {
+      "files": [
+        "**/**.{spec}.js",
+        "__mocks__/**/**.js"
+      ],
+      "rules": {
+        "no-console": 0,
+        "import/first": 0,
+        "import/no-unassigned-import": 0,
+        "import/no-extraneous-dependencies": [
+          2,
+          {
+            "optionalDependencies": true,
+            "devDependencies": true
+          }
+        ]
+      }
+    }
+  ]
 }
