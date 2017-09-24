@@ -4,7 +4,7 @@
 
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 ```sh
-yarn install -D format-package
+yarn add -D format-package
 ```
 <!-- AUTO-GENERATED-CONTENT:END -->
 

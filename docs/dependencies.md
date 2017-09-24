@@ -11,7 +11,7 @@
 | -------------- | --------------- | ----------- | -------- |
  | [chalk@^2.1.0](https://github.com/chalk/chalk) | Terminal string styling done right | 2.1.0 | production | 
  | [codecov@^2.3.0](https://github.com/codecov/codecov-node) | Uploading report to Codecov: https://codecov.io | 2.3.0 | production | 
- | [find-up@^0.1.5](https://github.com/sindresorhus/find-up) | Find a file by walking up parent directories | 2.1.0 | production | 
+ | [find-up@^2.1.0](https://github.com/sindresorhus/find-up) | Find a file by walking up parent directories | 2.1.0 | production | 
  | [sort-scripts@^1.0.0](https://github.com/camacho/sort-scripts#readme) | Sort a map of scripts in a logical order | 1.0.0 | production | 
  | [yargs@^9.0.1](http://yargs.js.org/) | yargs the modern, pirate-themed, successor to optimist. | 9.0.1 | production | 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -30,13 +30,13 @@
  | [husky@^0.14.3](https://github.com/typicode/husky) | Prevents bad commit or push (git hooks, pre-commit/precommit, pre-push/prepush, post-merge/postmerge and all that stuff...) | 0.14.3 | dev | 
  | [install-deps-postmerge@^1.0.2](https://github.com/camacho/install-deps-postmerge#readme) | Install package.json dependencies using npm or yarn as git post merge hook | 1.0.2 | dev | 
  | [jest@^21.1.0](http://facebook.github.io/jest/) | Delightful JavaScript Testing. | 21.1.0 | dev | 
- | [lint-staged@^4.0.3](https://github.com/okonet/lint-staged#readme) | Lint files staged by git | 4.0.3 | dev | 
- | [markdown-magic@^0.1.17](https://npmjs.org/package/markdown-magic) | Automatically update markdown files with content from external sources | 0.1.17 | dev | 
+ | [lint-staged@^4.0.3](https://github.com/okonet/lint-staged) | Lint files staged by git | 4.2.2 | dev | 
+ | [markdown-magic@^0.1.17](https://npmjs.org/package/markdown-magic) | Automatically update markdown files with content from external sources | 0.1.18 | dev | 
  | [markdown-magic-dependency-table@^1.2.2](https://github.com/camacho/markdown-magic-dependency-table#readme) | Generate table of information about dependencies automatically in markdown | 1.2.2 | dev | 
  | [markdown-magic-engines@^1.0.1](https://github.com/camacho/markdown-magic-engines#readme) | Render engine requirements in Markdown files via Markdown Magic | 1.0.1 | dev | 
- | [markdown-magic-install-command@^1.3.0](https://github.com/camacho/markdown-magic-install-command#readme) | Print install command for markdown file | 1.3.0 | dev | 
+ | [markdown-magic-install-command@^1.3.0](https://github.com/camacho/markdown-magic-install-command#readme) | Print install command for markdown file | 1.3.1 | dev | 
  | [markdown-magic-package-scripts@^1.2.0](https///github.com:camacho/markdown-magic-package-scripts) | Print list of scripts in package.json with descriptions | 1.2.0 | dev | 
- | [markdown-magic-prettier@^1.0.3](https://github.com/camacho/markdown-magic-prettier#readme) | Prettify JS blocks | 1.0.3 | dev | 
- | [npm-run-all@^4.0.2](https://github.com/mysticatea/npm-run-all) | A CLI tool to run multiple npm-scripts in parallel or sequential. | 4.0.2 | dev | 
+ | [markdown-magic-prettier@^1.0.3](https://github.com/camacho/markdown-magic-prettier#readme) | Prettify JS blocks | 1.0.4 | dev | 
+ | [npm-run-all@^4.0.2](https://github.com/mysticatea/npm-run-all) | A CLI tool to run multiple npm-scripts in parallel or sequential. | 4.1.1 | dev | 
  | [prettier@^1.7.0](https://prettier.io) | Prettier is an opinionated code formatter | 1.7.0 | dev | 
 <!-- AUTO-GENERATED-CONTENT:END -->
