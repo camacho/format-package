@@ -3,7 +3,6 @@
 <!-- AUTO-GENERATED-CONTENT:START (TOC) -->
   * [Production](#production)
   * [Development](#development)
-  * [PEER](#peer)
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Production
@@ -39,10 +38,4 @@
  | [markdown-magic-prettier@^1.0.3](https://github.com/camacho/markdown-magic-prettier#readme) | Prettify JS blocks | 1.0.3 | dev | 
  | [npm-run-all@^4.0.2](https://github.com/mysticatea/npm-run-all) | A CLI tool to run multiple npm-scripts in parallel or sequential. | 4.0.2 | dev | 
  | [prettier@^1.7.0](https://prettier.io) | Prettier is an opinionated code formatter | 1.7.0 | dev | 
-<!-- AUTO-GENERATED-CONTENT:END -->
-
-### PEER
-<!-- AUTO-GENERATED-CONTENT:START (DEPENDENCYTABLE:production=false&dev=false&peer=true) -->
-| **Dependency** | **Description** | **Version** | **Type** |
-| -------------- | --------------- | ----------- | -------- |
 <!-- AUTO-GENERATED-CONTENT:END -->
