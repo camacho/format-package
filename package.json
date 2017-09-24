@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -39,6 +39,15 @@
       "git add"
     ]
   },
+  "keywords": [
+    "format",
+    "order",
+    "prettify",
+    "organize",
+    "package",
+    "package.json",
+    "prettier"
+  ],
   "dependencies": {
     "chalk": "^2.1.0",
     "codecov": "^2.3.0",

@@ -14,7 +14,7 @@
  | [codecov@^2.3.0](https://github.com/codecov/codecov-node) | Uploading report to Codecov: https://codecov.io | 2.3.0 | production | 
  | [findup@^0.1.5](https://github.com/Filirom1/findup) | Walk up ancester's dir up to root | 0.1.5 | production | 
  | [sort-scripts@^1.0.0](https://github.com/camacho/sort-scripts#readme) | Sort a map of scripts in a logical order | 1.0.0 | production | 
- | [yargs@^9.0.1](http://yargs.js.org/) | yargs the modern, pirate-themed, successor to optimist. | 8.0.2 | production | 
+ | [yargs@^9.0.1](http://yargs.js.org/) | yargs the modern, pirate-themed, successor to optimist. | 9.0.1 | production | 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Development

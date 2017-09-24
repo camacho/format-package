@@ -72,9 +72,9 @@ yarn format:pkg
 
 ### Module
 
-The module exports a default `format` function that takes the contents of `package.json` and a [map of options](#options).
+The module exports a default `format` function that takes the contents of `package.json` and a [set of options](#options).
 
-It returns a formatted string with a few additional helper functions - `toJSON` and `toObject`.
+It returns a newly sorted and formatted `package.json` string.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
