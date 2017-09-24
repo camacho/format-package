@@ -279,7 +279,7 @@ By default, `JSON.stringify` is used:
 <!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
 ```js
 function formatter(obj) {
-  return JSON.stringify(obj, null, 2);
+  return [JSON.stringify(obj, null, 2), '\n'].join('');
 }
 
 module.exports = formatter;
