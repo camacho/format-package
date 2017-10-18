@@ -10,7 +10,6 @@
 | **Dependency** | **Description** | **Version** | **Type** |
 | -------------- | --------------- | ----------- | -------- |
  | [chalk@^2.1.0](https://github.com/chalk/chalk) | Terminal string styling done right | 2.1.0 | production | 
- | [codecov@^2.3.0](https://github.com/codecov/codecov-node) | Uploading report to Codecov: https://codecov.io | 2.3.0 | production | 
  | [find-up@^2.1.0](https://github.com/sindresorhus/find-up) | Find a file by walking up parent directories | 2.1.0 | production | 
  | [sort-scripts@^1.0.0](https://github.com/camacho/sort-scripts#readme) | Sort a map of scripts in a logical order | 1.0.0 | production | 
  | [yargs@^9.0.1](http://yargs.js.org/) | yargs the modern, pirate-themed, successor to optimist. | 9.0.1 | production | 
@@ -21,6 +20,7 @@
 | **Dependency** | **Description** | **Version** | **Type** |
 | -------------- | --------------- | ----------- | -------- |
  | [ajv@^5.2.2](https://github.com/epoberezkin/ajv) | Another JSON Schema Validator | 5.2.2 | dev | 
+ | [codecov@^2.3.1](https://github.com/codecov/codecov-node) | Uploading report to Codecov: https://codecov.io | 2.3.1 | dev | 
  | [eslint@^4.6.0](http://eslint.org) | An AST-based pattern checker for JavaScript. | 4.7.2 | dev | 
  | [eslint-config-airbnb-base@^12.0.0](https://github.com/airbnb/javascript) | Airbnb's base JS ESLint config, following our styleguide | 12.0.0 | dev | 
  | [eslint-config-prettier@^2.6.0](https://github.com/prettier/eslint-config-prettier) | Turns off all rules that are unnecessary or might conflict with Prettier. | 2.6.0 | dev | 
