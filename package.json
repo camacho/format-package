@@ -52,7 +52,7 @@
     "chalk": "^2.1.0",
     "find-up": "^2.1.0",
     "sort-scripts": "^1.0.0",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
     "ajv": "^5.2.2",
