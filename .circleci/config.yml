@@ -1,0 +1,104 @@
+aliases:
+  - &working-directory
+    ~/format-package
+  - &default-setup
+    working_directory: *working-directory
+    docker:
+      - image: 'circleci/node:8.4'
+  - &default-steps
+    - checkout
+    - attach_workspace:
+      at: *working-directory
+version: 2
+jobs:
+  setup:
+    <<: *default-setup
+    steps:
+      - checkout
+      - restore-cache:
+          keys:
+            - 'dependencies-{{ .Branch }}-{{ checksum "package.json" }}'
+            - 'dependencies-{{ .Branch }}-'
+      - run: yarn --no-progress
+      - save-cache:
+          paths:
+            - ./node_modules
+          key: 'dependencies-{{ .Branch }}-{{ checksum "package.json" }}'
+      - persist_to_workspace: 
+          root: *working-directory
+          paths:
+            - ./node_modules
+            - ./yarn.lock
+  update-lockfile:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: ./scripts/commit-lockfile.sh
+  docs:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: yarn docs
+  format:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: yarn format
+  git-status:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: git diff --name-status --exit-code
+  lint:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: yarn lint
+  test:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: yarn test --coverage --runInBand --ci
+      - run: yarn codecov
+      
+workflows:
+  version: 2
+  validate:
+    jobs:
+      - setup
+      - update-lockfile:
+          requires:
+            - setup
+          filters:
+            branches:
+              only: /^greenkeeper\/.*/
+      - docs:
+          requires:
+            - setup
+      - format:
+          requires:
+            - setup
+            - docs
+      - git-status:
+          requires:
+            - setup
+            - docs
+            - format
+      - lint:
+          requires:
+            - setup
+      - test:
+          requires:
+            - setup
