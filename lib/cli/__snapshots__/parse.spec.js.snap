@@ -6,7 +6,8 @@ Array [
     "format [file]",
     "*",
   ],
-  "Format closest package.json file",
+  "Format package.json file",
+  [Function],
 ]
 `;
 

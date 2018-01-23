@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "4.0.2",
+  "version": "4.1.2",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -21,7 +21,7 @@
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
     "format:js": "prettier --write \"{lib,scripts,.bin}/**/*.js\"",
-    "format:pkg": "./lib/cli/index.js -w -p package.json",
+    "format:pkg": "./lib/cli/index.js -wp",
     "lint": "eslint \"{lib,scripts,.bin}/**/*.js\" --fix",
     "postmerge": "install-deps-postmerge",
     "precommit": "lint-staged && yarn docs",
