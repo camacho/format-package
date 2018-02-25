@@ -10,7 +10,9 @@
   "homepage",
   "author",
   "bin",
+  "man",
   "main",
+  "directories",
   "module",
   "browser",
   "config",
@@ -20,5 +22,6 @@
   "dependencies",
   "peerDependencies",
   "devDependencies",
-  "optionalDependencies"
+  "optionalDependencies",
+  "bundledDependencies"
 ]
