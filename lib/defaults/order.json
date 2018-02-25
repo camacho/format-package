@@ -5,6 +5,8 @@
   "license",
   "private",
   "engines",
+  "os",
+  "cpu",
   "repository",
   "bugs",
   "homepage",
@@ -16,6 +18,7 @@
   "module",
   "browser",
   "config",
+  "publishConfig"
   "scripts",
   "lint-staged",
   "...rest",
