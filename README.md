@@ -38,6 +38,7 @@ And manually going through and organizing the file seems as painful as doing for
 It is configurable to allow teams to pick the order that work best for them, and includes `transformations` that can be applied to a value in the `package.json` (such as logically [sorting scripts](https://github.com/camacho/sort-scripts)).
 
 ### Requirements
+
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 * **node**: >=7.6.0
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -75,7 +76,7 @@ yarn format:pkg
 
 ### Module
 
-The module exports an *asynchronous* `format` function that takes the contents of `package.json` and a [set of options](#options).
+The module exports an _asynchronous_ `format` function that takes the contents of `package.json` and a [set of options](#options).
 
 It returns a newly sorted and formatted `package.json` string.
 
@@ -105,17 +106,22 @@ formatPackage(pkg).catch(err => {
 ## Options
 
 There are three options:
-* **order** (*Array*)
-* **transformations** (*Object*)
-* **formatter** (*Function*)
+
+* **order** (_Array_)
+* **transformations** (_Object_)
+* **formatter** (_Function_)
 
 Options are expected to be passed in as a keyed object:
 
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
-const options = { order: [], transformations: {}, formatter: v => v.toString() };
-format(pkg, options).then(formattedPkg => console.log(formattedPkg))
+const options = {
+  order: [],
+  transformations: {},
+  formatter: v => v.toString(),
+};
+format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 ```
 
 ### Defaults
@@ -220,7 +226,7 @@ format(pkg, options).then(formattedPkg =>
 
 ### `transformations`
 
-`transformations` is a map of `package.json` keys and corresponding *synchronous* or *asynchronous* functions that take a **key** and **value** and return a **key** and **value** to be written to `package.json`.
+`transformations` is a map of `package.json` keys and corresponding _synchronous_ or _asynchronous_ functions that take a **key** and **value** and return a **key** and **value** to be written to `package.json`.
 
 The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
 
@@ -278,7 +284,7 @@ format(pkg, options);
 
 The formatter is the function used to prepare the contents before being returned.
 
-A custom *synchronous* or *asynchronous* formatter can be supplied that will process the resulting package contents.
+A custom _synchronous_ or _asynchronous_ formatter can be supplied that will process the resulting package contents.
 
 By default, `JSON.stringify` is used:
 
@@ -312,13 +318,12 @@ formatPkg(pkg, { formatter });
 
 ### CLI
 
-| **Option** | **Alias** | **Description** | **Default** |
-| -----------| --------- | -------------- | ----------- |
-| `config` | `c` | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). | |
-| `write` | `w` | Write the output to the location of the found `package.json` | **false** |
-| `verbose` | `v` | Print the output of the formatting | **false** |
-| `help` | `h` | Print help menu | |
-
+| **Option** | **Alias** | **Description**                                                                                                                                                                                                               | **Default** |
+| ---------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `config`   | `c`       | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). |             |
+| `write`    | `w`       | Write the output to the location of the found `package.json`                                                                                                                                                                  | **false**   |
+| `verbose`  | `v`       | Print the output of the formatting                                                                                                                                                                                            | **false**   |
+| `help`     | `h`       | Print help menu                                                                                                                                                                                                               |             |
 
 You can also see the available options in the terminal by running:
 
@@ -338,10 +343,7 @@ An effective integration of this plugin could look like this:
     "prepublish": "format:pkg"
   },
   "lint-staged": {
-    "package.json": [
-      "format-package -w",
-      "git add"
-    ]
+    "package.json": ["format-package -w", "git add"]
   },
   "devDependencies": {
     "lint-staged": "latest",
@@ -354,6 +356,7 @@ An effective integration of this plugin could look like this:
 ```
 
 This configuration combines:
+
 * [lint-staged](https://github.com/okonet/lint-staged) for automatically running tasks on staged files
 * [husky](https://github.com/typicode/husky) for githook integrations
 * [format-package](https://github.com/camacho/format-package) to format `package.json`

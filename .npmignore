@@ -1,0 +1,11 @@
+__tests__/
+coverage/
+scripts/
+.circleci/
+.eslintignore
+.eslintrc
+.gitignore
+.nvmrc
+.prettierrc
+.prettierignore
+lib/**/*.spec.js
