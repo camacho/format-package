@@ -71,7 +71,7 @@ jobs:
       - attach_workspace:
           at: *working-directory
       - run: yarn test --coverage --runInBand --ci
-      - run: yarn codecov
+      - run: yarn codecov ./coverage/coverage-final.json
       
 workflows:
   version: 2
