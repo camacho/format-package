@@ -96,6 +96,7 @@ const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 
 async function formatPackage(pkg) {
+  const options = {parser: 'json'}
   const formattedPkg = await format(pkg, options);
 
   fs.writeFile('<path-to-package.json>', formattedPkg, err => {
