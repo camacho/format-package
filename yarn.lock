@@ -2908,13 +2908,6 @@ markdown-link@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/markdown-link/-/markdown-link-0.1.1.tgz#32c5c65199a6457316322d1e4229d13407c8c7cf"
 
-markdown-magic-dependency-table@^1.2.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/markdown-magic-dependency-table/-/markdown-magic-dependency-table-1.3.2.tgz#e08b6fda6a8b4310ffbf07f780fcca6d6ba06031"
-  dependencies:
-    find-up "^2.1.0"
-    semver "^5.3.0"
-
 markdown-magic-engines@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/markdown-magic-engines/-/markdown-magic-engines-1.0.1.tgz#7748629a52a200c43bddf67ac68ab9b0db7d5ec9"
@@ -2927,7 +2920,7 @@ markdown-magic-install-command@^1.3.0:
   dependencies:
     findup "^0.1.5"
 
-markdown-magic-package-scripts@^1.2.0:
+markdown-magic-package-scripts@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/markdown-magic-package-scripts/-/markdown-magic-package-scripts-1.2.1.tgz#39a33e605d70ea4988c25d3cbca1290e7328340e"
   dependencies:
@@ -2938,9 +2931,9 @@ markdown-magic-prettier@^1.0.3:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/markdown-magic-prettier/-/markdown-magic-prettier-1.0.4.tgz#a61e3ad7f27470f390a3dc4d14e27d2bfbc57e87"
 
-markdown-magic@^0.1.17:
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/markdown-magic/-/markdown-magic-0.1.20.tgz#5f0ef79342fa1b43bba42afe63d3023286e3eec3"
+markdown-magic@^0.1.21:
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/markdown-magic/-/markdown-magic-0.1.21.tgz#a212982c23e919bd896b4716568b73df8ef16ec0"
   dependencies:
     commander "^2.9.0"
     deepmerge "^1.3.0"
