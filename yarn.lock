@@ -2908,9 +2908,9 @@ markdown-link@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/markdown-link/-/markdown-link-0.1.1.tgz#32c5c65199a6457316322d1e4229d13407c8c7cf"
 
-markdown-magic-engines@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/markdown-magic-engines/-/markdown-magic-engines-1.0.1.tgz#7748629a52a200c43bddf67ac68ab9b0db7d5ec9"
+markdown-magic-engines@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/markdown-magic-engines/-/markdown-magic-engines-1.0.2.tgz#0b630ecf2b42f475e3a5ebae964021b936262412"
   dependencies:
     findup "^0.1.5"
 
