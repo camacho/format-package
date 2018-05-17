@@ -3,30 +3,27 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/camacho/format-package.svg)](https://greenkeeper.io/)
 
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
-
 ```sh
 yarn add -D format-package
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true) -->
-
 <details>
 <summary>Table of Contents</summary>
 
-* [Getting started](#getting-started)
+- [Getting started](#getting-started)
   * [Requirements](#requirements)
   * [Command Line](#command-line)
   * [Module](#module)
-* [Options](#options)
+- [Options](#options)
   * [Defaults](#defaults)
   * [`order`](#order)
   * [`transformations`](#transformations)
   * [`formatter`](#formatter)
   * [CLI](#cli)
-* [Integrating](#integrating)
-* [Development](#development)
+- [Integrating](#integrating)
+- [Development](#development)
   * [Scripts](#scripts)
 
 </details>
@@ -45,9 +42,8 @@ It is configurable to allow teams to pick the order that work best for them, and
 ### Requirements
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
-
 * **node**: >=7.6.0
-  <!-- AUTO-GENERATED-CONTENT:END -->
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
 
@@ -87,7 +83,6 @@ The module exports an _asynchronous_ `format` function that takes the contents o
 It returns a newly sorted and formatted `package.json` string.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-
 ```js
 #!/usr/bin/env node
 
@@ -108,7 +103,6 @@ formatPackage(pkg).catch(err => {
   process.exit(1);
 });
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Options
@@ -121,6 +115,7 @@ There are three options:
 
 Options are expected to be passed in as a keyed object:
 
+<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -131,24 +126,27 @@ const options = {
 };
 format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 ```
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Defaults
 
 The `format-package` module also exports its defaults to help with configuration:
 
+<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
-const { { defaults: { order: defaultOrder } } = format;
+const { defaults: { order: defaultOrder } } = format;
 
 // Move `...rest` to the bottom of the default order list
 const restIndex = defaultOrder.indexOf(sort, '...rest');
 let order = [...defaultOrder];
-if (restIndex !=== -1) order.splice(restIndex, 1);
+if (restIndex !== -1) order.splice(restIndex, 1);
 order.push('...rest');
 
-format(pkg, { order }).then(formattedPkg => console.log(formattedPkg))
+format(pkg, { order }).then(formattedPkg => console.log(formattedPkg));
 ```
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ### `order`
 
@@ -157,9 +155,7 @@ The most meaningful part of this utility is an ordered array of keys that are us
 The default order is:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/order.json) -->
-
 <!-- The below code snippet is automatically added from ./lib/defaults/order.json -->
-
 ```json
 [
   "name",
@@ -192,7 +188,6 @@ The default order is:
   "bundledDependencies"
 ]
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 The `...rest` value is considered special. It marks the location where the remaining `package.json` keys that are not found in this ordered list will be placed in alphabetical order.
@@ -200,7 +195,6 @@ The `...rest` value is considered special. It marks the location where the remai
 **Note:** if a `...rest` string is not found in the provided order list, it will be appended to the bottom.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -240,7 +234,6 @@ format(pkg, options).then(formattedPkg =>
 'repository' ]
 */
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `transformations`
@@ -250,15 +243,11 @@ format(pkg, options).then(formattedPkg =>
 The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/transformations.js) -->
-
 <!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
-
 ```js
-const sortScripts = require('sort-scripts');
-
 const transformations = {
   scripts(key, prevValue) {
-    const nextValue = sortScripts(prevValue).reduce(
+    const nextValue = require('sort-scripts')(prevValue).reduce(
       (obj, [name, value]) => Object.assign({}, obj, { [name]: value }),
       {}
     );
@@ -269,7 +258,6 @@ const transformations = {
 
 module.exports = transformations;
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 **Notes:** Any `package.json` property that is an object **and** does not have a defined transformation will be alphabetically sorted.
@@ -277,7 +265,6 @@ module.exports = transformations;
 Additional transformations or overrides can be passed in:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -301,7 +288,6 @@ const options = {
 
 format(pkg, options);
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `formatter`
@@ -313,9 +299,7 @@ A custom _synchronous_ or _asynchronous_ formatter can be supplied that will pro
 By default, `JSON.stringify` is used:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/formatter.js) -->
-
 <!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
-
 ```js
 function formatter(obj) {
   return [JSON.stringify(obj, null, 2), '\n'].join('');
@@ -323,13 +307,11 @@ function formatter(obj) {
 
 module.exports = formatter;
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 An alternative would be to use [`prettier`](https://github.com/prettier/prettier):
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-
 ```js
 const formatPkg = require('format-package');
 const prettier = require('prettier');
@@ -343,10 +325,15 @@ const formatter = async content => {
 
 formatPkg(pkg, { formatter });
 ```
-
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### CLI
+
+The CLI accepts a series of files to be formatted, as well as options.
+
+```
+yarn format-package file-1.json file-2.json
+```
 
 | **Option** | **Alias** | **Description**                                                                                                                                                                                                               | **Default** |
 | ---------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
@@ -411,19 +398,17 @@ yarn install
 These scripts can be run via `yarn` or `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
-
-| Script       | Description                                                                                                                                                                                                      |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs`       | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files                                                                                            |
-| `format`     | format the application code                                                                                                                                                                                      |
-| `format:js`  | format JS using [prettier](https://github.com/prettier/prettier)                                                                                                                                                 |
-| `format:pkg` | format package.json                                                                                                                                                                                              |
-| `lint`       | lint the application code                                                                                                                                                                                        |
-| `postmerge`  | install dependencies if `yarn.lock` or `package.json` has changed                                                                                                                                                |
-| `precommit`  | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each commit to make sure the code are properly formatted and docs are up to date |
-| `prepush`    | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each push to ensure the code passes tests                                        |
-| `test`       | run unit tests for the application                                                                                                                                                                               |
-
+| Script | Description |
+|--------|-------------|
+| `docs` | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
+| `format` | format the application code |
+| `format:js` | format JS using [prettier](https://github.com/prettier/prettier) |
+| `format:pkg` | format package.json |
+| `lint` | lint the application code |
+| `postmerge` | install dependencies if `yarn.lock` or `package.json` has changed |
+| `precommit` | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each commit to make sure the code are properly formatted and docs are up to date |
+| `prepush` | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each push to ensure the code passes tests |
+| `test` | run unit tests for the application |
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 **Note** - This repo depends on [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged) to automatically format code and update documents. If these commands are not run, code changes will most likely fail.
