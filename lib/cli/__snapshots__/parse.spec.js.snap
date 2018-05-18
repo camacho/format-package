@@ -3,10 +3,10 @@
 exports[`parse parses args with yargs 1`] = `
 Array [
   Array [
-    "format [file]",
+    "format [files..]",
     "*",
   ],
-  "Format package.json file",
+  "Format files",
   [Function],
 ]
 `;
@@ -17,6 +17,7 @@ Object {
     "alias": "config",
     "demandOption": false,
     "describe": "Location of a config file",
+    "transform": [Function],
     "type": "string",
   },
   "v": Object {

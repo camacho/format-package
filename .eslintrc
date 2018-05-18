@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "airbnb-base",
-    "prettier"
-  ],
+  "extends": ["airbnb-base", "prettier"],
   "env": {
     "node": true,
     "jest": true,
@@ -13,6 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "global-require": 0,
     "no-param-reassign": 2,
     "no-console": 2,
     "import/no-unresolved": [
@@ -44,21 +42,15 @@
   },
   "overrides": [
     {
-      "files": [
-        "lib/cli/**/**.js"
-      ],
+      "files": ["lib/cli/**/**.js"],
       "rules": {
         "no-console": 0,
         "import/no-dynamic-require": 0,
-        "import/no-unassigned-import": 0,
-        "global-require": 0
+        "import/no-unassigned-import": 0
       }
     },
     {
-      "files": [
-        "**/**.{spec}.js",
-        "__tests__/**/**.js"
-      ],
+      "files": ["**/**.{spec}.js", "__tests__/**/**.js"],
       "rules": {
         "no-console": 0,
         "import/first": 0,

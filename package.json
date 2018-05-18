@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -29,17 +29,17 @@
     "test": "jest"
   },
   "lint-staged": {
+    "**/package.json": [
+      "yarn format:pkg",
+      "git add"
+    ],
     "*.js": [
       "prettier --write",
-      "eslint --fix",
+      "eslint",
       "git add"
     ],
-    "*.{json,md}": [
+    "*.json": [
       "prettier --write",
-      "git add"
-    ],
-    "package.json": [
-      "yarn format:pkg",
       "git add"
     ]
   },
@@ -54,7 +54,7 @@
   ],
   "dependencies": {
     "chalk": "^2.1.0",
-    "find-up": "^2.1.0",
+    "convert-hrtime": "^2.0.0",
     "sort-scripts": "^1.0.0",
     "yargs": "^11.0.0"
   },
