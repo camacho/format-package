@@ -20,6 +20,15 @@ Object {
     "transform": [Function],
     "type": "string",
   },
+  "i": Object {
+    "alias": "ignore",
+    "default": Array [
+      "**/node_modules/**",
+    ],
+    "demandOptions": false,
+    "describe": "Patterns to ignore",
+    "type": "array",
+  },
   "v": Object {
     "alias": "verbose",
     "default": false,
