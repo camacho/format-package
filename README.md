@@ -329,10 +329,10 @@ formatPkg(pkg, { formatter });
 
 ### CLI
 
-The CLI accepts a series of files to be formatted, as well as options.
+The CLI accepts a series of files or globs to be formatted, as well as a set of options.
 
 ```
-yarn format-package file-1.json file-2.json
+yarn format-package "**/package.json"
 ```
 
 | **Option** | **Alias** | **Description**                                                                                                                                                                                                               | **Default** |

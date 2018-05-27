@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -55,6 +55,7 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "convert-hrtime": "^2.0.0",
+    "globby": "^8.0.1",
     "sort-scripts": "^1.0.0",
     "yargs": "^11.0.0"
   },
