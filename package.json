@@ -57,7 +57,7 @@
     "convert-hrtime": "^2.0.0",
     "globby": "^8.0.1",
     "sort-scripts": "^1.0.0",
-    "yargs": "^11.0.0"
+    "yargs": "^12.0.1"
   },
   "devDependencies": {
     "codecov": "^3.0.0",
