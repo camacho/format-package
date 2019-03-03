@@ -55,7 +55,7 @@
   "dependencies": {
     "chalk": "^2.1.0",
     "convert-hrtime": "^2.0.0",
-    "globby": "^8.0.1",
+    "globby": "^9.1.0",
     "sort-scripts": "^1.0.0",
     "yargs": "^11.0.0"
   },
