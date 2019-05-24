@@ -3,9 +3,11 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/camacho/format-package.svg)](https://greenkeeper.io/)
 
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
+
 ```sh
 yarn add -D format-package
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true) -->
@@ -13,18 +15,18 @@ yarn add -D format-package
 <summary>Table of Contents</summary>
 
 - [Getting started](#getting-started)
-  * [Requirements](#requirements)
-  * [Command Line](#command-line)
-  * [Module](#module)
+  - [Requirements](#requirements)
+  - [Command Line](#command-line)
+  - [Module](#module)
 - [Options](#options)
-  * [Defaults](#defaults)
-  * [`order`](#order)
-  * [`transformations`](#transformations)
-  * [`formatter`](#formatter)
-  * [CLI](#cli)
+  - [Defaults](#defaults)
+  - [`order`](#order)
+  - [`transformations`](#transformations)
+  - [`formatter`](#formatter)
+  - [CLI](#cli)
 - [Integrating](#integrating)
 - [Development](#development)
-  * [Scripts](#scripts)
+  - [Scripts](#scripts)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -42,8 +44,9 @@ It is configurable to allow teams to pick the order that work best for them, and
 ### Requirements
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
-* **node**: >=7.6.0
-<!-- AUTO-GENERATED-CONTENT:END -->
+
+- **node**: >=7.6.0
+  <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
 
@@ -83,6 +86,7 @@ The module exports an _asynchronous_ `format` function that takes the contents o
 It returns a newly sorted and formatted `package.json` string.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 #!/usr/bin/env node
 
@@ -103,19 +107,21 @@ formatPackage(pkg).catch(err => {
   process.exit(1);
 });
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Options
 
 There are three options:
 
-* **order** (_Array_)
-* **transformations** (_Object_)
-* **formatter** (_Function_)
+- **order** (_Array_)
+- **transformations** (_Object_)
+- **formatter** (_Function_)
 
 Options are expected to be passed in as a keyed object:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -126,6 +132,7 @@ const options = {
 };
 format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Defaults
@@ -133,10 +140,13 @@ format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 The `format-package` module also exports its defaults to help with configuration:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
-const { defaults: { order: defaultOrder } } = format;
+const {
+  defaults: { order: defaultOrder },
+} = format;
 
 // Move `...rest` to the bottom of the default order list
 const restIndex = defaultOrder.indexOf(sort, '...rest');
@@ -146,6 +156,7 @@ order.push('...rest');
 
 format(pkg, { order }).then(formattedPkg => console.log(formattedPkg));
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### `order`
@@ -156,6 +167,7 @@ The default order is:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/order.json) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/order.json -->
+
 ```json
 [
   "name",
@@ -170,6 +182,7 @@ The default order is:
   "bugs",
   "homepage",
   "author",
+  "keywords",
   "bin",
   "man",
   "main",
@@ -179,6 +192,7 @@ The default order is:
   "config",
   "publishConfig",
   "scripts",
+  "husky",
   "lint-staged",
   "...rest",
   "dependencies",
@@ -188,6 +202,7 @@ The default order is:
   "bundledDependencies"
 ]
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 The `...rest` value is considered special. It marks the location where the remaining `package.json` keys that are not found in this ordered list will be placed in alphabetical order.
@@ -195,6 +210,7 @@ The `...rest` value is considered special. It marks the location where the remai
 **Note:** if a `...rest` string is not found in the provided order list, it will be appended to the bottom.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -234,6 +250,7 @@ format(pkg, options).then(formattedPkg =>
 'repository' ]
 */
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `transformations`
@@ -244,6 +261,7 @@ The default transformations map has a `scripts` method that sorts the scripts in
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/transformations.js) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
+
 ```js
 const transformations = {
   scripts(key, prevValue) {
@@ -258,6 +276,7 @@ const transformations = {
 
 module.exports = transformations;
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 **Notes:** Any `package.json` property that is an object **and** does not have a defined transformation will be alphabetically sorted.
@@ -265,6 +284,7 @@ module.exports = transformations;
 Additional transformations or overrides can be passed in:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -288,6 +308,7 @@ const options = {
 
 format(pkg, options);
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `formatter`
@@ -300,6 +321,7 @@ By default, `JSON.stringify` is used:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/formatter.js) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
+
 ```js
 function formatter(obj) {
   return [JSON.stringify(obj, null, 2), '\n'].join('');
@@ -307,11 +329,13 @@ function formatter(obj) {
 
 module.exports = formatter;
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 An alternative would be to use [`prettier`](https://github.com/prettier/prettier):
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const formatPkg = require('format-package');
 const prettier = require('prettier');
@@ -325,6 +349,7 @@ const formatter = async content => {
 
 formatPkg(pkg, { formatter });
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### CLI
@@ -335,13 +360,13 @@ The CLI accepts a series of files or globs to be formatted, as well as a set of 
 yarn format-package "**/package.json"
 ```
 
-| **Option** | **Alias** | **Description**                                                                                                                                                                                                               | **Default** |
-| ---------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `config`   | `c`       | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). |             |
-| `write`    | `w`       | Write the output to the location of the found `package.json`                                                                                                                                                                  | **false**   |
-| `ignore`  | `i`       | Patterns for ignoring matching files                                                                                                                                                                                            | **`['**/node_modules/**']`**   |
-| `verbose`  | `v`       | Print the output of the formatting                                                                                                                                                                                            | **false**   |
-| `help`     | `h`       | Print help menu                                                                                                                                                                                                               |             |
+| **Option** | **Alias** | **Description**                                                                                                                                                                                                               | **Default**                  |
+| ---------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `config`   | `c`       | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). |                              |
+| `write`    | `w`       | Write the output to the location of the found `package.json`                                                                                                                                                                  | **false**                    |
+| `ignore`   | `i`       | Patterns for ignoring matching files                                                                                                                                                                                          | **`['**/node_modules/**']`** |
+| `verbose`  | `v`       | Print the output of the formatting                                                                                                                                                                                            | **false**                    |
+| `help`     | `h`       | Print help menu                                                                                                                                                                                                               |                              |
 
 You can also see the available options in the terminal by running:
 
@@ -375,9 +400,9 @@ An effective integration of this plugin could look like this:
 
 This configuration combines:
 
-* [lint-staged](https://github.com/okonet/lint-staged) for automatically running tasks on staged files
-* [husky](https://github.com/typicode/husky) for githook integrations
-* [format-package](https://github.com/camacho/format-package) to format `package.json`
+- [lint-staged](https://github.com/okonet/lint-staged) for automatically running tasks on staged files
+- [husky](https://github.com/typicode/husky) for githook integrations
+- [format-package](https://github.com/camacho/format-package) to format `package.json`
 
 Together, these modules ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
 
@@ -399,17 +424,16 @@ yarn install
 These scripts can be run via `yarn` or `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
-| Script | Description |
-|--------|-------------|
-| `docs` | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
-| `format` | format the application code |
-| `format:js` | format JS using [prettier](https://github.com/prettier/prettier) |
-| `format:pkg` | format package.json |
-| `lint` | lint the application code |
-| `postmerge` | install dependencies if `yarn.lock` or `package.json` has changed |
-| `precommit` | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each commit to make sure the code are properly formatted and docs are up to date |
-| `prepush` | [`git-hook`](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) run by [Husky](https://github.com/typicode/husky) before each push to ensure the code passes tests |
-| `test` | run unit tests for the application |
+
+| Script       | Description                                                                                                           |
+| ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `docs`       | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
+| `format`     | format the application code                                                                                           |
+| `format:js`  | format JS using [prettier](https://github.com/prettier/prettier)                                                      |
+| `format:pkg` | format package.json                                                                                                   |
+| `lint`       | lint the application code                                                                                             |
+| `test`       | run unit tests for the application                                                                                    |
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 **Note** - This repo depends on [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged) to automatically format code and update documents. If these commands are not run, code changes will most likely fail.

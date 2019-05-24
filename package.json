@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -15,6 +15,15 @@
   },
   "homepage": "https://github.com/camacho/format-package#readme",
   "author": "Patrick <patrick@daftdevelopers.com>",
+  "keywords": [
+    "format",
+    "order",
+    "prettify",
+    "organize",
+    "package",
+    "package.json",
+    "prettier"
+  ],
   "bin": "lib/cli/index.js",
   "main": "lib/index.js",
   "scripts": {
@@ -23,10 +32,14 @@
     "format:js": "prettier --write \"**/*.{md,js,json}\"",
     "format:pkg": "./lib/cli/index.js -wp",
     "lint": "eslint \"**/*.js\"",
-    "postmerge": "install-deps-postmerge",
-    "precommit": "lint-staged",
-    "prepush": "yarn test",
     "test": "jest"
+  },
+  "husky": {
+    "hooks": {
+      "post-merge": "install-deps-postmerge",
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test"
+    }
   },
   "lint-staged": {
     "**/package.json": [
@@ -43,40 +56,31 @@
       "git add"
     ]
   },
-  "keywords": [
-    "format",
-    "order",
-    "prettify",
-    "organize",
-    "package",
-    "package.json",
-    "prettier"
-  ],
   "dependencies": {
-    "chalk": "^2.1.0",
-    "convert-hrtime": "^2.0.0",
-    "globby": "^8.0.1",
+    "chalk": "^2.4.2",
+    "convert-hrtime": "^3.0.0",
+    "globby": "^9.2.0",
     "sort-scripts": "^1.0.0",
-    "yargs": "^11.0.0"
+    "yargs": "^13.2.4"
   },
   "devDependencies": {
-    "codecov": "^3.0.0",
-    "eslint": "^4.6.0",
-    "eslint-config-airbnb-base": "^12.0.0",
-    "eslint-config-prettier": "^2.6.0",
-    "eslint-plugin-import": "^2.7.0",
-    "execa": "^0.10.0",
-    "glob": "^7.1.2",
-    "husky": "^0.14.3",
-    "install-deps-postmerge": "^1.0.2",
-    "jest": "^22.0.4",
-    "lint-staged": "^7.0.0",
-    "markdown-magic": "^0.1.21",
+    "codecov": "^3.5.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.17.2",
+    "execa": "^1.0.0",
+    "glob": "^7.1.4",
+    "husky": "^2.3.0",
+    "install-deps-postmerge": "^1.0.3",
+    "jest": "^24.8.0",
+    "lint-staged": "^8.1.7",
+    "markdown-magic": "^0.1.25",
     "markdown-magic-engines": "^1.0.2",
-    "markdown-magic-install-command": "^1.3.0",
+    "markdown-magic-install-command": "^1.3.1",
     "markdown-magic-package-scripts": "^1.2.1",
-    "markdown-magic-prettier": "^1.0.3",
-    "npm-run-all": "^4.0.2",
-    "prettier": "^1.7.0"
+    "markdown-magic-prettier": "^1.0.4",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.17.1"
   }
 }
