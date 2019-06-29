@@ -59,7 +59,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "convert-hrtime": "^3.0.0",
-    "globby": "^9.2.0",
+    "globby": "^10.0.0",
     "sort-scripts": "^1.0.1",
     "yargs": "^13.2.4"
   },
