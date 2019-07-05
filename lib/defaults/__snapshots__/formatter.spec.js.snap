@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`formatter prints the object with spacing 1`] = `
-"{
-  \\"foo\\": \\"bar\\"
-}
-"
-`;

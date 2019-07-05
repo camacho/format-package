@@ -1,10 +1,9 @@
 aliases:
-  - &working-directory
-    ~/format-package
+  - &working-directory ~/format-package
   - &default-setup
     working_directory: *working-directory
     docker:
-      - image: 'circleci/node:9.10'
+      - image: 'circleci/node:8.16'
   - &default-steps
     - checkout
     - attach_workspace:
@@ -24,7 +23,7 @@ jobs:
           paths:
             - ./node_modules
           key: 'dependencies-{{ .Branch }}-{{ checksum "package.json" }}'
-      - persist_to_workspace: 
+      - persist_to_workspace:
           root: *working-directory
           paths:
             - ./node_modules
@@ -65,7 +64,7 @@ jobs:
           at: *working-directory
       - run: yarn test --coverage --runInBand --ci
       - run: yarn codecov
-      
+
 workflows:
   version: 2
   validate:
