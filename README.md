@@ -5,7 +5,7 @@
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 
 ```sh
-yarn add -D format-package
+yarn add -D format-package prettier@^1.6.0
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -317,37 +317,31 @@ The formatter is the function used to prepare the contents before being returned
 
 A custom _synchronous_ or _asynchronous_ formatter can be supplied that will process the resulting package contents.
 
-By default, `JSON.stringify` is used:
+By default, the formatter will try to use [`prettier`](https://github.com/prettier/prettier) if it is installed, and will fallback to `JSON.stringify` if the [peer dependency](https://nodejs.org/es/blog/npm/peer-dependencies/) is not found:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/formatter.js) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
 
 ```js
-function formatter(obj) {
-  return [JSON.stringify(obj, null, 2), '\n'].join('');
+async function formatter(obj) {
+  const content = JSON.stringify(obj, null, 2);
+
+  let prettier;
+  try {
+    prettier = require('prettier');
+  } catch (error) {
+    return [content, '\n'].join('');
+  }
+
+  const options = (await prettier.resolveConfig(process.cwd())) || {};
+  return prettier.format(content, {
+    ...options,
+    parser: 'json',
+    printWidth: 0,
+  });
 }
 
 module.exports = formatter;
-```
-
-<!-- AUTO-GENERATED-CONTENT:END *-->
-
-An alternative would be to use [`prettier`](https://github.com/prettier/prettier):
-
-<!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
-
-```js
-const formatPkg = require('format-package');
-const prettier = require('prettier');
-const pkg = require('./package.json');
-
-const formatter = async content => {
-  const options = await prettier.resolveConfig('./package.json');
-  // include `{ parser: 'json' }` in the options passed to prettier
-  return prettier.format(content, { ...options, parser: 'json' });
-};
-
-formatPkg(pkg, { formatter });
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
@@ -425,14 +419,17 @@ These scripts can be run via `yarn` or `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
 
-| Script       | Description                                                                                                           |
-| ------------ | --------------------------------------------------------------------------------------------------------------------- |
-| `docs`       | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
-| `format`     | format the application code                                                                                           |
-| `format:js`  | format JS using [prettier](https://github.com/prettier/prettier)                                                      |
-| `format:pkg` | format package.json                                                                                                   |
-| `lint`       | lint the application code                                                                                             |
-| `test`       | run unit tests for the application                                                                                    |
+| Script           | Description                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `docs`           | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
+| `format`         | format the application code                                                                                           |
+| `format:pkg`     | format package.json                                                                                                   |
+| `format:src`     | format source content using [prettier](https://github.com/prettier/prettier)                                          |
+| `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, and run tests                  |
+| `lint`           | lint the application code                                                                                             |
+| `prepublishOnly` | make sure the package is in good state before publishing                                                              |
+| `reset`          | reset the `node_modules` dependencies                                                                                 |
+| `test`           | run unit tests for the application                                                                                    |
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 

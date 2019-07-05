@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "4.5.1",
+  "version": "5.0.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -29,17 +29,13 @@
   "scripts": {
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
-    "format:js": "prettier --write \"**/*.{md,js,json}\"",
     "format:pkg": "./lib/cli/index.js -wp",
+    "format:src": "prettier --write \"**/*.{md,js,json}\"",
+    "gamut": "npm-run-all reset docs format lint test",
     "lint": "eslint \"**/*.js\"",
+    "prepublishOnly": "yarn gamut",
+    "reset": "cross-env rimraf node_modules && yarn install",
     "test": "jest"
-  },
-  "husky": {
-    "hooks": {
-      "post-merge": "install-deps-postmerge",
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn test"
-    }
   },
   "lint-staged": {
     "**/package.json": [
@@ -59,28 +55,32 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "convert-hrtime": "^3.0.0",
-    "globby": "^9.2.0",
+    "globby": "10.0.1",
     "sort-scripts": "^1.0.1",
     "yargs": "^13.2.4"
   },
+  "peerDependencies": {
+    "prettier": "^1.6.0"
+  },
   "devDependencies": {
     "codecov": "^3.5.0",
+    "cross-env": "^5.2.0",
     "eslint": "^6.0.1",
-    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-airbnb-base": "13.2.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.17.2",
-    "execa": "^2.0.1",
+    "execa": "2.0.3",
     "glob": "^7.1.4",
-    "husky": "^2.3.0",
+    "husky": "3.0.0",
     "install-deps-postmerge": "^1.0.3",
     "jest": "^24.8.0",
-    "lint-staged": "^8.1.7",
+    "lint-staged": "9.0.2",
     "markdown-magic": "^0.1.25",
     "markdown-magic-engines": "^1.0.2",
     "markdown-magic-install-command": "^1.3.1",
     "markdown-magic-package-scripts": "^1.2.1",
     "markdown-magic-prettier": "^1.0.4",
     "npm-run-all": "^4.1.5",
-    "prettier": "^1.17.1"
+    "prettier": "^1.18.2"
   }
 }
