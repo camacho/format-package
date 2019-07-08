@@ -3,9 +3,11 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/camacho/format-package.svg)](https://greenkeeper.io/)
 
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
+
 ```sh
 yarn add -D format-package prettier@^1.6.0
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 <!-- AUTO-GENERATED-CONTENT:START (TOC:collapse=true) -->
@@ -13,27 +15,25 @@ yarn add -D format-package prettier@^1.6.0
 <summary>Table of Contents</summary>
 
 - [Getting started](#getting-started)
-  * [Requirements](#requirements)
-  * [Command Line](#command-line)
-  * [Module](#module)
+  - [Requirements](#requirements)
+  - [Command Line](#command-line)
+  - [Module](#module)
 - [Options](#options)
-  * [Defaults](#defaults)
-  * [`order`](#order)
-  * [`transformations`](#transformations)
-  * [`formatter`](#formatter)
-  * [CLI](#cli)
-- [Config](#config)
-  * [with `--config`](#with---config)
-  * [with a config file](#with-a-config-file)
-  * [with an environment variable `FORMAT_PACKAGE_CONFIG`](#with-an-environment-variable-format_package_config)
-- [Creating a custom configuration](#creating-a-custom-configuration)
-  * [with package.json](#with-packagejson)
-  * [with format-package.json](#with-format-packagejson)
-  * [with `format-package.js` or `format-package.config.js`](#with-format-packagejs-or-format-packageconfigjs)
-  * [with format-package.{yml,yaml}, format-package.config.{yml,yaml}](#with-format-packageymlyaml-format-packageconfigymlyaml)
+  - [Defaults](#defaults)
+  - [`order`](#order)
+  - [`transformations`](#transformations)
+  - [`formatter`](#formatter)
+  - [CLI](#cli)
+- [Configuration Files](#configuration-files)
+  - [Configuration Schema](#configuration-schema)
+  - [Configuration Examples](#configuration-examples)
+  - [with package.json](#with-packagejson)
+  - [with format-package.json](#with-format-packagejson)
+  - [with `format-package.js` or `format-package.config.js`](#with-format-packagejs-or-format-packageconfigjs)
+  - [with format-package.{yml,yaml}, format-package.config.{yml,yaml}](#with-format-packageymlyaml-format-packageconfigymlyaml)
 - [Integrating](#integrating)
 - [Development](#development)
-  * [Scripts](#scripts)
+  - [Scripts](#scripts)
 
 </details>
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -51,8 +51,9 @@ It is configurable to allow teams to pick the order that work best for them, and
 ### Requirements
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
-* **node**: >=7.6.0
-<!-- AUTO-GENERATED-CONTENT:END -->
+
+- **node**: >=7.6.0
+  <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
 
@@ -92,6 +93,7 @@ The module exports an _asynchronous_ `format` function that takes the contents o
 It returns a newly sorted and formatted `package.json` string.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 #!/usr/bin/env node
 
@@ -112,6 +114,7 @@ formatPackage(pkg).catch(err => {
   process.exit(1);
 });
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Options
@@ -125,6 +128,7 @@ There are three options:
 Options are expected to be passed in as a keyed object:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -135,6 +139,7 @@ const options = {
 };
 format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Defaults
@@ -142,6 +147,7 @@ format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 The `format-package` module also exports its defaults to help with configuration:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -157,6 +163,7 @@ order.push('...rest');
 
 format(pkg, { order }).then(formattedPkg => console.log(formattedPkg));
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### `order`
@@ -167,6 +174,7 @@ The default order is:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/order.json) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/order.json -->
+
 ```json
 [
   "name",
@@ -201,6 +209,7 @@ The default order is:
   "bundledDependencies"
 ]
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 The `...rest` value is considered special. It marks the location where the remaining `package.json` keys that are not found in this ordered list will be placed in alphabetical order.
@@ -208,6 +217,7 @@ The `...rest` value is considered special. It marks the location where the remai
 **Note:** if a `...rest` string is not found in the provided order list, it will be appended to the bottom.
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -247,6 +257,7 @@ format(pkg, options).then(formattedPkg =>
 'repository' ]
 */
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `transformations`
@@ -257,10 +268,13 @@ The default transformations map has a `scripts` method that sorts the scripts in
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/transformations.js) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
+
 ```js
+const sortScripts = require('sort-scripts');
+
 const transformations = {
   scripts(key, prevValue) {
-    const nextValue = require('sort-scripts')(prevValue).reduce(
+    const nextValue = sortScripts(prevValue).reduce(
       (obj, [name, value]) => Object.assign({}, obj, { [name]: value }),
       {}
     );
@@ -271,6 +285,7 @@ const transformations = {
 
 module.exports = transformations;
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 **Notes:** Any `package.json` property that is an object **and** does not have a defined transformation will be alphabetically sorted.
@@ -278,6 +293,7 @@ module.exports = transformations;
 Additional transformations or overrides can be passed in:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
+
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
@@ -301,6 +317,7 @@ const options = {
 
 format(pkg, options);
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### `formatter`
@@ -313,6 +330,7 @@ By default, the formatter will try to use [`prettier`](https://github.com/pretti
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/formatter.js) -->
 <!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
+
 ```js
 async function formatter(obj) {
   const content = JSON.stringify(obj, null, 2);
@@ -334,6 +352,7 @@ async function formatter(obj) {
 
 module.exports = formatter;
 ```
+
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
 ### CLI
@@ -344,7 +363,10 @@ The CLI accepts a series of files or globs to be formatted, as well as a set of 
 yarn format-package "**/package.json"
 ```
 
-Options can also be passed as environment variables.
+Options can also be passed as environment variables and are used in the following order of precedence:
+
+1. Command line options
+2. Env vars
 
 ```
 FORMAT_PACKAGE_VERBOSE=true
@@ -364,87 +386,100 @@ You can also see the available options in the terminal by running:
 yarn format-package --help
 ```
 
-## Config
+## Configuration Files
 
-`format-package` supports a custom configuration from:
+`format-package` will search for a valid configuration file in the following order of precedence.
 
-- a path specified with `--config`
-- a config file relative to `process.cwd()`
-- a path from an environment variable `FORMAT_PACKAGE_CONFIG`
+1.  If the option `--config [path | module id]` or a `FORMAT_PACKAGE_CONFIG`
+    environment variable is provided:
 
-### with `--config`
+         a. check if the value resolves to a module id, else
+         b. check if value resolves to an existing path
 
-When using `--config` for custom configuration, this can be a module name
-or a file relative to `process.cwd()`.
+    If either `a` or `b` are valid configuration, then use the configuration, else continue searching.
 
+2.  [`format-package.js`](#with-format-packagejs-or-format-packageconfigjs)
+3.  [`format-package.yaml` or `format-package.yml`](#with-format-packageymlyaml-format-packageconfigymlyaml)
+4.  [`format-package.json`](#with-format-packagejson)
+5.  [`format-package.config.js`](#with-format-packagejs-or-format-packageconfigjs)
+6.  [`format-package.config.yaml` or `format-package.config.yml`](#with-format-packageymlyaml-format-packageconfigymlyaml)
+7.  [`format-package`](#with-packagejson) property in `package.json`
+
+If there are no valid configuration, it will use the [default](lib/defaults/index.js).
+
+### Configuration Schema
+
+<!-- AUTO-GENERATED-CONTENT:START (REGION:src=./lib/cli/config-schema.js&region='Joi Schema') -->
+<!-- The below code snippet is automatically added from ./lib/cli/config-schema.js -->
+
+```js
+const JoiConfigSchema = Joi.object({
+  order: Joi.array()
+    .min(0)
+    .unique(),
+  transformations: Joi.object().optional(),
+  formatter: Joi.func().optional(),
+});
 ```
-yarn format-package -c @acme/format-config package.json
-yarn format-package -c ./configs/format-config.js package.json
-yarn format-package -c format-config.js package.json
-```
 
-### with a config file
+<!-- AUTO-GENERATED-CONTENT:END -->
 
-```
-- format-package property in package.json
-- format-package.json, format-package.yaml or format-package.yml
-- format-package.config.js file exporting a JS object
-- format-package.config.yaml or format-package.config.yml file in YAML format
-```
+### Configuration Examples
 
-### with an environment variable `FORMAT_PACKAGE_CONFIG`
-
-```
-FORMAT_PACKAGE_CONFIG=./format-config.js yarn format-package package.json
-```
-
-## Creating a custom configuration
-
-Supported custom configuration formats: JSON, JSON5, JS, and YAML.
+Supported configuration formats: JSON, JSON5, JS, and YAML.
 
 ### with package.json
 
-```
+<!-- AUTO-GENERATED-CONTENT:START (JSONPROP:src=./examples/format-package-property/package.json&prop=format-package) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-property/package.json -->
+
+```json
 {
-    "format-package" : {
-        "order: [
-            "name",
-            "description",
-            "..."
-        ]
-    }
+  "order": ["name", "version"]
 }
 ```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ### with format-package.json
 
-```
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-json/format-package.json) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-json/format-package.json -->
+
+```json
 {
-    "order: [
-        "name",
-        "description",
-        "..."
-    ]
+  "order": ["name", "description", "..."]
 }
 ```
 
+<!-- AUTO-GENERATED-CONTENT:END -->
+
 ### with `format-package.js` or `format-package.config.js`
 
-```javascript
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-config-js/format-package.config.js) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-config-js/format-package.config.js -->
+
+```js
 module.exports = {
-  order: ['name', 'description', 'version', '...'],
+  order: ['name', 'description', '...'],
 };
 ```
 
+<!-- AUTO-GENERATED-CONTENT:END -->
+
 ### with format-package.{yml,yaml}, format-package.config.{yml,yaml}
 
-```yaml
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-config-yml/format-package.config.yml) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-config-yml/format-package.config.yml -->
+
+```yml
 order:
   - name
   - description
-  - version,
   - ...
 ```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Integrating
 
@@ -496,17 +531,19 @@ yarn install
 These scripts can be run via `yarn` or `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
-| Script | Description |
-|--------|-------------|
-| `docs` | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
-| `format` | format the application code |
-| `format:pkg` | format package.json |
-| `format:src` | format source content using [prettier](https://github.com/prettier/prettier) |
-| `gamut` | run the full gamut of checks - reset environment, generate docs, format and lint code, and run tests |
-| `lint` | lint the application code |
-| `prepublishOnly` | make sure the package is in good state before publishing |
-| `reset` | reset the `node_modules` dependencies |
-| `test` | run unit tests for the application |
+
+| Script           | Description                                                                                                           |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `docs`           | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
+| `format`         | format the application code                                                                                           |
+| `format:pkg`     | format package.json                                                                                                   |
+| `format:src`     | format source content using [prettier](https://github.com/prettier/prettier)                                          |
+| `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, and run tests                  |
+| `lint`           | lint the application code                                                                                             |
+| `prepublishOnly` | make sure the package is in good state before publishing                                                              |
+| `reset`          | reset the `node_modules` dependencies                                                                                 |
+| `test`           | run unit tests for the application                                                                                    |
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 **Note** - This repo depends on [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged) to automatically format code and update documents. If these commands are not run, code changes will most likely fail.
