@@ -29,7 +29,7 @@
   "scripts": {
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
-    "format:pkg": "./lib/cli/index.js -wp",
+    "format:pkg": "./lib/cli/index.js -w package.json",
     "format:src": "prettier --write \"**/*.{md,js,json}\"",
     "gamut": "npm-run-all reset docs format lint test",
     "lint": "eslint \"**/*.js\"",
@@ -52,10 +52,23 @@
       "git add"
     ]
   },
+  "jest": {
+    "snapshotSerializers": [
+      "./scripts/snapshot-serializers-ansi.js"
+    ],
+    "testMatch": [
+      "**/lib/**/?(*.)+(spec|test).[jt]s?(x)"
+    ]
+  },
   "dependencies": {
+    "@hapi/joi": "^15.1.0",
     "chalk": "^2.4.2",
     "convert-hrtime": "^3.0.0",
+    "cosmiconfig": "^5.2.1",
+    "fs-extra": "^8.1.0",
     "globby": "10.0.1",
+    "json5": "^2.1.0",
+    "resolve-from": "^5.0.0",
     "sort-scripts": "^1.0.1",
     "yargs": "^13.2.4"
   },
@@ -63,6 +76,11 @@
     "prettier": "^1.6.0"
   },
   "devDependencies": {
+    "@types/cosmiconfig": "^5.0.3",
+    "@types/fs-extra": "^8.0.0",
+    "@types/hapi__joi": "^15.0.2",
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.12",
     "codecov": "^3.5.0",
     "cross-env": "^5.2.0",
     "eslint": "^6.0.1",
@@ -71,6 +89,7 @@
     "eslint-plugin-import": "^2.17.2",
     "execa": "2.0.3",
     "glob": "^7.1.4",
+    "has-ansi": "^3.0.0",
     "husky": "3.0.0",
     "install-deps-postmerge": "^1.0.3",
     "jest": "^24.8.0",
@@ -81,6 +100,7 @@
     "markdown-magic-package-scripts": "^1.2.1",
     "markdown-magic-prettier": "^1.0.4",
     "npm-run-all": "^4.1.5",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "strip-ansi": "^5.2.0"
   }
 }

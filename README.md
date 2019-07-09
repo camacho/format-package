@@ -24,6 +24,13 @@ yarn add -D format-package prettier@^1.6.0
   - [`transformations`](#transformations)
   - [`formatter`](#formatter)
   - [CLI](#cli)
+- [Configuration Files](#configuration-files)
+  - [Configuration Schema](#configuration-schema)
+  - [Configuration Examples](#configuration-examples)
+  - [with package.json](#with-packagejson)
+  - [with format-package.json](#with-format-packagejson)
+  - [with `format-package.js` or `format-package.config.js`](#with-format-packagejs-or-format-packageconfigjs)
+  - [with format-package.{yml,yaml}, format-package.config.{yml,yaml}](#with-format-packageymlyaml-format-packageconfigymlyaml)
 - [Integrating](#integrating)
 - [Development](#development)
   - [Scripts](#scripts)
@@ -263,9 +270,11 @@ The default transformations map has a `scripts` method that sorts the scripts in
 <!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
 
 ```js
+const sortScripts = require('sort-scripts');
+
 const transformations = {
   scripts(key, prevValue) {
-    const nextValue = require('sort-scripts')(prevValue).reduce(
+    const nextValue = sortScripts(prevValue).reduce(
       (obj, [name, value]) => Object.assign({}, obj, { [name]: value }),
       {}
     );
@@ -354,19 +363,123 @@ The CLI accepts a series of files or globs to be formatted, as well as a set of 
 yarn format-package "**/package.json"
 ```
 
-| **Option** | **Alias** | **Description**                                                                                                                                                                                                               | **Default**                  |
-| ---------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `config`   | `c`       | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). |                              |
-| `write`    | `w`       | Write the output to the location of the found `package.json`                                                                                                                                                                  | **false**                    |
-| `ignore`   | `i`       | Patterns for ignoring matching files                                                                                                                                                                                          | **`['**/node_modules/**']`** |
-| `verbose`  | `v`       | Print the output of the formatting                                                                                                                                                                                            | **false**                    |
-| `help`     | `h`       | Print help menu                                                                                                                                                                                                               |                              |
+Options can also be passed as environment variables and are used in the following order of precedence:
+
+1. Command line options
+2. Env vars
+
+```
+FORMAT_PACKAGE_VERBOSE=true
+```
+
+| **Option** | **Alias** | **ENV**                | **Description**                                                                                                                                                                                                               | **Default**                  |
+| ---------- | --------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `config`   | `c`       | FORMAT_PACKAGE_CONFIG  | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). |                              |
+| `write`    | `w`       | FORMAT_PACKAGE_WRITE   | Write the output to the location of the found `package.json`                                                                                                                                                                  | **false**                    |
+| `ignore`   | `i`       | FORMAT_PACKAGE_IGNORE  | Patterns for ignoring matching files                                                                                                                                                                                          | **`['**/node_modules/**']`** |
+| `verbose`  | `v`       | FORMAT_PACKAGE_VERBOSE | Print the output of the formatting                                                                                                                                                                                            | **false**                    |
+| `help`     | `h`       |                        | Print help menu                                                                                                                                                                                                               |                              |
 
 You can also see the available options in the terminal by running:
 
 ```
 yarn format-package --help
 ```
+
+## Configuration Files
+
+`format-package` will search for a valid configuration file in the following order of precedence.
+
+1.  If the option `--config [path | module id]` or a `FORMAT_PACKAGE_CONFIG`
+    environment variable is provided:
+
+         a. check if the value resolves to a module id, else
+         b. check if value resolves to an existing path
+
+    If either `a` or `b` are valid configuration, then use the configuration, else continue searching.
+
+2.  [`format-package.js`](#with-format-packagejs-or-format-packageconfigjs)
+3.  [`format-package.yaml` or `format-package.yml`](#with-format-packageymlyaml-format-packageconfigymlyaml)
+4.  [`format-package.json`](#with-format-packagejson)
+5.  [`format-package.config.js`](#with-format-packagejs-or-format-packageconfigjs)
+6.  [`format-package.config.yaml` or `format-package.config.yml`](#with-format-packageymlyaml-format-packageconfigymlyaml)
+7.  [`format-package`](#with-packagejson) property in `package.json`
+
+If there are no valid configuration, it will use the [default](lib/defaults/index.js).
+
+### Configuration Schema
+
+<!-- AUTO-GENERATED-CONTENT:START (REGION:src=./lib/cli/config-schema.js&region='Joi Schema') -->
+<!-- The below code snippet is automatically added from ./lib/cli/config-schema.js -->
+
+```js
+const JoiConfigSchema = Joi.object({
+  order: Joi.array()
+    .min(0)
+    .unique(),
+  transformations: Joi.object().optional(),
+  formatter: Joi.func().optional(),
+});
+```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+### Configuration Examples
+
+Supported configuration formats: JSON, JSON5, JS, and YAML.
+
+### with package.json
+
+<!-- AUTO-GENERATED-CONTENT:START (JSONPROP:src=./examples/format-package-property/package.json&prop=format-package) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-property/package.json -->
+
+```json
+{
+  "order": ["name", "version"]
+}
+```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+### with format-package.json
+
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-json/format-package.json) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-json/format-package.json -->
+
+```json
+{
+  "order": ["name", "description", "..."]
+}
+```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+### with `format-package.js` or `format-package.config.js`
+
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-config-js/format-package.config.js) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-config-js/format-package.config.js -->
+
+```js
+module.exports = {
+  order: ['name', 'description', '...'],
+};
+```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
+
+### with format-package.{yml,yaml}, format-package.config.{yml,yaml}
+
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-config-yml/format-package.config.yml) -->
+<!-- The below code snippet is automatically added from ./examples/format-package-config-yml/format-package.config.yml -->
+
+```yml
+order:
+  - name
+  - description
+  - ...
+```
+
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ## Integrating
 

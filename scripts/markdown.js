@@ -10,6 +10,8 @@ const PRETTIER = require('markdown-magic-prettier');
 const ENGINES = require('markdown-magic-engines');
 const INSTALL = require('markdown-magic-install-command');
 
+const { JSONPROP, REGION } = require('./markdown-transformers');
+
 const root = path.resolve(__dirname, '..');
 const globs = [`${root}/**/**.md`, `!${root}/node_modules/**`];
 
@@ -20,6 +22,8 @@ const config = {
     PRETTIER,
     ENGINES,
     INSTALL,
+    REGION,
+    JSONPROP,
   },
 };
 

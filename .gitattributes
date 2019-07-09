@@ -1,0 +1,3 @@
+# Don't merge changes to these generated files, because the result
+# may be invalid.
+yarn.lock                    merge=binary

@@ -1,0 +1,10 @@
+{
+  "name": "format-package-example",
+  "description": "format-package property in package.json",
+  "format-package": {
+    "order": [
+      "name",
+      "version"
+    ]
+  }
+}

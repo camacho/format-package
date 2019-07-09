@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`error logs generic message and exists with 1 when called without error 1`] = `"[41m[37m ERROR [39m[49m Something went wrong!"`;
+exports[`error logs generic message and exists with 1 when called without error 1`] = `" ERROR  Something went wrong!"`;
 
-exports[`error prints message 1`] = `"[41m[37m ERROR [39m[49m Error: Standard message"`;
+exports[`error prints message 1`] = `" ERROR  Error: Standard message"`;
 
-exports[`error prints stderr 1`] = `"[41m[37m ERROR [39m[49m Stderr message"`;
+exports[`error prints stderr 1`] = `" ERROR  Stderr message"`;
 
-exports[`error prints stdout 1`] = `"[41m[37m ERROR [39m[49m Stdout message"`;
+exports[`error prints stdout 1`] = `" ERROR  Stdout message"`;
