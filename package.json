@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
