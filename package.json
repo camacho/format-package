@@ -29,17 +29,17 @@
   "scripts": {
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
-    "format:pkg": "./lib/cli/index.js -w package.json",
-    "format:src": "prettier --write \"**/*.{md,js,json}\"",
+    "format:package": "./lib/cli/index.js -w package.json",
+    "format:source": "prettier --write \"**/*.{md,js,json}\"",
     "gamut": "npm-run-all reset docs format lint test",
     "lint": "eslint \"**/*.js\"",
     "prepublishOnly": "yarn gamut",
-    "reset": "cross-env rimraf node_modules && yarn install",
+    "reset": "rimraf node_modules && yarn install",
     "test": "jest"
   },
   "lint-staged": {
     "**/package.json": [
-      "yarn format:pkg",
+      "yarn format:package",
       "git add"
     ],
     "*.js": [
@@ -82,7 +82,6 @@
     "@types/jest": "^24.0.15",
     "@types/node": "^12.0.12",
     "codecov": "^3.5.0",
-    "cross-env": "^5.2.0",
     "eslint": "^6.0.1",
     "eslint-config-airbnb-base": "13.2.0",
     "eslint-config-prettier": "^6.0.0",

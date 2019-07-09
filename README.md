@@ -193,9 +193,10 @@ The default order is:
   "bin",
   "man",
   "main",
-  "directories",
   "module",
   "browser",
+  "files",
+  "directories",
   "config",
   "publishConfig",
   "scripts",
@@ -435,7 +436,7 @@ Supported configuration formats: JSON, JSON5, JS, and YAML.
 
 ```json
 {
-  "order": ["name", "version"]
+  "order": ["version", "name"]
 }
 ```
 
@@ -536,8 +537,8 @@ These scripts can be run via `yarn` or `npm run`:
 | ---------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `docs`           | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
 | `format`         | format the application code                                                                                           |
-| `format:pkg`     | format package.json                                                                                                   |
-| `format:src`     | format source content using [prettier](https://github.com/prettier/prettier)                                          |
+| `format:package` | `./lib/cli/index.js -w package.json`                                                                                  |
+| `format:source`  | `prettier --write "**/*.{md,js,json}"`                                                                                |
 | `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, and run tests                  |
 | `lint`           | lint the application code                                                                                             |
 | `prepublishOnly` | make sure the package is in good state before publishing                                                              |
