@@ -29,8 +29,9 @@
   "scripts": {
     "docs": "scripts/markdown.js",
     "format": "npm-run-all format:*",
+    "format:docs": "prettier --write '**/*.md'",
     "format:package": "./lib/cli/index.js -w package.json",
-    "format:source": "prettier --write \"**/*.{md,js,json}\"",
+    "format:source": "prettier --write '**/*.{js,json}'",
     "gamut": "npm-run-all reset docs format lint test",
     "lint": "eslint \"**/*.js\"",
     "prepublishOnly": "yarn gamut",
