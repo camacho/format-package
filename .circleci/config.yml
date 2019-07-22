@@ -16,13 +16,16 @@ jobs:
       - checkout
       - restore-cache:
           keys:
-            - 'dependencies-{{ .Branch }}-{{ checksum "package.json" }}'
-            - 'dependencies-{{ .Branch }}-'
-      - run: yarn --no-progress
+            # when lock file changes, use increasingly general patterns to restore cache
+            # https://circleci.com/docs/2.0/caching/
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
+      - run: './scripts/exec-greenkeeper.sh greenkeeper-lockfile-upload'
       - save-cache:
           paths:
             - ./node_modules
-          key: 'dependencies-{{ .Branch }}-{{ checksum "package.json" }}'
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
       - persist_to_workspace:
           root: *working-directory
           paths:
@@ -34,7 +37,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: *working-directory
-      - run: ./scripts/commit-lockfile.sh
+      - run: './scripts/exec-greenkeeper.sh greenkeeper-lockfile-upload'
   format:
     <<: *default-setup
     steps:
@@ -73,9 +76,6 @@ workflows:
       - update-lockfile:
           requires:
             - setup
-          filters:
-            branches:
-              only: /^greenkeeper\/.*/
       - format:
           requires:
             - setup
