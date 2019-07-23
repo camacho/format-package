@@ -2,6 +2,6 @@
   "hooks": {
     "post-merge": "install-deps-postmerge",
     "pre-commit": "lint-staged",
-    "pre-push": "yarn test"
+    "pre-push": "yarn test --coverage"
   }
 }
