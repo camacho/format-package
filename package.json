@@ -88,7 +88,6 @@
     "eslint-plugin-import": "^2.17.2",
     "execa": "2.0.3",
     "glob": "^7.1.4",
-    "greenkeeper-lockfile": "^2.9.2",
     "has-ansi": "^3.0.0",
     "husky": "3.0.1",
     "install-deps-postmerge": "^1.0.3",

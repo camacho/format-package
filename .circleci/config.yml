@@ -21,7 +21,7 @@ jobs:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
-      - run: './scripts/exec-greenkeeper.sh greenkeeper-lockfile-upload'
+      - run: 'npx greenkeeper-lockfile@next greenkeeper-lockfile-upload'
       - save-cache:
           paths:
             - ./node_modules
@@ -37,7 +37,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: *working-directory
-      - run: './scripts/exec-greenkeeper.sh greenkeeper-lockfile-upload'
+      - run: 'npx greenkeeper-lockfile@next greenkeeper-lockfile-upload'
   format:
     <<: *default-setup
     steps:
