@@ -36,6 +36,7 @@ function stageChanges(err, output) {
 
   if (!files.length) return;
 
+  execa.sync('yarn', ['format:docs']);
   execa.sync('git', ['add', ...files]);
 }
 
