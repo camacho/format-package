@@ -48,7 +48,7 @@
     ],
     "*.js": [
       "prettier --write",
-      "./scripts/lint-staged-eslint.sh",
+      "eslint",
       "git add"
     ],
     "*.json": [
