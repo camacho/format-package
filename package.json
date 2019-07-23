@@ -39,9 +39,6 @@
     "test": "jest"
   },
   "lint-staged": {
-    "**/lib/**/*.js": [
-      "./scripts/lint-staged-jest.sh"
-    ],
     "**/package.json": [
       "yarn format:package",
       "git add"
