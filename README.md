@@ -423,8 +423,9 @@ If no configuration is found, then the [default](lib/defaults/index.js) configur
 ```js
 const JoiConfigSchema = Joi.object({
   order: Joi.array()
-    .min(0)
-    .unique(),
+    .min(1)
+    .unique()
+    .optional(),
   transformations: Joi.object().optional(),
   formatter: Joi.func().optional(),
 });
