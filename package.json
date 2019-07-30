@@ -1,6 +1,6 @@
 {
   "name": "format-package",
-  "version": "5.1.0",
+  "version": "5.2.0",
   "description": "Sensible formatting and ordering of package.json",
   "license": "MIT",
   "engines": {
@@ -14,7 +14,10 @@
     "url": "https://github.com/camacho/format-package/issues"
   },
   "homepage": "https://github.com/camacho/format-package#readme",
-  "author": "Patrick <patrick@daftdevelopers.com>",
+  "author": "Patrick Camacho <patrick@daftdevelopers.com>",
+  "contributors": [
+    "Peter Chanthamynavong <peterkc@gmail.com>"
+  ],
   "keywords": [
     "format",
     "order",
@@ -66,7 +69,8 @@
       "./scripts/snapshot-serializers-ansi.js"
     ],
     "testMatch": [
-      "**/lib/**/?(*.)+(spec|test).[jt]s?(x)"
+      "**/lib/**/?(*.)+(spec|test).[jt]s?(x)",
+      "**/__tests__/**/?(*.)+(spec|test).[jt]s?(x)"
     ]
   },
   "dependencies": {
@@ -75,34 +79,36 @@
     "convert-hrtime": "^3.0.0",
     "cosmiconfig": "^5.2.1",
     "fs-extra": "^8.1.0",
-    "globby": "10.0.1",
+    "globby": "^10.0.1",
     "json5": "^2.1.0",
     "resolve-from": "^5.0.0",
     "sort-scripts": "^1.0.1",
-    "yargs": "^13.2.4"
+    "yargs": "^13.3.0"
   },
   "peerDependencies": {
-    "prettier": "^1.6.0"
+    "prettier": "^1.18.2"
   },
   "devDependencies": {
     "@types/cosmiconfig": "^5.0.3",
     "@types/fs-extra": "^8.0.0",
-    "@types/hapi__joi": "^15.0.2",
-    "@types/jest": "^24.0.15",
-    "@types/node": "^12.0.12",
+    "@types/hapi__joi": "^15.0.3",
+    "@types/jest": "^24.0.16",
+    "@types/node": "^12.6.8",
     "codecov": "^3.5.0",
-    "eslint": "^6.0.1",
-    "eslint-config-airbnb-base": "13.2.0",
+    "eslint": "6.1.0",
+    "eslint-config-airbnb": "17.1.1",
+    "eslint-config-airbnb-base": "^13.2.0",
     "eslint-config-prettier": "^6.0.0",
-    "eslint-formatter-pretty": "^2.1.1",
-    "eslint-plugin-import": "^2.17.2",
-    "execa": "2.0.3",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "execa": "^2.0.3",
     "glob": "^7.1.4",
     "has-ansi": "^3.0.0",
-    "husky": "3.0.2",
-    "install-deps-postmerge": "^1.0.3",
+    "husky": "^3.0.2",
+    "install-deps-postmerge": "^1.0.5",
     "jest": "^24.8.0",
-    "lint-staged": "9.2.1",
+    "lint-staged": "^9.2.1",
     "markdown-magic": "^0.1.25",
     "markdown-magic-engines": "^1.0.2",
     "markdown-magic-install-command": "^1.3.1",

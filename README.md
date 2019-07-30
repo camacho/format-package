@@ -5,7 +5,7 @@
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 
 ```sh
-yarn add -D format-package prettier@^1.6.0
+yarn add -D format-package prettier@^1.18.2
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -189,6 +189,7 @@ The default order is:
   "bugs",
   "homepage",
   "author",
+  "contributors",
   "keywords",
   "bin",
   "man",
@@ -197,6 +198,7 @@ The default order is:
   "browser",
   "files",
   "directories",
+  "workspaces",
   "config",
   "publishConfig",
   "scripts",

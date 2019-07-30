@@ -43,7 +43,7 @@ function REGION(content, options, config) {
     code = code.match(pattern);
     code = code[0].replace(pattern, '$2');
   } else {
-    throw new Error(`Region not found: ${region}`);
+    throw new Error(`Region not found: ${region}.`);
   }
 
   // trim leading and trailing spaces/line breaks in code
