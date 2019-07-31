@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Fixtures Formatting basic.json produces an expected output 1`] = `
+exports[`Fixtures Formatting "basic.json" produces an expected output: basic.json 1`] = `
 "{
   \\"name\\": \\"format-package\\",
   \\"description\\": \\"Sensible formatting and ordering of package.json\\",
