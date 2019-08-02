@@ -1,9 +1,12 @@
-const order = require('./order.json');
-const transformations = require('./transformations');
-const formatter = require('./formatter');
+import * as order from './order.json';
+import transformations from './transformations';
+import formatter from './formatter';
 
-module.exports = {
-  order: order.slice(),
-  transformations: Object.assign({}, transformations),
+const orderCopy = order.slice();
+const transformationsCopy = { ...transformations };
+
+export {
   formatter,
+  orderCopy as order,
+  transformationsCopy as transformations,
 };

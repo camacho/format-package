@@ -1,4 +1,4 @@
-const { transformations, order, formatter } = require('./');
+import { transformations, order, formatter } from './';
 
 describe('defaults', () => {
   it('exposes a transformations object', () => {

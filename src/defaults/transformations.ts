@@ -1,9 +1,10 @@
-const sortScripts = require('sort-scripts');
+import * as sortScripts from 'sort-scripts';
+import { Transformations } from '../transform';
 
-const transformations = {
+const transformations: Transformations = {
   scripts(key, prevValue) {
     const nextValue = sortScripts(prevValue).reduce(
-      (obj, [name, value]) => Object.assign({}, obj, { [name]: value }),
+      (obj, [name, value]) => ({ ...obj, [name]: value }),
       {}
     );
 
@@ -11,4 +12,4 @@ const transformations = {
   },
 };
 
-module.exports = transformations;
+export { transformations as default };

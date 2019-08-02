@@ -147,7 +147,7 @@ const searchWithoutConfigPath = async ({
   searchFrom,
 }: {
   searchFrom: string;
-}) => {
+}): Promise<{ [key: string]: any }> => {
   // Configure the explorer with pre-defined properties above
   const explorer = cosmiconfig(configModuleName, {
     packageProp: configModuleName,

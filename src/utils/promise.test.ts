@@ -1,4 +1,4 @@
-const { callbackToPromise } = require('./promise');
+import { callbackToPromise } from './promise';
 
 describe('promise utils', () => {
   let fn;

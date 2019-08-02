@@ -390,6 +390,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/convert-hrtime@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/convert-hrtime/-/convert-hrtime-3.0.2.tgz#83bd94c2337329e89a5d94cb86a7618d63fb8195"
+  integrity sha512-Vp5XAhp2XuzQQF+3vM4o7i8BDovr4Lhcg5hEGa772mrX0HUvDm+NWYn+enO5dBjsIEB+NBEPCn7+A6+lzPkmmQ==
+  dependencies:
+    convert-hrtime "*"
+
 "@types/cosmiconfig@^5.0.3":
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@types/cosmiconfig/-/cosmiconfig-5.0.3.tgz#880644bb155d4038d3b752159684b777b0a159dd"
@@ -500,6 +507,11 @@
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
+
+"@types/prettier@^1.18.1":
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.18.1.tgz#a71897c3860efe1ed4d36162bc6efa79e6e0b237"
+  integrity sha512-68j7wTrTZUInkpYd6PGJOeKkEtDDkQDIyrX/ynY0gV20gOjSq0xcGpvsUrmdhUn+s4eJgOImNtnNmh5rXkq3Vg==
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -1265,7 +1277,7 @@ contains-path@^0.1.0:
   resolved "https://registry.yarnpkg.com/contains-path/-/contains-path-0.1.0.tgz#fe8cf184ff6670b6baef01a9d4861a5cbec4120a"
   integrity sha1-/ozxhP9mcLa67wGp1IYaXL7EEgo=
 
-convert-hrtime@^3.0.0:
+convert-hrtime@*, convert-hrtime@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/convert-hrtime/-/convert-hrtime-3.0.0.tgz#62c7593f5809ca10be8da858a6d2f702bcda00aa"
   integrity sha512-7V+KqSvMiHp8yWDuwfww06XleMWVVB9b9tURBx+G7UTADuo5hYPuowKloz4OzOqbPezxgo+fdQ1522WzPG4OeA==

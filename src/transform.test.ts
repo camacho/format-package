@@ -1,4 +1,4 @@
-const transform = require('./transform');
+import transform from './transform';
 
 describe('transform', () => {
   it('alphabetizes the object if no transformation is provided', () => {

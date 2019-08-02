@@ -1,9 +1,12 @@
+// Make TypeScript treat as commonjs
+export {};
+
 let formatter;
 
 describe('formatter', () => {
   beforeEach(() => {
     jest.resetModules();
-    formatter = require('./formatter');
+    formatter = require('./formatter').default;
   });
 
   describe('with prettier', () => {

@@ -125,12 +125,14 @@
     "prettier": "^1.18.2"
   },
   "devDependencies": {
+    "@types/convert-hrtime": "^3.0.2",
     "@types/cosmiconfig": "^5.0.3",
     "@types/fs-extra": "^8.0.0",
     "@types/globby": "^9.1.0",
     "@types/hapi__joi": "^15.0.3",
     "@types/jest": "^24.0.16",
     "@types/node": "^12.6.9",
+    "@types/prettier": "^1.18.1",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "codecov": "^3.5.0",

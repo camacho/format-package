@@ -11,17 +11,12 @@ import * as config from './config';
 import * as cli from './';
 
 describe('cli', () => {
-  let mockReadJSON;
   let mockConsoleLog;
   let mockConsoleWarn;
 
   beforeAll(() => {
-    let mockConsoleLog = jest
-      .spyOn(console, 'log')
-      .mockImplementation(() => {});
-    let mockConsoleWarn = jest
-      .spyOn(console, 'warn')
-      .mockImplementation(() => {});
+    mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
+    mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
   });
 
   beforeEach(() => {
@@ -42,7 +37,7 @@ describe('cli', () => {
     expect.assertions(1);
 
     const configSpy = jest.spyOn(config, 'search');
-    await cli.execute('--verbose');
+    await cli.execute(['--verbose']);
 
     expect(configSpy).toHaveBeenCalled();
   });
@@ -50,7 +45,7 @@ describe('cli', () => {
   it('writes the contents', async () => {
     expect.assertions(1);
 
-    await cli.execute('--write');
+    await cli.execute(['--write']);
 
     expect(writeFile).toHaveBeenCalled();
   });
@@ -58,7 +53,7 @@ describe('cli', () => {
   it('prints the contents if verbose is set', async () => {
     expect.assertions(1);
 
-    await cli.execute('--verbose --write');
+    await cli.execute(['--verbose', '--write']);
 
     expect(console.log).toHaveBeenCalledTimes(2);
   });
@@ -66,7 +61,7 @@ describe('cli', () => {
   it('catches errors', async () => {
     expect.assertions(2);
 
-    await cli.execute(null);
+    await cli.execute(null as any);
 
     expect(logErrorAndExit).toHaveBeenCalled();
     expect(console.warn).toHaveBeenCalledTimes(1);

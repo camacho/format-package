@@ -1,6 +1,7 @@
 import * as yargs from 'yargs';
 
 type Parsed = {
+  globs: string[];
   files: string[];
   config: string | undefined;
   write: boolean;

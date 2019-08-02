@@ -1,4 +1,4 @@
-const { alphabetize, has } = require('./object');
+import { alphabetize, has } from './object';
 
 describe('object', () => {
   describe('alphabetize', () => {

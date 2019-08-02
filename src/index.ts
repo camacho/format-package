@@ -1,6 +1,7 @@
-const defaults = require('./defaults');
+import * as defaults from './defaults';
+export { defaults };
 
-async function format(pkg, options = {}) {
+export default async function format(pkg, options = {}) {
   const sort = require('./sort');
   const transform = require('./transform');
   const validate = require('./validate');
@@ -26,9 +27,3 @@ async function format(pkg, options = {}) {
 
   return formatter(nextPkg);
 }
-
-format.defaults = defaults;
-
-module.exports = format;
-
-//-

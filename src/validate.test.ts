@@ -1,4 +1,4 @@
-const validate = require('./validate');
+import validate from './validate';
 
 describe('validate', () => {
   let prevPkg;

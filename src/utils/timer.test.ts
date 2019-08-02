@@ -1,4 +1,4 @@
-const Timer = require('./timer');
+import Timer from './timer';
 
 describe('timer util', () => {
   let timer;
