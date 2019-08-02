@@ -1,4 +1,4 @@
-const order = require('./order');
+const order = require('./order.json');
 const transformations = require('./transformations');
 const formatter = require('./formatter');
 

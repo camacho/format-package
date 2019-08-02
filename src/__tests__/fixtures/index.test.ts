@@ -12,7 +12,7 @@ const fixtures = require('glob').sync('*.json', {
   cwd: __dirname,
 });
 
-const { execute } = require('../../lib/cli');
+const { execute } = require('../../cli');
 
 describe('Fixtures', () => {
   const processExit = process.exit;

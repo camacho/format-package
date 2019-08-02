@@ -1,28 +1,38 @@
-const logErrorAndExit = require('./error');
+import logErrorAndExit from './error';
 
 describe('error', () => {
   const processExit = process.exit;
+  let mockConsoleError;
+  let mockProcessExit;
   let error;
 
   beforeEach(() => {
-    jest.spyOn(console, 'error');
-    console.error.mockImplementation(v => v);
+    mockProcessExit = jest.fn();
 
     Object.defineProperty(process, 'exit', {
-      value: jest.fn(),
+      value: mockProcessExit,
     });
 
+    mockConsoleError = jest.spyOn(console, 'error').mockImplementation(v => v);
+  });
+
+  beforeEach(() => {
     error = new Error('Standard message.');
   });
 
   afterEach(() => {
+    mockConsoleError.mockClear();
+    mockProcessExit.mockClear();
+  });
+
+  afterAll(() => {
     Object.defineProperty(process, 'exit', { value: processExit });
-    console.error.mockRestore();
+    mockConsoleError.mockRestore();
   });
 
   it('logs generic message and exists with 1 when called without error', () => {
     logErrorAndExit();
-    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
       `" ERROR  Something went wrong!"`
     );
     expect(process.exit).toHaveBeenCalledWith(1);
@@ -31,7 +41,7 @@ describe('error', () => {
   it('prints stderr', () => {
     error.stderr = 'Stderr message.';
     logErrorAndExit(error);
-    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
       `" ERROR  Stderr message."`
     );
   });
@@ -39,14 +49,14 @@ describe('error', () => {
   it('prints stdout', () => {
     error.stdout = 'Stdout message.';
     logErrorAndExit(error);
-    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
       `" ERROR  Stdout message."`
     );
   });
 
   it('prints message', () => {
     logErrorAndExit(error);
-    expect(console.error.mock.calls[0][0]).toMatchInlineSnapshot(
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
       `" ERROR  Error: Standard message."`
     );
   });

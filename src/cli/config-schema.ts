@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+import * as Joi from '@hapi/joi';
 
 // region Joi Schema
 const JoiConfigSchema = Joi.object({
@@ -11,6 +11,4 @@ const JoiConfigSchema = Joi.object({
 });
 // endregion
 
-module.exports = {
-  JoiConfigSchema,
-};
+export { JoiConfigSchema as default };

@@ -4,28 +4,38 @@ jest.mock('globby', () => () => ['config.json']);
 
 jest.mock('./error');
 
-const fs = require('fs-extra');
+import { readJson, writeFile } from 'fs-extra';
 
-const logErrorAndExit = require('./error');
-const config = require('./config');
-const cli = require('./');
+import logErrorAndExit from './error';
+import * as config from './config';
+import * as cli from './';
 
 describe('cli', () => {
+  let mockReadJSON;
+  let mockConsoleLog;
+  let mockConsoleWarn;
+
   beforeAll(() => {
-    jest.spyOn(console, 'log');
-    jest.spyOn(console, 'warn');
-    console.log.mockImplementation(v => v);
-    console.warn.mockImplementation(v => v);
+    let mockConsoleLog = jest
+      .spyOn(console, 'log')
+      .mockImplementation(() => {});
+    let mockConsoleWarn = jest
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
   });
 
   beforeEach(() => {
-    fs.readJson.mockReturnValue({ name: 'foo' });
-    console.log.mockReset();
-    console.warn.mockReset();
+    (readJson as jest.Mock).mockReturnValue({ name: 'foo' });
+  });
+
+  afterEach(() => {
+    mockConsoleLog.mockReset();
+    mockConsoleWarn.mockReset();
   });
 
   afterAll(() => {
-    console.log.mockRestore();
+    mockConsoleLog.mockRestore();
+    mockConsoleWarn.mockRestore();
   });
 
   it('parses arguments', async () => {
@@ -42,7 +52,7 @@ describe('cli', () => {
 
     await cli.execute('--write');
 
-    expect(fs.writeFile).toHaveBeenCalled();
+    expect(writeFile).toHaveBeenCalled();
   });
 
   it('prints the contents if verbose is set', async () => {

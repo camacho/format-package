@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
-const path = require('path');
+import * as path from 'path';
 
-const fs = require('fs-extra');
-const globby = require('globby');
+import * as fs from 'fs-extra';
+import * as globby from 'globby';
 
-const format = require('../');
-const Timer = require('../utils/timer');
+import * as format from '../';
+import * as Timer from '../utils/timer';
 
-const parser = require('./parse');
-const configSearch = require('./config');
-const error = require('./error');
+import parser from './parse';
+import * as configSearch from './config';
+import logErrorAndExit from './error';
 
-const handleFile = ({ write, verbose }, config) => async filePath => {
+export const handleFile = ({ write, verbose }, config) => async filePath => {
   const timer = new Timer();
   timer.start();
 
-  const prevPkg = await fs.readJson(filePath, 'utf8');
+  const prevPkg = fs.readJsonSync(filePath, { encoding: 'utf8' });
   const nextPkg = await format(prevPkg, config);
 
   if (write) {
@@ -34,7 +34,7 @@ const handleFile = ({ write, verbose }, config) => async filePath => {
   }
 };
 
-async function execute(argv) {
+export async function execute(argv: string[]) {
   try {
     const timer = new Timer();
     timer.start();
@@ -62,14 +62,9 @@ async function execute(argv) {
       }`
     );
   } catch (err) {
-    error(err);
+    logErrorAndExit(err);
   }
 }
 
 /* istanbul ignore next */
 if (require.main === module) execute(process.argv.slice(2));
-
-module.exports = {
-  handleFile,
-  execute,
-};

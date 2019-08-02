@@ -1,35 +1,33 @@
 {
-  "extends": ["airbnb-base", "prettier"],
   "env": {
-    "node": true,
-    "jest": true
+    "node": true
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "."
   },
+  "plugins": ["@typescript-eslint", "jest"],
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:jest/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
   "rules": {
     "global-require": 0,
-    "no-param-reassign": 2,
-    "no-console": 2,
-    "import/no-unresolved": [
-      2,
-      {
-        "commonjs": true,
-        "amd": false
-      }
-    ],
-    "import/no-amd": 2,
     "import/named": 2,
     "import/namespace": 2,
-    "import/no-absolute-path": 2,
-    "import/no-dynamic-require": 2,
-    "import/no-webpack-loader-syntax": 2,
-    "import/no-deprecated": 2,
-    "import/no-mutable-exports": 2,
-    "import/no-duplicates": 2,
     "import/newline-after-import": 2,
-    "import/no-unassigned-import": 2,
+    "import/no-absolute-path": 2,
+    "import/no-amd": 2,
+    "import/no-deprecated": 2,
+    "import/no-duplicates": 2,
+    "import/no-dynamic-require": 2,
     "import/no-extraneous-dependencies": [
       2,
       {
@@ -37,30 +35,46 @@
         "optionalDependencies": true,
         "peerDependencies": true
       }
-    ]
+    ],
+    "import/no-mutable-exports": 2,
+    "import/no-unassigned-import": 2,
+    "import/no-unresolved": [
+      2,
+      {
+        "amd": true,
+        "commonjs": true
+      }
+    ],
+    "import/no-webpack-loader-syntax": 2,
+    "no-console": 2,
+    "no-param-reassign": 2,
+    "@typescript-eslint/no-var-requires": 0
   },
   "overrides": [
     {
-      "files": ["lib/cli/**/**.js"],
+      "files": ["src/cli/**/**.{j,t}s"],
       "rules": {
-        "no-console": 0,
         "import/no-dynamic-require": 0,
-        "import/no-unassigned-import": 0
+        "import/no-unassigned-import": 0,
+        "no-console": 0
       }
     },
     {
-      "files": ["**/**.{spec}.js", "__tests__/**/**.js"],
+      "files": ["**/**.test.js", "**/__tests__/**/**.{j,t}s"],
+      "env": {
+        "jest/globals": true
+      },
       "rules": {
-        "no-console": 0,
         "import/first": 0,
-        "import/no-unassigned-import": 0,
         "import/no-extraneous-dependencies": [
           2,
           {
-            "optionalDependencies": true,
-            "devDependencies": true
+            "devDependencies": true,
+            "optionalDependencies": true
           }
-        ]
+        ],
+        "import/no-unassigned-import": 0,
+        "no-console": 0
       }
     }
   ]
