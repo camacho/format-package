@@ -1,4 +1,13 @@
 {
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
   "env": {
     "node": true
   },
@@ -7,17 +16,6 @@
     "project": "./tsconfig.json",
     "tsconfigRootDir": "."
   },
-  "plugins": ["@typescript-eslint", "jest"],
-  "extends": [
-    "airbnb-base",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "plugin:jest/recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
-  ],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": 0,
     "global-require": 0,
@@ -59,10 +57,9 @@
       }
     },
     {
+      "plugins": ["jest"],
+      "extends": "plugin:jest/recommended",
       "files": ["**/**/**.test.ts", "**/__tests__/**/**.{j,t}s"],
-      "env": {
-        "jest/globals": true
-      },
       "rules": {
         "import/first": 0,
         "import/no-extraneous-dependencies": 0,
