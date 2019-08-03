@@ -56,16 +56,23 @@
     "type-check": "tsc --noEmit",
     "watch": "ts-node-dev --respawn --transpileOnly"
   },
+  "husky": {
+    "hooks": {
+      "post-merge": "install-deps-postmerge",
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test --coverage"
+    }
+  },
   "lint-staged": {
     "**/package.json": [
-      "yarn format:package",
+      "yarn format-package",
       "git add"
     ],
     "*.json": [
       "prettier --write",
       "git add"
     ],
-    "*.{j,t}s": [
+    "*.{js,ts}": [
       "prettier --write",
       "eslint",
       "git add"
@@ -82,6 +89,7 @@
     },
     "globals": {
       "ts-jest": {
+        "allowJS": true,
         "diagnostics": true
       }
     },

@@ -88,7 +88,9 @@ export const loadConfig = async (
 
 export const searchPlaces = ({
   moduleName,
-}: { moduleName?: string } = {}): string[] => {
+}: {
+  moduleName?: string;
+}): string[] => {
   const places: string[] = [];
 
   if (moduleName) {
