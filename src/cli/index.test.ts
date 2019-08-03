@@ -1,11 +1,11 @@
-jest.mock('globby', () => () => ['config.json']);
-jest.mock('./error');
-
 import * as fs from 'fs-extra';
 
 import logErrorAndExit from './error';
 import * as config from './config';
-import * as cli from './';
+import * as cli from '.';
+
+jest.mock('globby', () => () => ['config.json']);
+jest.mock('./error');
 
 describe('cli', () => {
   let mockReadJSONSync;

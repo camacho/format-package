@@ -51,13 +51,12 @@ describe('object', () => {
     it('identifies properties on object, not on prototype', () => {
       expect(has({ foo: 'bar' }, 'foo')).toBeTrue();
 
-      class Foo {
-        constructor(public bar: string) {}
-        foo() {}
-      }
+      const Obj = function() {};
+      Obj.prototype.foo = 'bar';
 
-      const a = new Foo('test');
-      expect(has(a, 'foo')).toBeFalse();
+      const obj = new Obj();
+
+      expect(has(obj, 'foo')).toBeFalse();
     });
   });
 });

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
@@ -20,5 +19,5 @@
     "node_modules",
     "build"
   ],
-  "include": ["src", "node_modules/jest-extended/types/**/*.d.ts"]
+  "include": ["src", "src/**/*.json"]
 }

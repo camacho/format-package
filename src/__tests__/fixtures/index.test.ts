@@ -3,12 +3,12 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as glob from 'globby';
 
-const fixtures = require('glob').sync('*.json', {
+import { execute } from '../../cli';
+
+const fixtures = glob.sync('*.json', {
   absolute: false,
   cwd: __dirname,
 });
-
-const { execute } = require('../../cli');
 
 describe('Fixtures', () => {
   const processExit = process.exit;

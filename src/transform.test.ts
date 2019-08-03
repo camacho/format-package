@@ -22,7 +22,7 @@ describe('transform', () => {
     const key = 'foo';
     const value = 'prev';
     const transformations = {
-      foo: (jest.fn((k: string, value: any) => [
+      foo: (jest.fn((k: string) => [
         k,
         'transformed',
       ]) as any) as Transformation,

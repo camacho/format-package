@@ -19,6 +19,7 @@
     "prettier/@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/explicit-function-return-type": 0,
     "global-require": 0,
     "import/named": 2,
     "import/namespace": 2,
@@ -52,27 +53,19 @@
   },
   "overrides": [
     {
-      "files": ["src/cli/**/**.{j,t}s"],
+      "files": ["src/cli/**/**.ts"],
       "rules": {
-        "import/no-dynamic-require": 0,
-        "import/no-unassigned-import": 0,
         "no-console": 0
       }
     },
     {
-      "files": ["**/**.test.js", "**/__tests__/**/**.{j,t}s"],
+      "files": ["**/**/**.test.ts", "**/__tests__/**/**.{j,t}s"],
       "env": {
         "jest/globals": true
       },
       "rules": {
         "import/first": 0,
-        "import/no-extraneous-dependencies": [
-          2,
-          {
-            "devDependencies": true,
-            "optionalDependencies": true
-          }
-        ],
+        "import/no-extraneous-dependencies": 0,
         "import/no-unassigned-import": 0,
         "no-console": 0
       }

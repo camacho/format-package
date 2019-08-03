@@ -29,14 +29,21 @@
   ],
   "bin": "build/cli/index.js",
   "main": "build/index.js",
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "prebuild": "yarn run clean-build",
     "build": "tsc",
+    "postbuild": "chmod +x ./build/cli/index.js",
     "clean": "npm-run-all clean-build clean-packages",
     "clean-build": "rimraf ./build",
     "clean-packages": "rimraf ./node_modules",
-    "dev": "ts-node-dev --respawn --transpileOnly src/index.ts",
-    "docs": "scripts/markdown.js",
+    "dev": "ts-node-dev --respawn --transpileOnly -- ./src/cli/index.ts",
+    "docs": "ts-node ./scripts/markdown.ts",
     "format": "npm-run-all format-package format-source",
     "format-docs": "prettier --write '**/*.md'",
     "format-package": "ts-node ./src/cli/index.ts -w package.json",
@@ -46,14 +53,9 @@
     "prepublishOnly": "yarn gamut",
     "reset": "yarn run clean && yarn install",
     "test": "jest",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "watch": "ts-node-dev --respawn --transpileOnly"
   },
-  "files": [
-    "build",
-    "README.md",
-    "LICENSE",
-    "CHANGELOG.md"
-  ],
   "lint-staged": {
     "**/package.json": [
       "yarn format:package",
@@ -80,13 +82,9 @@
     },
     "globals": {
       "ts-jest": {
-        "diagnostics": true,
-        "allowJS": true
+        "diagnostics": true
       }
     },
-    "snapshotSerializers": [
-      "./scripts/snapshot-serializers-ansi.js"
-    ],
     "moduleFileExtensions": [
       "ts",
       "js",
@@ -95,6 +93,9 @@
     "setupFilesAfterEnv": [
       "jest-extended",
       "<rootDir>/scripts/jest-setup.ts"
+    ],
+    "snapshotSerializers": [
+      "./scripts/snapshot-serializers-ansi.ts"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/build/",
@@ -133,6 +134,7 @@
     "@types/jest": "^24.0.16",
     "@types/node": "^12.6.9",
     "@types/prettier": "^1.18.1",
+    "@types/strip-ansi": "^5.2.1",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
     "codecov": "^3.5.0",

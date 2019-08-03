@@ -1,4 +1,4 @@
-import order from './order';
+import * as order from './order.json';
 import transformations from './transformations';
 import formatter from './formatter';
 

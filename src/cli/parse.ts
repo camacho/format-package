@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
 
-type Parsed = {
+interface Parsed {
   globs: string[];
   files: string[];
   config: string | undefined;
@@ -9,11 +9,11 @@ type Parsed = {
   ignore: string[];
   _: string[];
   $0: string;
-};
+}
 
 const parser = yargs
-  .command(['format [files..]', '*'], 'Format files', yargs =>
-    yargs.positional('files', {
+  .command(['format [files..]', '*'], 'Format files', commandYargs =>
+    commandYargs.positional('files', {
       default: ['**/package.json'],
       describe: 'Files to be formatted (accepts globs)',
       type: 'string',

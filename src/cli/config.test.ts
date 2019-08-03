@@ -120,6 +120,7 @@ describe('config', () => {
     });
 
     it('should return default config on exception', () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return expect(search({ searchFrom: {} as any })).resolves.toMatchObject({
         filepath: configDefault.filepath,
         error: {

@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as globby from 'globby';
 
-import format from '../';
+import format from '..';
 import Timer from '../utils/timer';
 
 import parser from './parse';

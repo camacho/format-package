@@ -1,4 +1,4 @@
-import { transformations, order, formatter } from './';
+import { transformations, order, formatter } from '.';
 
 describe('defaults', () => {
   it('exposes a transformations object', () => {

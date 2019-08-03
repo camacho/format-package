@@ -10,7 +10,7 @@ import * as defaults from './defaults';
 import sort from './sort';
 import transform from './transform';
 import validate from './validate';
-import format, { defaults as exportedDefaults } from './';
+import format, { defaults as exportedDefaults } from '.';
 
 describe('format', () => {
   beforeEach(() => {

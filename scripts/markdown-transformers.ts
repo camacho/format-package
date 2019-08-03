@@ -1,13 +1,14 @@
-/* eslint-disable import/no-extraneous-dependencies, no-console, no-useless-escape */
-const path = require('path');
+/* eslint-disable no-console, no-useless-escape */
+import * as path from 'path';
 
-const fs = require('fs-extra');
-const JSON5 = require('json5');
+import * as fs from 'fs-extra';
+import * as JSON5 from 'json5';
 
 // stolen from markdown-magic/lib/transforms/code.js
-function REGION(content, options, config) {
+export function REGION(content, options, config) {
   let code;
   let { syntax } = options;
+
   if (!options.src) {
     return false;
   }
@@ -16,18 +17,12 @@ function REGION(content, options, config) {
   const filePath = path.join(fileDir, options.src);
 
   try {
-    code = fs.readFileSync(filePath, 'utf8', (err, contents) => {
-      if (err) {
-        console.log(`FILE NOT FOUND ${filePath}`);
-        console.log(err);
-        // throw err
-      }
-      return contents;
-    });
+    code = fs.readFileSync(filePath, 'utf8');
   } catch (e) {
     console.log(`FILE NOT FOUND ${filePath}`);
     throw e;
   }
+
   if (!syntax) {
     syntax = path.extname(filePath).replace(/^./, '');
   }
@@ -60,9 +55,10 @@ ${code}
 \`\`\``;
 }
 
-function JSONPROP(content, options, config) {
+export function JSONPROP(content, options, config) {
   let code;
   let { syntax } = options;
+
   if (!options.src) {
     return false;
   }
@@ -71,18 +67,12 @@ function JSONPROP(content, options, config) {
   const filePath = path.join(fileDir, options.src);
 
   try {
-    code = fs.readFileSync(filePath, 'utf8', (err, contents) => {
-      if (err) {
-        console.log(`FILE NOT FOUND ${filePath}`);
-        console.log(err);
-        // throw err
-      }
-      return contents;
-    });
+    code = fs.readFileSync(filePath, 'utf8');
   } catch (e) {
     console.log(`FILE NOT FOUND ${filePath}`);
     throw e;
   }
+
   if (!syntax) {
     syntax = path.extname(filePath).replace(/^./, '');
   }
@@ -101,8 +91,3 @@ function JSONPROP(content, options, config) {
 ${code}
 \`\`\``;
 }
-
-module.exports = {
-  JSONPROP,
-  REGION,
-};

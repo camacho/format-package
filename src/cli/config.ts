@@ -7,11 +7,11 @@ import { ValidationError } from '@hapi/joi/lib/errors';
 import * as resolveFrom from 'resolve-from';
 import * as JSON5 from 'json5';
 
-import * as config from '../defaults';
+import * as defaultConfig from '../defaults';
 import JoiConfigSchema from './config-schema';
 
 export const configDefault = {
-  config,
+  config: defaultConfig,
   filepath: require.resolve('../defaults'),
   isDefault: true,
 };
