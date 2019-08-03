@@ -1,4 +1,4 @@
-import * as order from './order.json';
+import order from './order';
 
 describe('default order', () => {
   it('can be loaded', () => {

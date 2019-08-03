@@ -1,4 +1,4 @@
-import transform from './transform';
+import transform, { Transformation } from './transform';
 
 describe('transform', () => {
   it('alphabetizes the object if no transformation is provided', () => {
@@ -22,7 +22,10 @@ describe('transform', () => {
     const key = 'foo';
     const value = 'prev';
     const transformations = {
-      foo: jest.fn(k => [k, 'transformed']),
+      foo: (jest.fn((k: string, value: any) => [
+        k,
+        'transformed',
+      ]) as any) as Transformation,
     };
 
     await expect(transform(key, value, transformations)).resolves

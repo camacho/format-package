@@ -13,7 +13,7 @@ describe('error', () => {
       value: mockProcessExit,
     });
 
-    mockConsoleError = jest.spyOn(console, 'error').mockImplementation(v => v);
+    mockConsoleError = jest.spyOn(console, 'error').mockReturnValue(undefined);
   });
 
   beforeEach(() => {

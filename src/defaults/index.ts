@@ -1,8 +1,8 @@
-import * as order from './order.json';
+import order from './order';
 import transformations from './transformations';
 import formatter from './formatter';
 
-const orderCopy = order.slice();
+const orderCopy = [...order];
 const transformationsCopy = { ...transformations };
 
 export {

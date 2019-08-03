@@ -1,5 +1,5 @@
 // Receives the contents of `package.json` and returns an array of [pkgKey, value]
-function sort(
+export default function sort(
   keys: string[],
   order: string[],
   restKey: string = '...rest'
@@ -27,5 +27,3 @@ function sort(
 
   return orderedKeys;
 }
-
-export { sort as default };

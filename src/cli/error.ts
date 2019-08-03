@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 export type LogError =
   | Error & {
       stderr?: string;
@@ -7,11 +9,10 @@ export type LogError =
   | { stderr?: string; stdout?: string; code?: number };
 
 function formatError(message) {
-  const chalk = require('chalk');
   return [chalk.bgRed.white(' ERROR '), message].join(' ');
 }
 
-function logErrorAndExit(error?: LogError) {
+export default function logErrorAndExit(error?: LogError) {
   if (error) {
     console.error(formatError(error.stderr || error.stdout || error));
     process.exit(error.code || 1);
@@ -21,5 +22,3 @@ function logErrorAndExit(error?: LogError) {
     process.exit(1);
   }
 }
-
-export { logErrorAndExit as default };

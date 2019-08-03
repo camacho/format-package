@@ -16,11 +16,12 @@ export const handleFile = ({ write, verbose }, config) => async filePath => {
   const timer = new Timer();
   timer.start();
 
-  const prevPkg = fs.readJsonSync(filePath, { encoding: 'utf8' });
+  const prevPkg = fs.readJSONSync(filePath, { encoding: 'utf8' });
+
   const nextPkg = await format(prevPkg, config);
 
   if (write) {
-    await fs.writeFile(filePath, nextPkg, { encoding: 'utf8' });
+    fs.writeFileSync(filePath, nextPkg, 'utf8');
   }
 
   const elapsed = timer.end();
@@ -46,6 +47,7 @@ export async function execute(argv: string[]) {
     });
 
     const files = await globby(globs, {
+      cwd: process.cwd(),
       onlyFiles: true,
       ignore,
       absolute: true,

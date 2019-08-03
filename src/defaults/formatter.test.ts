@@ -34,7 +34,9 @@ describe('formatter', () => {
 
   describe('without prettier', () => {
     beforeAll(() => {
-      jest.doMock('prettier', null);
+      // Hack to make prettier not be found when attempting
+      // to dynamically import the dependency
+      jest.doMock('prettier', (false as any) as undefined);
     });
 
     afterAll(() => {

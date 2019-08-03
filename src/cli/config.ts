@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 
 import * as cosmiconfig from 'cosmiconfig';
 import * as Joi from '@hapi/joi';
@@ -7,10 +7,11 @@ import { ValidationError } from '@hapi/joi/lib/errors';
 import * as resolveFrom from 'resolve-from';
 import * as JSON5 from 'json5';
 
+import * as config from '../defaults';
 import JoiConfigSchema from './config-schema';
 
 export const configDefault = {
-  config: require('../defaults'),
+  config,
   filepath: require.resolve('../defaults'),
   isDefault: true,
 };

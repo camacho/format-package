@@ -1,34 +1,42 @@
-jest.mock('fs-extra');
-jest.mock('console');
 jest.mock('globby', () => () => ['config.json']);
-
 jest.mock('./error');
 
-import { readJson, writeFile } from 'fs-extra';
+import * as fs from 'fs-extra';
 
 import logErrorAndExit from './error';
 import * as config from './config';
 import * as cli from './';
 
 describe('cli', () => {
+  let mockReadJSONSync;
+  let mockWriteFileSync;
   let mockConsoleLog;
   let mockConsoleWarn;
 
   beforeAll(() => {
-    mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
-    mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
-  beforeEach(() => {
-    (readJson as jest.Mock).mockReturnValue({ name: 'foo' });
+    mockReadJSONSync = jest
+      .spyOn(fs, 'readJSONSync')
+      .mockReturnValue({ name: 'foo' });
+    mockWriteFileSync = jest
+      .spyOn(fs, 'writeFileSync')
+      .mockReturnValue(undefined);
+    mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue(undefined);
+    mockConsoleWarn = jest.spyOn(console, 'warn').mockReturnValue(undefined);
   });
 
   afterEach(() => {
-    mockConsoleLog.mockReset();
-    mockConsoleWarn.mockReset();
+    mockConsoleLog.mockClear();
+    mockConsoleWarn.mockClear();
   });
 
   afterAll(() => {
+    mockReadJSONSync = jest
+      .spyOn(fs, 'readJSONSync')
+      .mockReturnValue({ name: 'foo' });
+    mockWriteFileSync = jest
+      .spyOn(fs, 'writeFileSync')
+      .mockReturnValue(undefined);
+
     mockConsoleLog.mockRestore();
     mockConsoleWarn.mockRestore();
   });
@@ -47,7 +55,7 @@ describe('cli', () => {
 
     await cli.execute(['--write']);
 
-    expect(writeFile).toHaveBeenCalled();
+    expect(fs.writeFileSync).toHaveBeenCalled();
   });
 
   it('prints the contents if verbose is set', async () => {

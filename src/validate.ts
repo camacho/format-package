@@ -1,9 +1,12 @@
+import { has } from './utils/object';
+
 // Safety check
 //   - every key from previous package.json is in the next package.json
 //   - every key in the next package.json is in the previous package.json
-
-export default function validate(prevPkg, nextPkg): void | never {
-  const { has } = require('./utils/object');
+export default function validate(
+  prevPkg: { [k: string]: any },
+  nextPkg: { [k: string]: any }
+): void | never {
   const prevAccountedFor = Object.keys(prevPkg).every(k => has(nextPkg, k));
   const nextAccountedFor = Object.keys(nextPkg).every(k => has(prevPkg, k));
 

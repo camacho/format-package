@@ -1,3 +1,4 @@
+import 'jest-extended';
 import { alphabetize, has } from './object';
 
 describe('object', () => {
@@ -47,19 +48,16 @@ describe('object', () => {
   });
 
   describe('has', () => {
-    beforeEach(() => {
-      const oldHas = Object.prototype.hasOwnProperty;
-      jest.spyOn(Object.prototype, 'hasOwnProperty');
-      Object.prototype.hasOwnProperty.mockImplementation(oldHas);
-    });
+    it('identifies properties on object, not on prototype', () => {
+      expect(has({ foo: 'bar' }, 'foo')).toBeTrue();
 
-    afterEach(() => {
-      Object.prototype.hasOwnProperty.mockRestore();
-    });
+      class Foo {
+        constructor(public bar: string) {}
+        foo() {}
+      }
 
-    it('uses Object.prototype.hasOwnProperty', () => {
-      expect(has({ foo: 'bar' }, 'foo')).toEqual(true);
-      expect(Object.prototype.hasOwnProperty).toHaveBeenCalledWith('foo');
+      const a = new Foo('test');
+      expect(has(a, 'foo')).toBeFalse();
     });
   });
 });

@@ -1,5 +1,7 @@
+import { alphabetize, has } from './utils/object';
+
 export interface Transformation {
-  (key: string, prevValue: string): [string, string];
+  (key: string, prevValue: any): [string, string];
 }
 export interface Transformations {
   [key: string]: Transformation;
@@ -12,11 +14,9 @@ export interface Transformations {
 // Return a new key and value to be stored
 export default async function transform(
   prevKey: string,
-  prevValue: string,
+  prevValue: any,
   transformations: Transformations = {}
-): Promise<[string, string]> {
-  const { alphabetize, has } = require('./utils/object');
-
+): Promise<[string, any]> {
   let nextKey = prevKey;
   let nextValue = prevValue;
 
