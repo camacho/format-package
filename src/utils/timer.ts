@@ -1,17 +1,18 @@
-module.exports = class Timer {
-  constructor(precision = 0) {
-    this.precision = precision;
-  }
+import * as convertHrtime from 'convert-hrtime';
 
-  start() {
-    this.startTime = process.hrtime();
+type HrtimeResponse = [number, number];
+
+export default class Timer {
+  private startTime: HrtimeResponse | undefined;
+
+  public start(): HrtimeResponse {
+    this.startTime = process.hrtime() as HrtimeResponse;
     return this.startTime;
   }
 
-  end() {
-    const convertHrtime = require('convert-hrtime');
+  public end(): convertHrtime.HRTime {
     const elapsed = convertHrtime(process.hrtime(this.startTime));
     this.startTime = undefined;
     return elapsed;
   }
-};
+}

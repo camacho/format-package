@@ -1,15 +1,18 @@
-const defaults = require('./defaults');
+import * as defaults from './defaults';
+import sort from './sort';
+import transform from './transform';
+import validate from './validate';
 
-async function format(pkg, options = {}) {
-  const sort = require('./sort');
-  const transform = require('./transform');
-  const validate = require('./validate');
+export { defaults };
 
-  const { order, transformations, formatter } = Object.assign(
-    {},
-    defaults,
-    options
-  );
+export default async function format(
+  pkg: { [k: string]: any },
+  options: { [k: string]: any } = {}
+) {
+  const { order, transformations, formatter } = {
+    ...defaults,
+    ...options,
+  };
 
   const sortedKeys = sort(Object.keys(pkg), order);
 
@@ -26,9 +29,3 @@ async function format(pkg, options = {}) {
 
   return formatter(nextPkg);
 }
-
-format.defaults = defaults;
-
-module.exports = format;
-
-//-

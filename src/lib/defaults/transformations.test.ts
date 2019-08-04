@@ -1,7 +1,7 @@
-jest.mock('sort-scripts');
+import * as sortScripts from 'sort-scripts';
+import transformations from './transformations';
 
-const sortScripts = require('sort-scripts');
-const transformations = require('./transformations');
+jest.mock('sort-scripts');
 
 describe('default transformations', () => {
   describe('scripts', () => {

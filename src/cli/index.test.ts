@@ -1,38 +1,51 @@
-jest.mock('fs-extra');
-jest.mock('console');
-jest.mock('globby', () => () => ['config.json']);
+import * as fs from 'fs-extra';
 
+import logErrorAndExit from './error';
+import * as config from './config';
+import * as cli from '.';
+
+jest.mock('globby', () => () => ['config.json']);
 jest.mock('./error');
 
-const fs = require('fs-extra');
-
-const logErrorAndExit = require('./error');
-const config = require('./config');
-const cli = require('./');
-
 describe('cli', () => {
+  let mockReadJSONSync;
+  let mockWriteFileSync;
+  let mockConsoleLog;
+  let mockConsoleWarn;
+
   beforeAll(() => {
-    jest.spyOn(console, 'log');
-    jest.spyOn(console, 'warn');
-    console.log.mockImplementation(v => v);
-    console.warn.mockImplementation(v => v);
+    mockReadJSONSync = jest
+      .spyOn(fs, 'readJSONSync')
+      .mockReturnValue({ name: 'foo' });
+    mockWriteFileSync = jest
+      .spyOn(fs, 'writeFileSync')
+      .mockReturnValue(undefined);
+    mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue(undefined);
+    mockConsoleWarn = jest.spyOn(console, 'warn').mockReturnValue(undefined);
   });
 
-  beforeEach(() => {
-    fs.readJson.mockReturnValue({ name: 'foo' });
-    console.log.mockReset();
-    console.warn.mockReset();
+  afterEach(() => {
+    mockConsoleLog.mockClear();
+    mockConsoleWarn.mockClear();
   });
 
   afterAll(() => {
-    console.log.mockRestore();
+    mockReadJSONSync = jest
+      .spyOn(fs, 'readJSONSync')
+      .mockReturnValue({ name: 'foo' });
+    mockWriteFileSync = jest
+      .spyOn(fs, 'writeFileSync')
+      .mockReturnValue(undefined);
+
+    mockConsoleLog.mockRestore();
+    mockConsoleWarn.mockRestore();
   });
 
   it('parses arguments', async () => {
     expect.assertions(1);
 
     const configSpy = jest.spyOn(config, 'search');
-    await cli.execute('--verbose');
+    await cli.execute(['--verbose']);
 
     expect(configSpy).toHaveBeenCalled();
   });
@@ -40,15 +53,15 @@ describe('cli', () => {
   it('writes the contents', async () => {
     expect.assertions(1);
 
-    await cli.execute('--write');
+    await cli.execute(['--write']);
 
-    expect(fs.writeFile).toHaveBeenCalled();
+    expect(fs.writeFileSync).toHaveBeenCalled();
   });
 
   it('prints the contents if verbose is set', async () => {
     expect.assertions(1);
 
-    await cli.execute('--verbose --write');
+    await cli.execute(['--verbose', '--write']);
 
     expect(console.log).toHaveBeenCalledTimes(2);
   });
@@ -56,7 +69,7 @@ describe('cli', () => {
   it('catches errors', async () => {
     expect.assertions(2);
 
-    await cli.execute(null);
+    await cli.execute(null as any);
 
     expect(logErrorAndExit).toHaveBeenCalled();
     expect(console.warn).toHaveBeenCalledTimes(1);

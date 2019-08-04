@@ -1,43 +1,62 @@
-const parser = require('yargs')('run --help')
-  .command(['format [files..]', '*'], 'Format files', yargs => {
-    yargs.positional('files', {
+import * as yargs from 'yargs';
+
+interface Parsed {
+  globs: string[];
+  files: string[];
+  config: string | undefined;
+  write: boolean;
+  verbose: boolean;
+  ignore: string[];
+  _: string[];
+  $0: string;
+}
+
+const parser = yargs
+  .command(['format [files..]', '*'], 'Format files', commandYargs =>
+    commandYargs.positional('files', {
       default: ['**/package.json'],
       describe: 'Files to be formatted (accepts globs)',
       type: 'string',
       alias: 'globs',
-    });
-  })
+    })
+  )
   .env('FORMAT_PACKAGE')
   .options({
-    c: {
-      alias: 'config',
+    config: {
+      alias: 'c',
       demandOption: false,
       describe: `Location of a config file`,
       type: 'string',
     },
-    w: {
-      alias: 'write',
+    write: {
+      alias: 'w',
       demandOption: false,
       default: false,
       describe: 'Flag to write the output of ordering to the package.json file',
       type: 'boolean',
     },
-    v: {
-      alias: 'verbose',
+    verbose: {
+      alias: 'v',
       demandOption: false,
       default: false,
       describe: 'Flag to make the script print the formatted result',
       type: 'boolean',
     },
-    i: {
-      alias: 'ignore',
+    ignore: {
+      alias: 'i',
       demandOptions: false,
       default: ['**/node_modules/**'],
       describe: 'Patterns to ignore',
       type: 'array',
     },
   })
-  .strict()
-  .help('h');
+  .alias('h', 'help')
+  .help()
+  .strict();
 
-module.exports = parser.parse.bind(parser);
+const parse = (argv: string[]): Parsed => {
+  // Safely cast
+  return parser.parse(argv) as any;
+};
+
+export { parse as default };

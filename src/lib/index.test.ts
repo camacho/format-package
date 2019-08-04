@@ -1,27 +1,26 @@
-jest.mock('./sort', () => jest.fn(keys => keys));
-jest.mock('./transform', () => jest.fn((k, v) => [k, v]));
-jest.mock('./validate');
+const mockSort = jest.fn(keys => keys);
+const mockTransform = jest.fn((k, v) => [k, v]);
+const mockValidate = jest.fn();
 
-const defaults = require('./defaults');
-const sort = require('./sort');
-const transform = require('./transform');
-const validate = require('./validate');
+jest.mock('./sort', () => ({ default: mockSort }));
+jest.mock('./transform', () => ({ default: mockTransform }));
+jest.mock('./validate', () => ({ default: mockValidate }));
 
-const format = require('./');
+import * as defaults from './defaults';
+import sort from './sort';
+import transform from './transform';
+import validate from './validate';
+import format, { defaults as exportedDefaults } from '.';
 
 describe('format', () => {
   beforeEach(() => {
-    sort.mockClear();
-    transform.mockClear();
-    validate.mockClear();
+    mockSort.mockClear();
+    mockTransform.mockClear();
+    mockValidate.mockClear();
   });
 
   it('has defaults', () => {
-    expect(format.defaults).toMatchObject({
-      order: expect.any(Array),
-      transformations: expect.any(Object),
-      formatter: expect.any(Function),
-    });
+    expect(exportedDefaults).toMatchObject(defaults);
   });
 
   it('sorts the package', async () => {

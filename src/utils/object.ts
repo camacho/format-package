@@ -1,7 +1,11 @@
-function alphabetize(obj) {
-  if (typeof obj !== 'object') return obj;
+export function alphabetize(obj: any): { [k: string]: any } {
+  if (typeof obj !== 'object') {
+    return obj;
+  }
 
-  if (Array.isArray(obj)) return obj.map(entry => alphabetize(entry));
+  if (Array.isArray(obj)) {
+    return obj.map(entry => alphabetize(entry));
+  }
 
   return Object.keys(obj)
     .sort()
@@ -12,8 +16,6 @@ function alphabetize(obj) {
     );
 }
 
-function has(obj, key) {
+export function has(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }
-
-module.exports = { alphabetize, has };

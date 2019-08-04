@@ -1,5 +1,9 @@
 // Receives the contents of `package.json` and returns an array of [pkgKey, value]
-function sort(keys, order, restKey = '...rest') {
+export default function sort(
+  keys: string[],
+  order: string[],
+  restKey: string = '...rest'
+): string[] {
   // What keys are in the package.json file but not in the order list?
   const sortedKeys = keys.filter(k => order.indexOf(k) === -1).sort();
 
@@ -23,5 +27,3 @@ function sort(keys, order, restKey = '...rest') {
 
   return orderedKeys;
 }
-
-module.exports = sort;

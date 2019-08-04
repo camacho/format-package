@@ -27,32 +27,56 @@
     "package.json",
     "prettier"
   ],
-  "bin": "lib/cli/index.js",
-  "main": "lib/index.js",
+  "bin": "build/cli/index.js",
+  "main": "build/lib/index.js",
+  "files": [
+    "build",
+    "yarn.lock",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "scripts": {
-    "docs": "scripts/markdown.js",
-    "format": "npm-run-all format:*",
-    "format:docs": "prettier --write '**/*.md'",
-    "format:package": "./lib/cli/index.js -w package.json",
-    "format:source": "prettier --write '**/*.{js,json}'",
-    "gamut": "npm-run-all reset docs format lint test",
-    "lint": "eslint \"**/*.js\"",
+    "prebuild": "yarn run clean-build",
+    "build": "tsc",
+    "postbuild": "chmod +x ./build/cli/index.js",
+    "clean": "npm-run-all clean-build clean-packages",
+    "clean-build": "rimraf ./build",
+    "clean-packages": "rimraf ./node_modules",
+    "dev": "ts-node-dev --respawn --transpileOnly -- ./src/cli/index.ts",
+    "docs": "ts-node ./scripts/markdown.ts",
+    "format": "npm-run-all format-package format-source",
+    "format-docs": "prettier --write '**/*.md'",
+    "format-package": "ts-node ./src/cli/index.ts -w package.json",
+    "format-source": "prettier \"**/**{js,json,ts}\" --write",
+    "gamut": "npm-run-all reset format lint type-check test build start",
+    "lint": "eslint . --ext .ts,.js",
     "prepublishOnly": "yarn gamut",
-    "reset": "rimraf node_modules && yarn install",
-    "test": "jest"
+    "reset": "yarn run clean && yarn install",
+    "start": "node ./build/cli/index.js",
+    "test": "jest",
+    "type-check": "tsc --noEmit",
+    "watch": "ts-node-dev --respawn --transpileOnly"
+  },
+  "husky": {
+    "hooks": {
+      "post-merge": "install-deps-postmerge",
+      "pre-commit": "lint-staged",
+      "pre-push": "yarn test --coverage"
+    }
   },
   "lint-staged": {
     "**/package.json": [
-      "yarn format:package",
-      "git add"
-    ],
-    "*.js": [
-      "prettier --write",
-      "eslint",
+      "yarn format-package",
       "git add"
     ],
     "*.json": [
       "prettier --write",
+      "git add"
+    ],
+    "*.{js,ts}": [
+      "prettier --write",
+      "eslint",
       "git add"
     ]
   },
@@ -65,12 +89,35 @@
         "statements": -10
       }
     },
-    "snapshotSerializers": [
-      "./scripts/snapshot-serializers-ansi.js"
+    "globals": {
+      "ts-jest": {
+        "allowJS": true,
+        "diagnostics": true
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
     ],
-    "testMatch": [
-      "**/lib/**/?(*.)+(spec|test).[jt]s?(x)",
-      "**/__tests__/**/?(*.)+(spec|test).[jt]s?(x)"
+    "setupFilesAfterEnv": [
+      "jest-extended",
+      "<rootDir>/scripts/jest-setup.ts"
+    ],
+    "snapshotSerializers": [
+      "./scripts/snapshot-serializers-ansi.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/",
+      "<rootDir>/node_modules/"
+    ],
+    "transform": {
+      ".ts": "ts-jest"
+    },
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname",
+      "jest-watch-master"
     ]
   },
   "dependencies": {
@@ -93,21 +140,28 @@
     "@types/fs-extra": "^8.0.0",
     "@types/hapi__joi": "^15.0.3",
     "@types/jest": "^24.0.16",
-    "@types/node": "^12.6.8",
+    "@types/node": "^12.6.9",
+    "@types/prettier": "^1.18.1",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
     "codecov": "^3.5.0",
     "eslint": "6.1.0",
     "eslint-config-airbnb": "17.1.1",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.14.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
     "execa": "^2.0.3",
-    "glob": "^7.1.4",
     "has-ansi": "^3.0.0",
     "husky": "^3.0.2",
     "install-deps-postmerge": "^1.0.5",
     "jest": "^24.8.0",
+    "jest-extended": "^0.11.2",
+    "jest-validate": "^24.8.0",
+    "jest-watch-master": "^1.0.0",
+    "jest-watch-typeahead": "^0.3.1",
     "lint-staged": "^9.2.1",
     "markdown-magic": "^0.1.25",
     "markdown-magic-engines": "^1.0.2",
@@ -116,6 +170,10 @@
     "markdown-magic-prettier": "^1.0.4",
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
-    "strip-ansi": "^5.2.0"
+    "strip-ansi": "^5.2.0",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.3.0",
+    "ts-node-dev": "^1.0.0-pre.40",
+    "typescript": "^3.5.3"
   }
 }

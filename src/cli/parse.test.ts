@@ -1,12 +1,12 @@
-const parse = require('./parse');
+import parse from './parse';
 
 describe('parse', () => {
   it('parses positional files', () => {
-    const argv = parse('-v **/package.json');
-
-    expect(argv.write).toBeFalsy();
-    expect(argv.v).toBeTruthy();
-    expect(argv.verbose).toBeTruthy();
-    expect(argv.files[0]).toEqual('**/package.json');
+    expect(parse(['-v', '**/package.json'])).toMatchObject({
+      write: false,
+      ignore: ['**/node_modules/**'],
+      verbose: true,
+      files: ['**/package.json'],
+    });
   });
 });

@@ -1,4 +1,4 @@
-const order = require('./order');
+import * as order from './order.json';
 
 describe('default order', () => {
   it('can be loaded', () => {

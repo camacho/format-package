@@ -1,11 +1,22 @@
+import { alphabetize, has } from '../utils/object';
+
+export interface Transformation {
+  (key: string, prevValue: any): [string, string];
+}
+export interface Transformations {
+  [key: string]: Transformation;
+}
+
 // All transformers receive:
 //   * the key they matched on
 //   * the value in package.json (if any)
 //
 // Return a new key and value to be stored
-async function transform(prevKey, prevValue, transformations = {}) {
-  const { alphabetize, has } = require('./utils/object');
-
+export default async function transform(
+  prevKey: string,
+  prevValue: any,
+  transformations: Transformations = {}
+): Promise<[string, any]> {
   let nextKey = prevKey;
   let nextValue = prevValue;
 
@@ -17,5 +28,3 @@ async function transform(prevKey, prevValue, transformations = {}) {
 
   return [nextKey, nextValue];
 }
-
-module.exports = transform;

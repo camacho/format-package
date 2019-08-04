@@ -1,25 +1,27 @@
-const { resolve } = require('path');
-const { existsSync, readFileSync } = require('fs');
+import { resolve } from 'path';
+import * as fs from 'fs-extra';
 
-const cosmiconfig = require('cosmiconfig');
-const Joi = require('@hapi/joi');
-const { ValidationError } = require('@hapi/joi/lib/errors');
-const resolveFrom = require('resolve-from');
+import * as cosmiconfig from 'cosmiconfig';
+import * as Joi from '@hapi/joi';
+import { ValidationError } from '@hapi/joi/lib/errors';
+import * as resolveFrom from 'resolve-from';
+import * as JSON5 from 'json5';
 
-const JSON5 = require('json5');
+import { defaults } from '../../lib';
+import JoiConfigSchema from './schema';
 
-const { JoiConfigSchema } = require('./config-schema');
-
-const configDefault = {
-  config: require('../defaults'),
-  filepath: require.resolve('../defaults'),
+export const configDefault = {
+  config: defaults,
+  filepath: require.resolve('../../lib/defaults'),
   isDefault: true,
 };
 
-const configValidate = config => {
+export const configValidate = (config?: any) => {
   const result = Joi.validate(config, JoiConfigSchema);
 
-  if (result.error) return result;
+  if (result.error) {
+    return result;
+  }
 
   if (!Array.isArray(config.order)) {
     return {
@@ -30,30 +32,39 @@ const configValidate = config => {
   return result;
 };
 
-const configModuleName = 'format-package';
+export const configModuleName = 'format-package';
 
-const resolveModuleOrPath = ({ configPath, searchFrom }) => {
+export const resolveModuleOrPath = ({
+  configPath,
+  searchFrom,
+}: {
+  configPath?: any;
+  searchFrom?: string;
+}) => {
   if (typeof configPath !== 'string') {
     return undefined;
   }
 
-  // resolve as a node_modules, if undefined default to path.resolve if exists
-  let resolvedPath = resolveFrom.silent(
-    searchFrom || process.cwd(),
-    configPath
-  );
+  let resolvedPath;
 
-  if (typeof resolvedPath === 'undefined') {
+  // resolve as a node_modules, if undefined default to path.resolve if exists
+  if (searchFrom) {
+    resolvedPath = resolveFrom.silent(searchFrom, configPath);
+  }
+
+  if (!resolvedPath) {
     resolvedPath = resolve(configPath);
-    resolvedPath = existsSync(resolvedPath) ? resolvedPath : undefined;
+    resolvedPath = fs.existsSync(resolvedPath) ? resolvedPath : undefined;
   }
 
   return resolvedPath;
 };
 
-const loadJson5 = filepath => {
+export const loadJson5 = (
+  filepath: string
+): Promise<{ [k: string]: string | boolean }> => {
   try {
-    const buf = readFileSync(filepath, 'utf8');
+    const buf = fs.readFileSync(filepath, { encoding: 'utf8' });
     return JSON5.parse(buf);
   } catch (err) {
     err.message = `JSON Error in ${filepath}:\n${err.message}`;
@@ -62,10 +73,12 @@ const loadJson5 = filepath => {
 };
 
 const createCosmiconfigLoader = () => ({
-  '.json': loadJson5,
+  '.json': { sync: loadJson5 },
 });
 
-const loadConfig = configPath => {
+export const loadConfig = async (
+  configPath: string
+): Promise<cosmiconfig.CosmiconfigResult> => {
   const explorer = cosmiconfig(configModuleName, {
     loaders: createCosmiconfigLoader(),
   });
@@ -73,25 +86,44 @@ const loadConfig = configPath => {
   return explorer.load(configPath);
 };
 
-const searchPlaces = ({ moduleName }) =>
-  [
-    moduleName && `${moduleName}.js`,
-    moduleName && `${moduleName}.yaml`,
-    moduleName && `${moduleName}.yml`,
-    moduleName && `${moduleName}.json`,
-    moduleName && `${moduleName}.config.js`,
-    moduleName && `${moduleName}.config.yaml`,
-    moduleName && `${moduleName}.config.yml`,
-    `package.json`,
-  ].filter(Boolean);
+export const searchPlaces = ({
+  moduleName,
+}: {
+  moduleName?: string;
+}): string[] => {
+  const places: string[] = [];
 
-const searchWithConfigPath = async ({ configPath, searchFrom }) => {
+  if (moduleName) {
+    places.push(
+      `${moduleName}.js`,
+      `${moduleName}.yaml`,
+      `${moduleName}.yml`,
+      `${moduleName}.json`,
+      `${moduleName}.config.js`,
+      `${moduleName}.config.yaml`,
+      `${moduleName}.config.yml`
+    );
+  }
+
+  places.push('package.json');
+  return places;
+};
+
+const searchWithConfigPath = async ({
+  configPath,
+  searchFrom,
+}: {
+  configPath?: string;
+  searchFrom: string;
+}) => {
   try {
     // Find the path by looking for a dependency or a local file
     // then load and validate the configuration
     const resolvedPath = resolveModuleOrPath({ configPath, searchFrom });
+
+    // Load and validate the configuration file contents
     const result = await loadConfig(resolvedPath);
-    const { error } = configValidate(result.config, JoiConfigSchema);
+    const { error } = configValidate(result && result.config);
 
     // NOTE: This validation error handling is more strict than when a config
     //       path is not provided, as the intention is clearly expressed
@@ -114,7 +146,11 @@ const searchWithConfigPath = async ({ configPath, searchFrom }) => {
   }
 };
 
-const searchWithoutConfigPath = async ({ searchFrom }) => {
+const searchWithoutConfigPath = async ({
+  searchFrom,
+}: {
+  searchFrom: string;
+}): Promise<{ [key: string]: any }> => {
   // Configure the explorer with pre-defined properties above
   const explorer = cosmiconfig(configModuleName, {
     packageProp: configModuleName,
@@ -130,7 +166,7 @@ const searchWithoutConfigPath = async ({ searchFrom }) => {
     // If configuration is found, validate it and
     // include error in the response
     if (result) {
-      ({ error } = configValidate(result.config, JoiConfigSchema));
+      ({ error } = configValidate(result.config));
       return { ...result, error };
     }
   } catch (e) {
@@ -145,20 +181,18 @@ const searchWithoutConfigPath = async ({ searchFrom }) => {
   };
 };
 
-const search = async ({ configPath, searchFrom } = {}) =>
+export const search = async (
+  {
+    configPath,
+    searchFrom = process.cwd(),
+  }: {
+    configPath?: string;
+    searchFrom?: string;
+  } = { searchFrom: process.cwd() }
+) => {
   // Configuration loading is dependent on whether the
   // config path is given or if it has to be found
-  configPath
+  return configPath
     ? searchWithConfigPath({ configPath, searchFrom })
     : searchWithoutConfigPath({ searchFrom });
-
-module.exports = {
-  configDefault,
-  configModuleName,
-  configValidate,
-  loadConfig,
-  loadJson5,
-  resolveModuleOrPath,
-  search,
-  searchPlaces,
 };

@@ -1,16 +1,13 @@
-#!/usr/bin/env node
+import * as path from 'path';
 
-/* eslint-disable import/no-extraneous-dependencies */
-const path = require('path');
-const execa = require('execa');
+import * as execa from 'execa';
+import * as markdownMagic from 'markdown-magic';
+import * as SCRIPTS from 'markdown-magic-package-scripts';
+import * as PRETTIER from 'markdown-magic-prettier';
+import * as ENGINES from 'markdown-magic-engines';
+import * as INSTALL from 'markdown-magic-install-command';
 
-const markdownMagic = require('markdown-magic');
-const SCRIPTS = require('markdown-magic-package-scripts');
-const PRETTIER = require('markdown-magic-prettier');
-const ENGINES = require('markdown-magic-engines');
-const INSTALL = require('markdown-magic-install-command');
-
-const { JSONPROP, REGION } = require('./markdown-transformers');
+import { JSONPROP, REGION } from './markdown-transformers';
 
 const root = path.resolve(__dirname, '..');
 const globs = [`${root}/**/**.md`, `!${root}/node_modules/**`];
@@ -29,14 +26,21 @@ const config = {
 
 const target = process.argv[2] || globs;
 
-function stageChanges(err, output) {
-  if (err) throw err;
+function stageChanges(
+  error: Error,
+  output: {
+    outputFilePath: string;
+  }[]
+): void {
+  if (error) {
+    throw error;
+  }
 
   const files = output.map(data => data.outputFilePath).filter(file => !!file);
 
   if (!files.length) return;
 
-  execa.sync('yarn', ['format:docs']);
+  execa.sync('yarn', ['format-docs']);
   execa.sync('git', ['add', ...files]);
 }
 

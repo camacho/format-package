@@ -1,9 +1,12 @@
+// Make TypeScript treat as commonjs
+export {};
+
 let formatter;
 
 describe('formatter', () => {
   beforeEach(() => {
     jest.resetModules();
-    formatter = require('./formatter');
+    formatter = require('./formatter').default;
   });
 
   describe('with prettier', () => {
@@ -31,7 +34,9 @@ describe('formatter', () => {
 
   describe('without prettier', () => {
     beforeAll(() => {
-      jest.doMock('prettier', null);
+      // Hack to make prettier not be found when attempting
+      // to dynamically import the dependency
+      jest.doMock('prettier', (false as any) as undefined);
     });
 
     afterAll(() => {

@@ -1,4 +1,4 @@
-const sort = require('./sort');
+import sort from './sort';
 
 describe('sort', () => {
   let order;
