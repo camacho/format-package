@@ -11,7 +11,7 @@
     "target": "es2016"
   },
   "exclude": [
-    "**/__tests__/**",
+    "tests/**",
     "**/__fixtures__/**",
     "**/__mocks__/**",
     "**/**.test.ts",

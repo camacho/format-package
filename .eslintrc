@@ -17,62 +17,62 @@
     "tsconfigRootDir": "."
   },
   "rules": {
-    "@typescript-eslint/explicit-function-return-type": 0,
-    "global-require": 0,
-    "import/named": 2,
-    "import/namespace": 2,
-    "import/newline-after-import": 2,
-    "import/no-absolute-path": 2,
-    "import/no-amd": 2,
-    "import/no-deprecated": 2,
-    "import/no-duplicates": 2,
-    "import/no-dynamic-require": 2,
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "global-require": "off",
+    "import/named": "error",
+    "import/namespace": "error",
+    "import/newline-after-import": "error",
+    "import/no-absolute-path": "error",
+    "import/no-amd": "error",
+    "import/no-deprecated": "error",
+    "import/no-duplicates": "error",
+    "import/no-dynamic-require": "error",
     "import/no-extraneous-dependencies": [
-      2,
+      "error",
       {
         "devDependencies": false,
         "optionalDependencies": true,
         "peerDependencies": true
       }
     ],
-    "import/no-mutable-exports": 2,
-    "import/no-unassigned-import": 2,
+    "import/no-mutable-exports": "error",
+    "import/no-unassigned-import": "error",
     "import/no-unresolved": [
-      2,
+      "error",
       {
         "amd": true,
         "commonjs": true
       }
     ],
-    "import/no-webpack-loader-syntax": 2,
-    "no-console": 2,
-    "no-param-reassign": 2,
-    "@typescript-eslint/no-var-requires": 0
+    "import/no-webpack-loader-syntax": "error",
+    "no-console": "error",
+    "no-param-reassign": "error",
+    "@typescript-eslint/no-var-requires": "off"
   },
   "overrides": [
     {
       "files": ["src/cli/**"],
       "rules": {
-        "no-console": 0
+        "no-console": "off"
       }
     },
     {
       "plugins": ["jest"],
       "extends": "plugin:jest/recommended",
-      "files": ["**/**.test.ts", "**/__tests__/**/**.{j,t}s"],
+      "files": ["**/**.test.ts", "tests/**/**.{j,t}s"],
       "rules": {
-        "import/first": 0,
-        "import/no-extraneous-dependencies": 0,
-        "import/no-unassigned-import": 0,
-        "no-console": 0
+        "import/first": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unassigned-import": "off",
+        "no-console": "off"
       }
     },
     {
       "files": ["scripts/**"],
       "rules": {
-        "import/first": 0,
-        "import/no-extraneous-dependencies": 0,
-        "no-console": 0
+        "import/first": "off",
+        "import/no-extraneous-dependencies": "off",
+        "no-console": "off"
       }
     }
   ]
