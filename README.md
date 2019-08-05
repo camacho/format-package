@@ -104,13 +104,20 @@ const pkg = require('<path-to-package.json>');
 async function formatPackage(pkg) {
   const formattedPkg = await format(pkg, options);
 
-  fs.writeFile('<path-to-package.json>', formattedPkg, err => {
-    if (err) throw err;
+  return new Promise((resolve, reject) => {
+    fs.writeFile('<path-to-package.json>', formattedPkg, error => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      resolve();
+    });
   });
 }
 
-formatPackage(pkg).catch(err => {
-  console.error(err);
+formatPackage(pkg).catch(error => {
+  console.error(error);
   process.exit(1);
 });
 ```
@@ -132,11 +139,13 @@ Options are expected to be passed in as a keyed object:
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
+
 const options = {
   order: [],
   transformations: {},
   formatter: v => v.toString(),
 };
+
 format(pkg, options).then(formattedPkg => console.log(formattedPkg));
 ```
 
@@ -151,6 +160,7 @@ The `format-package` module also exports its defaults to help with configuration
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
+
 const {
   defaults: { order: defaultOrder },
 } = format;
@@ -158,10 +168,16 @@ const {
 // Move `...rest` to the bottom of the default order list
 const restIndex = defaultOrder.indexOf(sort, '...rest');
 let order = [...defaultOrder];
-if (restIndex !== -1) order.splice(restIndex, 1);
+
+if (restIndex !== -1) {
+  order.splice(restIndex, 1);
+}
+
 order.push('...rest');
 
-format(pkg, { order }).then(formattedPkg => console.log(formattedPkg));
+format(pkg, {
+  order,
+}).then(formattedPkg => console.log(formattedPkg));
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -172,8 +188,8 @@ The most meaningful part of this utility is an ordered array of keys that are us
 
 The default order is:
 
-<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/order.json) -->
-<!-- The below code snippet is automatically added from ./lib/defaults/order.json -->
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/order.json) -->
+<!-- The below code snippet is automatically added from ./src/lib/defaults/order.json -->
 
 ```json
 [
@@ -269,16 +285,17 @@ format(pkg, options).then(formattedPkg =>
 
 The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
 
-<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/transformations.js) -->
-<!-- The below code snippet is automatically added from ./lib/defaults/transformations.js -->
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/transformations.ts) -->
+<!-- The below code snippet is automatically added from ./src/lib/defaults/transformations.ts -->
 
-```js
-const sortScripts = require('sort-scripts');
+```ts
+import * as sortScripts from 'sort-scripts';
+import { Transformations } from '../transform';
 
-const transformations = {
+const transformations: Transformations = {
   scripts(key, prevValue) {
     const nextValue = sortScripts(prevValue).reduce(
-      (obj, [name, value]) => Object.assign({}, obj, { [name]: value }),
+      (obj, [name, value]) => ({ ...obj, [name]: value }),
       {}
     );
 
@@ -286,7 +303,7 @@ const transformations = {
   },
 };
 
-module.exports = transformations;
+export { transformations as default };
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
@@ -300,6 +317,7 @@ Additional transformations or overrides can be passed in:
 ```js
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
+
 const options = {
   transformations: {
     // This reverses all the keys in dependencies
@@ -331,29 +349,35 @@ A custom _synchronous_ or _asynchronous_ formatter can be supplied that will pro
 
 By default, the formatter will try to use [`prettier`](https://github.com/prettier/prettier) if it is installed, and will fallback to `JSON.stringify` if the [peer dependency](https://nodejs.org/es/blog/npm/peer-dependencies/) is not found:
 
-<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./lib/defaults/formatter.js) -->
-<!-- The below code snippet is automatically added from ./lib/defaults/formatter.js -->
+<!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/formatter.ts) -->
+<!-- The below code snippet is automatically added from ./src/lib/defaults/formatter.ts -->
 
-```js
-async function formatter(obj) {
+```ts
+async function formatter(obj: any): Promise<string> {
   const content = JSON.stringify(obj, null, 2);
 
+  // Try to use prettier if it can be imported,
+  // otherwise add a new line at the end
   let prettier;
   try {
     prettier = require('prettier');
   } catch (error) {
-    return [content, '\n'].join('');
+    return `${content}\n`;
   }
 
-  const options = (await prettier.resolveConfig(process.cwd())) || {};
+  let config = await prettier.resolveConfig(process.cwd());
+  if (!config) {
+    config = {};
+  }
+
   return prettier.format(content, {
-    ...options,
+    ...config,
     parser: 'json',
     printWidth: 0,
   });
 }
 
-module.exports = formatter;
+export { formatter as default };
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
@@ -362,7 +386,7 @@ module.exports = formatter;
 
 The CLI accepts a series of files or globs to be formatted, as well as a set of options.
 
-```
+```sh
 yarn format-package "**/package.json"
 ```
 
@@ -371,21 +395,21 @@ Options can also be passed as environment variables and are used in the followin
 1. Command line options
 2. Env vars
 
-```
+```sh
 FORMAT_PACKAGE_VERBOSE=true
 ```
 
-| **Option** | **Alias** | **ENV**                | **Description**                                                                                                                                                                                                               | **Default**                  |
-| ---------- | --------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| `config`   | `c`       | FORMAT_PACKAGE_CONFIG  | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](lib/defaults/index.js). |                              |
-| `write`    | `w`       | FORMAT_PACKAGE_WRITE   | Write the output to the location of the found `package.json`                                                                                                                                                                  | **false**                    |
-| `ignore`   | `i`       | FORMAT_PACKAGE_IGNORE  | Patterns for ignoring matching files                                                                                                                                                                                          | **`['**/node_modules/**']`** |
-| `verbose`  | `v`       | FORMAT_PACKAGE_VERBOSE | Print the output of the formatting                                                                                                                                                                                            | **false**                    |
-| `help`     | `h`       |                        | Print help menu                                                                                                                                                                                                               |                              |
+| **Option** | **Alias** | **ENV**                  | **Description**                                                                                                                                                                                                                   | **Default**                  |
+| ---------- | --------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `config`   | `c`       | `FORMAT_PACKAGE_CONFIG`  | Path to a custom configuration to use. This configuration can be JavaScript, `JSON`, or any other format that your configuration of node can `require`. The default configuration can be found [here](src/lib/defaults/index.ts). |                              |
+| `write`    | `w`       | `FORMAT_PACKAGE_WRITE`   | Write the output to the location of the found `package.json`                                                                                                                                                                      | **false**                    |
+| `ignore`   | `i`       | `FORMAT_PACKAGE_IGNORE`  | Patterns for ignoring matching files                                                                                                                                                                                              | **`['**/node_modules/**']`** |
+| `verbose`  | `v`       | `FORMAT_PACKAGE_VERBOSE` | Print the output of the formatting                                                                                                                                                                                                | **false**                    |
+| `help`     | `h`       |                          | Print help menu                                                                                                                                                                                                                   |                              |
 
 You can also see the available options in the terminal by running:
 
-```
+```sh
 yarn format-package --help
 ```
 
@@ -400,7 +424,7 @@ yarn format-package --help
          b. check if value resolves to an existing path
 
     If either `a` or `b` are valid configuration, then use the configuration, else
-    return the [default](lib/defaults/index.js) configuration.
+    return the [default](src/lib/defaults/index.ts) configuration.
 
 If neither a `--config` or a `FORMAT_PACKAGE_CONFIG` environment variable is provided, search for configurations in the following places:
 
@@ -415,14 +439,14 @@ If there are no configuration from the above search places, `format-package` wil
 
 `format-package` will continue searching until arriving at the home directory.
 
-If no configuration is found, then the [default](lib/defaults/index.js) configuration is used.
+If no configuration is found, then the [default](src/lib/defaults/index.ts) configuration is used.
 
 ### Configuration Schema
 
-<!-- AUTO-GENERATED-CONTENT:START (REGION:src=./lib/cli/config-schema.js&region='Joi Schema') -->
-<!-- The below code snippet is automatically added from ./lib/cli/config-schema.js -->
+<!-- AUTO-GENERATED-CONTENT:START (REGION:src=./src/cli/config/schema.ts&region='Joi Schema') -->
+<!-- The below code snippet is automatically added from ./src/cli/config/schema.ts -->
 
-```js
+```ts
 const JoiConfigSchema = Joi.object({
   order: Joi.array()
     .min(1)
@@ -498,20 +522,18 @@ An effective integration of this plugin could look like this:
 
 ```json
 {
-  "scripts": {
-    "format:pkg": "format-package -w",
-    "precommit": "lint-staged",
-    "prepublish": "format:pkg"
-  },
   "lint-staged": {
     "package.json": ["format-package -w", "git add"]
   },
-  "devDependencies": {
-    "lint-staged": "latest",
-    "format-package": "latest"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
-  "optionalDependencies": {
-    "husky": "latest"
+  "devDependencies": {
+    "format-package": "latest",
+    "husky": "latest",
+    "lint-staged": "latest"
   }
 }
 ```
@@ -543,18 +565,28 @@ These scripts can be run via `yarn` or `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
 
-| Script           | Description                                                                                                           |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `docs`           | updates any auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
-| `format`         | format the application code                                                                                           |
-| `format:docs`    | format application documents                                                                                          |
-| `format:package` | format package.json files                                                                                             |
-| `format:source`  | format source content using [prettier](https://github.com/prettier/prettier)                                          |
-| `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, and run tests                  |
-| `lint`           | lint the application code                                                                                             |
-| `prepublishOnly` | make sure the package is in good state before publishing                                                              |
-| `reset`          | reset the `node_modules` dependencies                                                                                 |
-| `test`           | run unit tests for the application                                                                                    |
+| Script           | Description                                                                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `prebuild`       | clean the `build` directory to prevent dangling artifacts                                                                   |
+| `build`          | transpile TypeScript files in the `src` directory into JavaScript files in the `build` directory                            |
+| `postbuild`      | make `build/cli/index.js` file executable                                                                                   |
+| `clean`          | remove `build` and `node_modules` directories                                                                               |
+| `clean-build`    | remove `build` directory                                                                                                    |
+| `clean-packages` | `rimraf ./node_modules`                                                                                                     |
+| `dev`            | run [`ts-node-dev`](https://github.com/whitecolor/ts-node-dev) with `src/cli/index.ts` entrypoint                           |
+| `docs`           | update auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files            |
+| `format`         | format application code                                                                                                     |
+| `format-docs`    | format documentation                                                                                                        |
+| `format-package` | format package.json files                                                                                                   |
+| `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                            |
+| `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build                 |
+| `lint`           | lint the application code                                                                                                   |
+| `prepublishOnly` | make sure the package is in good state before publishing                                                                    |
+| `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                           |
+| `start`          | run the cli from `build` directory                                                                                          |
+| `test`           | run tests for the application                                                                                               |
+| `type-check`     | check source types                                                                                                          |
+| `watch`          | run [`ts-node-dev`](https://github.com/whitecolor/ts-node-dev) with provided entrypoint, e.g. `yarn watch src/cli/index.ts` |
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 

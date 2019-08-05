@@ -21,7 +21,8 @@ jobs:
             - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - yarn-packages-v1-{{ .Branch }}-
             - yarn-packages-v1-
-      - run: 'npx greenkeeper-lockfile@next greenkeeper-lockfile-upload'
+      - run: npx greenkeeper-lockfile@next greenkeeper-lockfile-upload
+      - run: yarn install --no-progress --silent
       - save-cache:
           paths:
             - ./node_modules
@@ -52,6 +53,13 @@ jobs:
       - attach_workspace:
           at: *working-directory
       - run: git diff --name-status --exit-code
+  type-check:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: yarn type-check
   lint:
     <<: *default-setup
     steps:
@@ -67,10 +75,18 @@ jobs:
           at: *working-directory
       - run: yarn test --coverage --runInBand --ci
       - run: yarn codecov
+  build-and-run:
+    <<: *default-setup
+    steps:
+      - checkout
+      - attach_workspace:
+          at: *working-directory
+      - run: yarn build
+      - run: ./build/cli/index.js package.json
 
 workflows:
   version: 2
-  validate:
+  build:
     jobs:
       - setup
       - update-lockfile:
@@ -83,9 +99,20 @@ workflows:
           requires:
             - setup
             - format
+      - type-check:
+          requires:
+            - setup
       - lint:
           requires:
             - setup
+            - type-check
       - test:
           requires:
             - setup
+            - type-check
+      - build-and-run:
+          requires:
+            - setup
+            - type-check
+            - lint
+            - test

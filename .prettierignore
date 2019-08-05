@@ -1,2 +1,4 @@
 package.json
-coverage
+coverage/
+build/
+
