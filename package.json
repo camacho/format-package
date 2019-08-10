@@ -146,7 +146,7 @@
     "@typescript-eslint/parser": "^1.13.0",
     "codecov": "^3.5.0",
     "eslint": "6.1.0",
-    "eslint-config-airbnb": "17.1.1",
+    "eslint-config-airbnb": "18.0.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.18.2",
