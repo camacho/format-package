@@ -51,7 +51,8 @@ describe('object', () => {
     it('identifies properties on object, not on prototype', () => {
       expect(has({ foo: 'bar' }, 'foo')).toBeTrue();
 
-      const Obj = function() {};
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      function Obj() {}
       Obj.prototype.foo = 'bar';
 
       const obj = new Obj();

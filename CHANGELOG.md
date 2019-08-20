@@ -20,4 +20,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Stronger configuration validation by [@peterkc](https://github.com/peterkc).
 - Upgrade dependencies.
-- Fix formatting issues for `README`.
+- Formatting for `README`.

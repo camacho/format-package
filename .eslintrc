@@ -12,10 +12,6 @@
     "node": true
   },
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json",
-    "tsconfigRootDir": "."
-  },
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
     "global-require": "off",
