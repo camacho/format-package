@@ -123,7 +123,7 @@
     "prettier": "^1.18.2"
   },
   "devDependencies": {
-    "@types/cosmiconfig": "^5.0.3",
+    "@types/cosmiconfig": "^6.0.0",
     "@types/fs-extra": "^8.0.0",
     "@types/hapi__joi": "^15.0.3",
     "@types/jest": "^24.0.18",
