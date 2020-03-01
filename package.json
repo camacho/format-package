@@ -117,7 +117,7 @@
     "json5": "^2.1.0",
     "resolve-from": "^5.0.0",
     "sort-scripts": "^1.0.1",
-    "yargs": "^14.0.0"
+    "yargs": "^15.2.0"
   },
   "peerDependencies": {
     "prettier": "^1.18.2"
