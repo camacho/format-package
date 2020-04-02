@@ -109,7 +109,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.1.1",
-    "chalk": "^2.4.2",
+    "chalk": "^4.0.0",
     "convert-hrtime": "^3.0.0",
     "cosmiconfig": "^5.2.1",
     "fs-extra": "^8.1.0",
