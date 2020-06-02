@@ -113,7 +113,7 @@
     "convert-hrtime": "^3.0.0",
     "cosmiconfig": "^5.2.1",
     "fs-extra": "^8.1.0",
-    "globby": "^10.0.1",
+    "globby": "^11.0.1",
     "json5": "^2.1.0",
     "resolve-from": "^5.0.0",
     "sort-scripts": "^1.0.1",
