@@ -36,7 +36,9 @@ function stageChanges(
     throw error;
   }
 
-  const files = output.map(data => data.outputFilePath).filter(file => !!file);
+  const files = output
+    .map((data) => data.outputFilePath)
+    .filter((file) => !!file);
 
   if (!files.length) return;
 

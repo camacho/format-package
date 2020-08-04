@@ -1,6 +1,4 @@
 // Make TypeScript treat as commonjs
-export {};
-
 let formatter;
 
 describe('formatter', () => {

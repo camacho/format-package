@@ -4,7 +4,7 @@ export function alphabetize(obj: any): { [k: string]: any } {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(entry => alphabetize(entry));
+    return obj.map((entry) => alphabetize(entry));
   }
 
   return Object.keys(obj)

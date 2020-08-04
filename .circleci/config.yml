@@ -3,7 +3,7 @@ aliases:
   - &default-setup
     working_directory: *working-directory
     docker:
-      - image: 'circleci/node:8.16'
+      - image: 'circleci/node:10'
   - &default-steps
     - checkout
     - attach_workspace:

@@ -17,7 +17,7 @@ export default async function format(
   const sortedKeys = sort(Object.keys(pkg), order);
 
   const transformedPkg = await Promise.all(
-    sortedKeys.map(key => transform(key, pkg[key], transformations))
+    sortedKeys.map((key) => transform(key, pkg[key], transformations))
   );
 
   const nextPkg = transformedPkg.reduce(

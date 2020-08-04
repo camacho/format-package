@@ -1,4 +1,4 @@
-const mockSort = jest.fn(keys => keys);
+const mockSort = jest.fn((keys) => keys);
 const mockTransform = jest.fn((k, v) => [k, v]);
 const mockValidate = jest.fn();
 
@@ -69,7 +69,7 @@ describe('format', () => {
 
     const pkg = { name: 'test' };
     const options = {
-      formatter: jest.fn(o => JSON.stringify(o)),
+      formatter: jest.fn((o) => JSON.stringify(o)),
       order: ['...rest', 'name'],
       transformations: {
         name: (key, value) => [key, value.toUpperCase()],

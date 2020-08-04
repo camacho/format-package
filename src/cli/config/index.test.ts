@@ -67,28 +67,13 @@ describe('config', () => {
 
   describe('loadJson5', () => {
     it('should return parse JSON5', () => {
-      expect.assertions(1);
       const configPath = `${examplesDir}/format-package-json5/format-package.json`;
-
-      try {
-        const json = loadJson5(configPath);
-        expect(json).toBeDefined();
-      } catch (e) {
-        expect(e).toBeUndefined();
-      }
+      expect(loadJson5(configPath)).toBeDefined();
     });
 
     it('should throw on parse error', () => {
-      expect.assertions(1);
-
       const configPath = `${examplesDir}/format-package-json5/xxx`;
-
-      try {
-        const json = loadJson5(configPath);
-        expect(json).toBeUndefined();
-      } catch (e) {
-        expect(e).toBeDefined();
-      }
+      expect(() => loadJson5(configPath)).toThrow();
     });
   });
 
