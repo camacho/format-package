@@ -7,8 +7,8 @@ export default function validate(
   prevPkg: { [k: string]: any },
   nextPkg: { [k: string]: any }
 ): void | never {
-  const prevAccountedFor = Object.keys(prevPkg).every(k => has(nextPkg, k));
-  const nextAccountedFor = Object.keys(nextPkg).every(k => has(prevPkg, k));
+  const prevAccountedFor = Object.keys(prevPkg).every((k) => has(nextPkg, k));
+  const nextAccountedFor = Object.keys(nextPkg).every((k) => has(prevPkg, k));
 
   if (prevAccountedFor && nextAccountedFor) return;
 

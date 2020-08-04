@@ -12,7 +12,7 @@ interface Parsed {
 }
 
 const parser = yargs
-  .command(['format [files..]', '*'], 'Format files', commandYargs =>
+  .command(['format [files..]', '*'], 'Format files', (commandYargs) =>
     commandYargs.positional('files', {
       default: ['**/package.json'],
       describe: 'Files to be formatted (accepts globs)',

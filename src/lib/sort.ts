@@ -5,11 +5,11 @@ export default function sort(
   restKey = '...rest'
 ): string[] {
   // What keys are in the package.json file but not in the order list?
-  const sortedKeys = keys.filter(k => order.indexOf(k) === -1).sort();
+  const sortedKeys = keys.filter((k) => order.indexOf(k) === -1).sort();
 
   // Only worry about keys that are in the orderList AND in the keys array
   const orderedKeys = order.filter(
-    k => k === '...rest' || keys.indexOf(k) !== -1
+    (k) => k === '...rest' || keys.indexOf(k) !== -1
   );
 
   // We need a place to put the keys that aren't in the ordered list

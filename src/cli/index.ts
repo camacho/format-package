@@ -12,7 +12,7 @@ import parser from './parse';
 import * as configSearch from './config';
 import logErrorAndExit from './error';
 
-export const handleFile = ({ write, verbose }, config) => async filePath => {
+export const handleFile = ({ write, verbose }, config) => async (filePath) => {
   const timer = new Timer();
   timer.start();
 
@@ -54,7 +54,7 @@ export async function execute(argv: string[]) {
     });
 
     await Promise.all(
-      files.map(file => path.resolve(file)).map(handleFile(options, config))
+      files.map((file) => path.resolve(file)).map(handleFile(options, config))
     );
 
     /* istanbul ignore next */

@@ -1,5 +1,5 @@
 {
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["import", "@typescript-eslint", "prettier"],
   "extends": [
     "airbnb-base",
     "plugin:@typescript-eslint/recommended",
@@ -41,6 +41,7 @@
       }
     ],
     "import/no-webpack-loader-syntax": "error",
+    "import/extensions": "off",
     "no-console": "error",
     "no-param-reassign": "error",
     "@typescript-eslint/no-var-requires": "off"

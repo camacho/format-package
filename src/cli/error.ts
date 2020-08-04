@@ -1,11 +1,11 @@
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 
 export type LogError =
-  | Error & {
+  | (Error & {
       stderr?: string;
       stdout?: string;
       code?: number;
-    }
+    })
   | { stderr?: string; stdout?: string; code?: number };
 
 function formatError(message) {

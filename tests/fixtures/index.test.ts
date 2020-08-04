@@ -38,7 +38,7 @@ describe('Fixtures', () => {
     mockConsoleError.mockRestore();
   });
 
-  describe.each(fixtures)(`Formatting "%s"`, filename => {
+  describe.each(fixtures)(`Formatting "%s"`, (filename) => {
     const filepath = path.join(__dirname, filename);
     it(`produces an expected output`, async () => {
       expect.assertions(3);
