@@ -7,7 +7,8 @@ export { defaults };
 
 export default async function format(
   pkg: { [k: string]: any },
-  options: { [k: string]: any } = {}
+  options: { [k: string]: any } = {},
+  filePath?: string
 ) {
   const { order, transformations, formatter } = {
     ...defaults,
@@ -27,5 +28,5 @@ export default async function format(
 
   validate(pkg, nextPkg);
 
-  return formatter(nextPkg);
+  return formatter(nextPkg, filePath);
 }

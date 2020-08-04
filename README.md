@@ -5,7 +5,7 @@
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 
 ```sh
-yarn add -D format-package prettier@^1.18.2
+yarn add -D format-package prettier@^2.0.0
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -52,8 +52,8 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 
-- **node**: >=7.6.0
-  <!-- AUTO-GENERATED-CONTENT:END -->
+- **node**: >=10
+<!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
 
@@ -101,11 +101,11 @@ const fs = require('fs');
 const format = require('format-package');
 const pkg = require('<path-to-package.json>');
 
-async function formatPackage(pkg) {
+async function formatPackage(pkg, filePath) {
   const formattedPkg = await format(pkg, options);
 
   return new Promise((resolve, reject) => {
-    fs.writeFile('<path-to-package.json>', formattedPkg, error => {
+    fs.writeFile('<path-to-package.json>', formattedPkg, (error) => {
       if (error) {
         reject(error);
         return;
@@ -116,7 +116,7 @@ async function formatPackage(pkg) {
   });
 }
 
-formatPackage(pkg).catch(error => {
+formatPackage(pkg).catch((error) => {
   console.error(error);
   process.exit(1);
 });
@@ -143,10 +143,10 @@ const pkg = require('<path-to-package.json>');
 const options = {
   order: [],
   transformations: {},
-  formatter: v => v.toString(),
+  formatter: (v) => v.toString(),
 };
 
-format(pkg, options).then(formattedPkg => console.log(formattedPkg));
+format(pkg, options).then((formattedPkg) => console.log(formattedPkg));
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -177,7 +177,7 @@ order.push('...rest');
 
 format(pkg, {
   order,
-}).then(formattedPkg => console.log(formattedPkg));
+}).then((formattedPkg) => console.log(formattedPkg));
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -254,7 +254,7 @@ const options = {
   ],
 };
 
-format(pkg, options).then(formattedPkg =>
+format(pkg, options).then((formattedPkg) =>
   Object.keys(JSON.parse(formattedPkg))
 );
 /*
@@ -353,7 +353,9 @@ By default, the formatter will try to use [`prettier`](https://github.com/pretti
 <!-- The below code snippet is automatically added from ./src/lib/defaults/formatter.ts -->
 
 ```ts
-async function formatter(obj: any): Promise<string> {
+import * as path from 'path';
+
+async function formatter(obj: any, filePath?: string): Promise<string> {
   const content = JSON.stringify(obj, null, 2);
 
   // Try to use prettier if it can be imported,
@@ -365,7 +367,9 @@ async function formatter(obj: any): Promise<string> {
     return `${content}\n`;
   }
 
-  let config = await prettier.resolveConfig(process.cwd());
+  let config = await prettier.resolveConfig(
+    filePath ? path.dirname(filePath) : process.cwd()
+  );
   if (!config) {
     config = {};
   }
@@ -448,10 +452,7 @@ If no configuration is found, then the [default](src/lib/defaults/index.ts) conf
 
 ```ts
 const JoiConfigSchema = Joi.object({
-  order: Joi.array()
-    .min(1)
-    .unique()
-    .optional(),
+  order: Joi.array().min(1).unique().optional(),
   transformations: Joi.object().optional(),
   formatter: Joi.func().optional(),
 });
