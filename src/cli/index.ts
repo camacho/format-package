@@ -18,7 +18,7 @@ export const handleFile = ({ write, verbose }, config) => async (filePath) => {
 
   const prevPkg = fs.readJSONSync(filePath, { encoding: 'utf8' });
 
-  const nextPkg = await format(prevPkg, config);
+  const nextPkg = await format(prevPkg, config, filePath);
 
   if (write) {
     fs.writeFileSync(filePath, nextPkg, 'utf8');
