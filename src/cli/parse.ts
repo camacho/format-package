@@ -32,7 +32,7 @@ const parser = yargs
     check: {
       demandOption: false,
       default: false,
-      describe: `Return non-0 exit code if formatting might/had changed the file`,
+      describe: `Return a non-0 exit code if formatting has an effect on one or more files`,
       type: 'boolean',
     },
     write: {
