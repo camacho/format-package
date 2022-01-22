@@ -7,7 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["ESNext"],
     "module": "CommonJS",
-    "outDir": "dist",
+    "outDir": "build",
     "resolveJsonModule": true,
     "rootDir": "src",
     "sourceMap": true,
@@ -24,7 +24,7 @@
     "**/**.test.ts/",
     "**/__fixtures__/**",
     "**/__mocks__/**",
-    "dist/"
+    "build/"
   ],
   "include": ["src/", "src/**/*.json"]
 }

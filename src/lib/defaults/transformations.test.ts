@@ -28,16 +28,42 @@ describe('default transformations', () => {
       `);
       expect(mockSortScripts).toHaveBeenCalledWith('value');
     });
+  });
 
-    it('does not sort exports', () => {
+  describe('exports', () => {
+    it('does not sort', () => {
       expect(
-        transformations.exports('exports', {
+        JSON.stringify(
+          transformations.exports('exports', {
+            foo: 'bar',
+            baz: 'qux',
+          }),
+
+          null,
+          2
+        )
+      ).toMatchInlineSnapshot(`
+        "[
+          \\"exports\\",
+          {
+            \\"foo\\": \\"bar\\",
+            \\"baz\\": \\"qux\\"
+          }
+        ]"
+      `);
+    });
+  });
+
+  describe('catch all', () => {
+    it('alphabetizes for keys without a specified transform', () => {
+      expect(
+        transformations['*']('unspecified', {
           foo: 'bar',
           baz: 'qux',
         })
       ).toMatchInlineSnapshot(`
         Array [
-          "exports",
+          "unspecified",
           Object {
             "baz": "qux",
             "foo": "bar",

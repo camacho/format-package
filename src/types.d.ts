@@ -1,15 +1,15 @@
-export type Json =
+export type PackageJson =
   | string
   | number
   | boolean
   | null
-  | Partial<{ [key: string]: Json }>
-  | Json[];
+  | Partial<{ [key: string]: PackageJson }>
+  | PackageJson[];
 
 export type Order = [string, ...string[]];
 
 export interface Transformation {
-  (key: string, prevValue: Json): [typeof key, Json];
+  (key: string, prevValue: PackageJson): [typeof key, PackageJson];
 }
 
 export type Transformations = {
@@ -17,7 +17,7 @@ export type Transformations = {
 };
 
 export interface Formatter {
-  (Json, string?): Promise<string>;
+  (PackageJson, string?): Promise<string>;
 }
 
 export type Config = {

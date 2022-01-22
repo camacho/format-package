@@ -1,17 +1,5 @@
 import * as yargs from 'yargs';
 
-interface Parsed {
-  globs: string[];
-  files: string[];
-  config: string | undefined;
-  write: boolean;
-  verbose: boolean;
-  check: boolean;
-  ignore: string[];
-  _: string[];
-  $0: string;
-}
-
 const parser = yargs
   .command(['format [files..]', '*'], 'Format files', (commandYargs) =>
     commandYargs.positional('files', {

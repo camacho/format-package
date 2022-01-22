@@ -4,5 +4,5 @@
     "rootDir": "."
   },
   "include": ["src", "tests", "scripts", "examples"],
-  "exclude": ["node_modules/", ".github/", ".husky/", ".yarn/", "dist/"]
+  "exclude": ["node_modules/", ".github/", ".husky/", ".yarn/", "build/"]
 }

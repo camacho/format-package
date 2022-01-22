@@ -52,7 +52,7 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 
-- **node**: >=10
+- **node**: >=14.0.0
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
@@ -143,7 +143,7 @@ const pkg = require('<path-to-package.json>');
 const options = {
   order: [],
   transformations: {},
-  formatter: (v) => v.toString(),
+  formatter: (pkg) => pkg.toString(),
 };
 
 format(pkg, options).then((formattedPkg) => console.log(formattedPkg));
@@ -209,6 +209,7 @@ The default order is:
   "keywords",
   "bin",
   "man",
+  "type",
   "main",
   "exports",
   "module",
@@ -290,8 +291,10 @@ The default transformations map has a `scripts` method that sorts the scripts in
 <!-- The below code snippet is automatically added from ./src/lib/defaults/transformations.ts -->
 
 ```ts
-import * as sortScripts from 'sort-scripts';
-import { Transformations } from '../transform';
+import sortScripts from 'sort-scripts';
+
+import { Transformations } from '../../types';
+import { alphabetize } from '../../utils/object';
 
 const transformations: Transformations = {
   scripts(key, prevValue) {
@@ -304,9 +307,10 @@ const transformations: Transformations = {
   },
   // Order of exports keys matters
   // https://github.com/camacho/format-package/issues/116
-  exports(key, prevValue) {
-    return [key, prevValue];
-  },
+  exports: (key, prevValue) => [key, prevValue],
+
+  // Special case for all keys without transforms
+  '*': (key, value) => [key, alphabetize(value)],
 };
 
 export default transformations;
@@ -314,7 +318,9 @@ export default transformations;
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
-**Notes:** Any `package.json` property that is an object **and** does not have a defined transformation will be alphabetically sorted.
+The `*...rest*` value is considered special. It is the function that will be used for `package.json` keys that are not found.
+
+**Note:** Any `package.json` property that is an object **and** does not have a defined transformation will use the `*` transformation function. If a `*` default function is not defined, alphabetize will be used.
 
 Additional transformations or overrides can be passed in:
 
@@ -359,9 +365,11 @@ By default, the formatter will try to use [`prettier`](https://github.com/pretti
 <!-- The below code snippet is automatically added from ./src/lib/defaults/formatter.ts -->
 
 ```ts
-import * as path from 'path';
+import path from 'path';
 
-async function formatter(obj: any, filePath?: string): Promise<string> {
+import { Formatter } from '../../types';
+
+const formatter: Formatter = async (obj, filePath) => {
   const content = JSON.stringify(obj, null, 2);
 
   // Try to use prettier if it can be imported,
@@ -386,7 +394,7 @@ async function formatter(obj: any, filePath?: string): Promise<string> {
     parser: 'json',
     printWidth: 0,
   });
-}
+};
 
 export default formatter;
 ```
@@ -598,6 +606,7 @@ These scripts can be run via `yarn` or `npm run`:
 | `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                            |
 | `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build                 |
 | `lint`           | lint the application code                                                                                                   |
+| `prepare`        | `husky install`                                                                                                             |
 | `prepublishOnly` | make sure the package is in good state before publishing                                                                    |
 | `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                           |
 | `start`          | run the cli from `build` directory                                                                                          |

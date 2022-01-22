@@ -17,10 +17,10 @@ export default async function format(
     ...options,
   };
 
-  const sortedKeys = sort(Object.keys(pkg), order);
+  const nextKeys = sort(Object.keys(pkg), order);
 
   const transformedPkg = await Promise.all(
-    sortedKeys.map((key) => transform(key, pkg[key], transformations))
+    nextKeys.map((key) => transform(key, pkg[key], transformations))
   );
 
   const nextPkg = transformedPkg.reduce(

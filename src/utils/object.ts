@@ -1,8 +1,10 @@
-import { Json } from '../types';
+import { PackageJson } from '../types';
 
 import { isStringArray } from './strings';
 
-function isSortableObject(value: unknown): value is { [k: string]: Json } {
+function isSortableObject(
+  value: unknown
+): value is { [k: string]: PackageJson } {
   if (!value || typeof value !== 'object') {
     return false;
   }
@@ -11,13 +13,13 @@ function isSortableObject(value: unknown): value is { [k: string]: Json } {
   return Object.values(value).every(isAlphabetizable);
 }
 
-export function isAlphabetizable(value: unknown): value is Json {
+export function isAlphabetizable(value: unknown): value is PackageJson {
   return (
     typeof value === 'string' || isStringArray(value) || isSortableObject(value)
   );
 }
 
-export function alphabetize(value: Json): typeof value {
+export function alphabetize(value: PackageJson): typeof value {
   if (typeof value === 'string' || !isAlphabetizable(value)) {
     return value;
   }
