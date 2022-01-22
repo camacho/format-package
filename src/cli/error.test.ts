@@ -30,6 +30,14 @@ describe('error', () => {
     mockConsoleError.mockRestore();
   });
 
+  it('prints out strings as error messages', () => {
+    logErrorAndExit('hello');
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
+      `" ERROR  hello"`
+    );
+    expect(process.exit).toHaveBeenCalledWith(1);
+  });
+
   it('logs generic message and exists with 1 when called without error', () => {
     logErrorAndExit();
     expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(

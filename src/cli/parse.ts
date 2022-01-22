@@ -39,16 +39,24 @@ const parser = yargs
       alias: 'w',
       demandOption: false,
       default: false,
-      describe: 'Flag to write the output of ordering to the package.json file',
+      describe: 'Write the output of ordering to the package.json file',
       type: 'boolean',
     },
     verbose: {
       alias: 'v',
       demandOption: false,
       default: false,
-      describe: 'Flag to make the script print the formatted result',
+      describe: 'Print the formatted file results',
       type: 'boolean',
     },
+    // For future options
+    // quiet: {
+    //   alias: 'q',
+    //   demandOption: false,
+    //   default: false,
+    //   describe: 'Prevent the script from printing any output',
+    //   type: 'boolean',
+    // },
     ignore: {
       alias: 'i',
       demandOptions: false,
@@ -57,13 +65,11 @@ const parser = yargs
       type: 'array',
     },
   })
+  // For future options
+  // .conflicts('verbose', 'quiet')
   .alias('h', 'help')
   .help()
   .strict();
 
-const parse = (argv: string[]): Parsed => {
-  // Safely cast
-  return parser.parse(argv) as any;
-};
-
-export { parse as default };
+const parse = (argv: string[]) => parser.parse(argv);
+export default parse;

@@ -210,6 +210,7 @@ The default order is:
   "bin",
   "man",
   "main",
+  "exports",
   "module",
   "browser",
   "files",
@@ -301,9 +302,14 @@ const transformations: Transformations = {
 
     return [key, nextValue];
   },
+  // Order of exports keys matters
+  // https://github.com/camacho/format-package/issues/116
+  exports(key, prevValue) {
+    return [key, prevValue];
+  },
 };
 
-export { transformations as default };
+export default transformations;
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
@@ -370,6 +376,7 @@ async function formatter(obj: any, filePath?: string): Promise<string> {
   let config = await prettier.resolveConfig(
     filePath ? path.dirname(filePath) : process.cwd()
   );
+
   if (!config) {
     config = {};
   }
@@ -381,7 +388,7 @@ async function formatter(obj: any, filePath?: string): Promise<string> {
   });
 }
 
-export { formatter as default };
+export default formatter;
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
@@ -521,15 +528,24 @@ order:
 
 An effective integration of this plugin could look like this:
 
+`.husky/pre-commit`:
+
+```sh
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx lint-staged
+```
+
+`package.json`:
+
 ```json
 {
-  "lint-staged": {
-    "package.json": ["format-package -w", "git add"]
+  "scripts": {
+    "format:pkg": "format-package -w"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "lint-staged": {
+    "package.json": ["format-package -w"]
   },
   "devDependencies": {
     "format-package": "latest",
@@ -545,7 +561,7 @@ This configuration combines:
 - [husky](https://github.com/typicode/husky) for githook integrations
 - [format-package](https://github.com/camacho/format-package) to format `package.json`
 
-Together, these modules ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
+Together, they ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
 
 ```sh
 yarn format:pkg

@@ -1,5 +1,5 @@
 import 'jest-extended';
-import { alphabetize, has } from './object';
+import { alphabetize } from './object';
 
 describe('object', () => {
   describe('alphabetize', () => {
@@ -44,20 +44,6 @@ describe('object', () => {
           },
         ]
       `);
-    });
-  });
-
-  describe('has', () => {
-    it('identifies properties on object, not on prototype', () => {
-      expect(has({ foo: 'bar' }, 'foo')).toBeTrue();
-
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      function Obj() {}
-      Obj.prototype.foo = 'bar';
-
-      const obj = new Obj();
-
-      expect(has(obj, 'foo')).toBeFalse();
     });
   });
 });

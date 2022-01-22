@@ -1,3 +1,5 @@
+import { Config, Json } from '../types';
+
 import * as defaults from './defaults';
 import sort from './sort';
 import transform from './transform';
@@ -6,8 +8,8 @@ import validate from './validate';
 export { defaults };
 
 export default async function format(
-  pkg: { [k: string]: any },
-  options: { [k: string]: any } = {},
+  pkg: { [k: string]: Json },
+  options: Config = {},
   filePath?: string
 ) {
   const { order, transformations, formatter } = {

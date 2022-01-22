@@ -1,21 +1,51 @@
-export function alphabetize(obj: any): { [k: string]: any } {
-  if (typeof obj !== 'object') {
-    return obj;
+import { Json } from '../types';
+
+import { isStringArray } from './strings';
+
+function isSortableObject(value: unknown): value is { [k: string]: Json } {
+  if (!value || typeof value !== 'object') {
+    return false;
   }
 
-  if (Array.isArray(obj)) {
-    return obj.map((entry) => alphabetize(entry));
-  }
-
-  return Object.keys(obj)
-    .sort()
-    .reduce(
-      (nextObj, key) =>
-        Object.assign(nextObj, { [key]: alphabetize(obj[key]) }),
-      {}
-    );
+  // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
+  return Object.values(value).every(isAlphabetizable);
 }
 
-export function has(obj, key) {
-  return Object.prototype.hasOwnProperty.call(obj, key);
+export function isAlphabetizable(value: unknown): value is Json {
+  return (
+    typeof value === 'string' || isStringArray(value) || isSortableObject(value)
+  );
+}
+
+export function alphabetize(value: Json): typeof value {
+  if (typeof value === 'string' || !isAlphabetizable(value)) {
+    return value;
+  }
+
+  if (isStringArray(value)) {
+    return value
+      .filter((a, b, c) => b === c.indexOf(a))
+      .sort((a: string, b: string) => a.localeCompare(b));
+  }
+
+  if (Array.isArray(value)) {
+    return value
+      .map(alphabetize)
+      .sort((a: string, b: string) => a.localeCompare(b));
+  }
+
+  if (isSortableObject(value)) {
+    return Object.keys(value)
+      .sort((a: string, b: string) => a.localeCompare(b))
+      .reduce(
+        (acc, key: string) => ({
+          ...acc,
+          [key]: alphabetize(value[key]),
+        }),
+
+        {}
+      );
+  }
+
+  return value;
 }

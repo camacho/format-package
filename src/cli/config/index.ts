@@ -1,11 +1,13 @@
 import { resolve } from 'path';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 
-import * as cosmiconfig from 'cosmiconfig';
-import * as Joi from '@hapi/joi';
+import cosmiconfig from 'cosmiconfig';
+import Joi from '@hapi/joi';
 import { ValidationError } from '@hapi/joi/lib/errors';
-import * as resolveFrom from 'resolve-from';
-import * as JSON5 from 'json5';
+import resolveFrom from 'resolve-from';
+import JSON5 from 'json5';
+
+import { Config } from '../../types';
 
 import { defaults } from '../../lib';
 import JoiConfigSchema from './schema';
@@ -16,14 +18,16 @@ export const configDefault = {
   isDefault: true,
 };
 
-export const configValidate = (config?: any) => {
+export const validateConfig = (
+  config: unknown
+): Config & { error?: ValidationError } => {
   const result = Joi.validate(config, JoiConfigSchema);
 
   if (result.error) {
     return result;
   }
 
-  if (!Array.isArray(config.order)) {
+  if (!Array.isArray((config as Config).order)) {
     return {
       error: new ValidationError('Empty order property.'),
     };
@@ -38,7 +42,7 @@ export const resolveModuleOrPath = ({
   configPath,
   searchFrom,
 }: {
-  configPath?: any;
+  configPath?: string;
   searchFrom?: string;
 }) => {
   if (typeof configPath !== 'string') {
@@ -123,7 +127,7 @@ const searchWithConfigPath = async ({
 
     // Load and validate the configuration file contents
     const result = await loadConfig(resolvedPath);
-    const { error } = configValidate(result && result.config);
+    const { error } = validateConfig(result?.config);
 
     // NOTE: This validation error handling is more strict than when a config
     //       path is not provided, as the intention is clearly expressed
@@ -150,7 +154,7 @@ const searchWithoutConfigPath = async ({
   searchFrom,
 }: {
   searchFrom: string;
-}): Promise<{ [key: string]: any }> => {
+}): Promise<{ [key: string]: unknown }> => {
   // Configure the explorer with pre-defined properties above
   const explorer = cosmiconfig(configModuleName, {
     packageProp: configModuleName,
@@ -166,7 +170,7 @@ const searchWithoutConfigPath = async ({
     // If configuration is found, validate it and
     // include error in the response
     if (result) {
-      ({ error } = configValidate(result.config));
+      ({ error } = validateConfig(result.config));
       return { ...result, error };
     }
   } catch (e) {
@@ -189,10 +193,9 @@ export const search = async (
     configPath?: string;
     searchFrom?: string;
   } = { searchFrom: process.cwd() }
-) => {
+) =>
   // Configuration loading is dependent on whether the
   // config path is given or if it has to be found
-  return configPath
+  configPath
     ? searchWithConfigPath({ configPath, searchFrom })
     : searchWithoutConfigPath({ searchFrom });
-};

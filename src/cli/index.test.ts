@@ -1,13 +1,15 @@
-const mockFormat = jest.fn();
-import * as fs from 'fs-extra';
+const mockFormat = jest.fn((value) => value);
+const mockGlobby = jest.fn(() => ['config.json']);
+const mockLogErrorAndExit = jest.fn();
 
-import logErrorAndExit from './error';
+import fs from 'fs-extra';
+
 import * as config from './config';
 import * as cli from '.';
 
-jest.mock('globby', () => () => ['config.json']);
-jest.mock('./error');
-jest.mock('../lib', () => ({ default: mockFormat }));
+jest.mock('globby', () => mockGlobby);
+jest.mock('./error', () => mockLogErrorAndExit);
+jest.mock('../lib', () => mockFormat);
 
 describe('cli', () => {
   let mockReadJSONSync;
@@ -20,30 +22,31 @@ describe('cli', () => {
   });
 
   beforeAll(() => {
-    mockReadJSONSync = jest
-      .spyOn(fs, 'readJSONSync')
-      .mockReturnValue({ name: 'foo' });
-    mockWriteFileSync = jest
-      .spyOn(fs, 'writeFileSync')
-      .mockReturnValue(undefined);
+    mockReadJSONSync = jest.spyOn(fs, 'readJSONSync');
+    mockWriteFileSync = jest.spyOn(fs, 'writeFileSync');
     mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue(undefined);
     mockConsoleWarn = jest.spyOn(console, 'warn').mockReturnValue(undefined);
   });
 
+  beforeEach(() => {
+    mockReadJSONSync.mockImplementation(() => ({
+      name: `foo${mockFormat.mock.calls.length}`,
+    }));
+    mockWriteFileSync.mockReturnValue(undefined);
+    mockFormat.mockImplementation((value) => value);
+  });
+
   afterEach(() => {
-    mockFormat.mockReset();
+    mockFormat.mockClear();
+    mockGlobby.mockClear();
+    mockLogErrorAndExit.mockClear();
+    mockReadJSONSync.mockClear();
+    mockWriteFileSync.mockClear();
     mockConsoleLog.mockClear();
     mockConsoleWarn.mockClear();
   });
 
   afterAll(() => {
-    mockReadJSONSync = jest
-      .spyOn(fs, 'readJSONSync')
-      .mockReturnValue({ name: 'foo' });
-    mockWriteFileSync = jest
-      .spyOn(fs, 'writeFileSync')
-      .mockReturnValue(undefined);
-
     mockConsoleLog.mockRestore();
     mockConsoleWarn.mockRestore();
   });
@@ -70,7 +73,7 @@ describe('cli', () => {
 
     await cli.execute(['--verbose', '--write']);
 
-    expect(console.log).toHaveBeenCalledTimes(2);
+    expect(mockConsoleLog).toHaveBeenCalledTimes(2);
   });
 
   it('catches errors', async () => {
@@ -78,49 +81,50 @@ describe('cli', () => {
 
     await expect(cli.execute(null as any)).resolves.toEqual(2);
 
-    expect(logErrorAndExit).toHaveBeenCalled();
-    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(mockLogErrorAndExit).toHaveBeenCalled();
+    expect(mockConsoleWarn).toHaveBeenCalledTimes(1);
   });
 
   describe('`--check` flag', () => {
-    it('should return `0` exit code if formatting did not changed the file', async () => {
+    it('should return `0` exit code if formatting would not change the file', async () => {
       expect.assertions(1);
-
       await expect(cli.execute(['--check'])).resolves.toEqual(0);
     });
-    it('should return `1` exit code if formatting changed the file', async () => {
-      mockFormat.mockImplementation(() => ({ name: 'bar' }));
-      expect.assertions(1);
 
+    it('should return `1` exit code if formatting changed the file', async () => {
+      expect.assertions(1);
+      mockFormat.mockReturnValueOnce('not the argument value');
       await expect(cli.execute(['--check', '--write'])).resolves.toEqual(1);
     });
-    it('should return `1` exit code if formatting might change the file', async () => {
-      mockFormat.mockImplementation(() => ({ name: 'bar' }));
-      expect.assertions(1);
 
+    it('should return `1` exit code if formatting would change the file', async () => {
+      expect.assertions(1);
+      mockFormat.mockReturnValueOnce('not the argument value');
       await expect(cli.execute(['--check'])).resolves.toEqual(1);
     });
-    it('should not print the contents by default', async () => {
-      expect.assertions(2);
 
+    it('should pluralize the messaging if formatting might change multiple files', async () => {
+      expect.assertions(1);
+      mockGlobby.mockReturnValueOnce(['package1.json', 'package2.json']);
+      mockFormat.mockImplementation(() => `foo${mockFormat.mock.calls.length}`);
       await cli.execute(['--check']);
-
-      expect(console.log).toHaveBeenCalledTimes(2);
-      expect(console.log).not.toHaveBeenNthCalledWith(
-        1,
-        expect.objectContaining({ name: 'foo' })
-      );
+      expect(mockLogErrorAndExit).toHaveBeenCalledWith('2 files different.');
     });
+
+    it('should not print the contents by default', async () => {
+      expect.assertions(1);
+      await cli.execute(['--check']);
+      expect(mockConsoleLog).toHaveBeenCalledTimes(1);
+    });
+
     it('should print the contents if verbose is set', async () => {
-      expect.assertions(2);
-
+      expect.assertions(3);
       await cli.execute(['--verbose', '--check']);
-
-      expect(console.log).toHaveBeenCalledTimes(2);
-      expect(console.log).toHaveBeenNthCalledWith(
-        1,
-        expect.objectContaining({ name: 'foo' })
-      );
+      expect(mockConsoleLog).toHaveBeenCalledTimes(2);
+      expect(mockConsoleLog).toHaveBeenCalledWith({
+        name: 'foo0',
+      });
+      expect(mockConsoleLog).toHaveBeenLastCalledWith('🔍  0 files changed');
     });
   });
 });

@@ -8,4 +8,4 @@ const JoiConfigSchema = Joi.object({
 });
 // endregion
 
-export { JoiConfigSchema as default };
+export default JoiConfigSchema;

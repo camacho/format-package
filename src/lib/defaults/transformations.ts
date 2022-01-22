@@ -1,5 +1,6 @@
-import * as sortScripts from 'sort-scripts';
-import { Transformations } from '../transform';
+import sortScripts from 'sort-scripts';
+
+import { Transformations } from '../../types';
 
 const transformations: Transformations = {
   scripts(key, prevValue) {
@@ -10,6 +11,11 @@ const transformations: Transformations = {
 
     return [key, nextValue];
   },
+  // Order of exports keys matters
+  // https://github.com/camacho/format-package/issues/116
+  exports(key, prevValue) {
+    return [key, prevValue];
+  },
 };
 
-export { transformations as default };
+export default transformations;

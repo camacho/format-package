@@ -1,4 +1,4 @@
-import * as order from './order.json';
+import order from './order.json';
 
 describe('default order', () => {
   it('can be loaded', () => {
@@ -20,7 +20,9 @@ describe('default order', () => {
         "keywords",
         "bin",
         "man",
+        "type",
         "main",
+        "exports",
         "module",
         "browser",
         "files",

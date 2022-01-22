@@ -1,22 +1,30 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "outDir": "build",
+    "lib": ["ESNext"],
+    "module": "CommonJS",
+    "outDir": "dist",
     "resolveJsonModule": true,
     "rootDir": "src",
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es2016"
+    "target": "es2016",
+    "types": ["jest", "node"]
   },
   "exclude": [
-    "tests/**",
+    "node_modules/",
+    ".github/",
+    ".husky/",
+    ".yarn/",
+    "**/tests/",
+    "**/**.test.ts/",
     "**/__fixtures__/**",
     "**/__mocks__/**",
-    "**/**.test.ts",
-    "node_modules",
-    "build"
+    "dist/"
   ],
-  "include": ["src", "src/**/*.json"]
+  "include": ["src/", "src/**/*.json"]
 }

@@ -2,16 +2,23 @@
   "plugins": ["import", "@typescript-eslint", "prettier"],
   "extends": [
     "airbnb-base",
+    "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
-    "prettier",
-    "prettier/@typescript-eslint"
+    "prettier"
   ],
   "env": {
-    "node": true
+    "node": true,
+    "jest": true,
+    "es6": true
   },
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.lint.json",
+    "sourceType": "module",
+    "ecmaVersion": 2018
+  },
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
     "global-require": "off",
@@ -51,6 +58,12 @@
       "files": ["src/cli/**"],
       "rules": {
         "no-console": "off"
+      }
+    },
+    {
+      "files": ["src/utils/**"],
+      "rules": {
+        "import/prefer-default-export": "off"
       }
     },
     {

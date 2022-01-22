@@ -1,29 +1,24 @@
-import { alphabetize, has } from '../utils/object';
+import { Transformations, Json } from '../types';
 
-export interface Transformation {
-  (key: string, prevValue: any): [string, string];
-}
-export interface Transformations {
-  [key: string]: Transformation;
-}
+import { alphabetize } from '../utils/object';
 
 // All transformers receive:
 //   * the key they matched on
-//   * the value in package.json (if any)
+//   * the value in package.Json (if any)
 //
 // Return a new key and value to be stored
 export default async function transform(
   prevKey: string,
-  prevValue: any,
+  prevValue: Json,
   transformations: Transformations = {}
-): Promise<[string, any]> {
+): Promise<[string, Json]> {
   let nextKey = prevKey;
   let nextValue = prevValue;
 
-  if (has(transformations, prevKey)) {
+  if (prevKey in transformations) {
     [nextKey, nextValue] = await transformations[prevKey](prevKey, prevValue);
   } else if (typeof prevValue === 'object') {
-    nextValue = await alphabetize(prevValue);
+    nextValue = alphabetize(prevValue);
   }
 
   return [nextKey, nextValue];

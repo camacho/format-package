@@ -1,18 +1,16 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 
-export type LogError =
-  | (Error & {
-      stderr?: string;
-      stdout?: string;
-      code?: number;
-    })
-  | { stderr?: string; stdout?: string; code?: number };
+import { LogError } from '../types';
 
 function formatError(message) {
   return [chalk.bgRed.white(' ERROR '), message].join(' ');
 }
 
 export default function logErrorAndExit(error?: LogError) {
+  if (typeof error === 'string') {
+    console.error(formatError(error));
+    process.exit(1);
+  }
   if (error) {
     console.error(formatError(error.stderr || error.stdout || error));
     process.exit(error.code || 1);

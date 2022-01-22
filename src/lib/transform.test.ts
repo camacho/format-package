@@ -1,4 +1,6 @@
-import transform, { Transformation } from './transform';
+import { Transformation } from '../types';
+
+import transform from './transform';
 
 describe('transform', () => {
   it('alphabetizes the object if no transformation is provided', () => {
@@ -22,10 +24,10 @@ describe('transform', () => {
     const key = 'foo';
     const value = 'prev';
     const transformations = {
-      foo: (jest.fn((k: string) => [
+      foo: jest.fn((k: string, _) => [
         k,
         'transformed',
-      ]) as any) as Transformation,
+      ]) as jest.MockedFunction<Transformation>,
     };
 
     await expect(transform(key, value, transformations)).resolves
