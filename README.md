@@ -98,7 +98,7 @@ It returns a newly sorted and formatted `package.json` string.
 #!/usr/bin/env node
 
 const fs = require('fs');
-const format = require('format-package');
+const format = require('format-package').default;
 const pkg = require('<path-to-package.json>');
 
 async function formatPackage(pkg, filePath) {
@@ -137,8 +137,11 @@ Options are expected to be passed in as a keyed object:
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
 
 const options = {
   order: [],
@@ -158,8 +161,11 @@ The `format-package` module also exports its defaults to help with configuration
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
 
 const {
   defaults: { order: defaultOrder },
@@ -240,8 +246,12 @@ The `...rest` value is considered special. It marks the location where the remai
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
+
 const options = {
   order: [
     'name',
@@ -327,8 +337,11 @@ Additional transformations or overrides can be passed in:
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
 
 const options = {
   transformations: {
