@@ -12,7 +12,9 @@ import parser from './parse';
 import * as configSearch from './config';
 import logErrorAndExit from './error';
 
-export const handleFile = ({ write, verbose }, config) => async (filePath) => {
+export const handleFile = ({ write, verbose, check }, config) => async (
+  filePath
+) => {
   const timer = new Timer();
   timer.start();
 
@@ -26,13 +28,17 @@ export const handleFile = ({ write, verbose }, config) => async (filePath) => {
 
   const elapsed = timer.end();
 
-  if (verbose || !write) {
+  if (verbose || (!write && !check)) {
     console.log(nextPkg);
   } else {
     console.log(
       `${path.relative('', filePath)} (${elapsed.milliseconds.toFixed(2)}ms)`
     );
   }
+  if (check) {
+    return JSON.stringify(nextPkg) !== JSON.stringify(prevPkg);
+  }
+  return false;
 };
 
 export async function execute(argv: string[]) {
@@ -53,7 +59,7 @@ export async function execute(argv: string[]) {
       absolute: true,
     });
 
-    await Promise.all(
+    const checkChanged = await Promise.all(
       files.map((file) => path.resolve(file)).map(handleFile(options, config))
     );
 
@@ -63,10 +69,17 @@ export async function execute(argv: string[]) {
         isDefault ? '.' : ` with ${filepath}.`
       }`
     );
+
+    if (checkChanged.includes(true)) {
+      return 1;
+    }
+    return 0;
   } catch (err) {
     logErrorAndExit(err);
+    return 2;
   }
 }
 
 /* istanbul ignore next */
-if (require.main === module) execute(process.argv.slice(2));
+if (require.main === module)
+  execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));

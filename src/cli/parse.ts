@@ -6,6 +6,7 @@ interface Parsed {
   config: string | undefined;
   write: boolean;
   verbose: boolean;
+  check: boolean;
   ignore: string[];
   _: string[];
   $0: string;
@@ -27,6 +28,12 @@ const parser = yargs
       demandOption: false,
       describe: `Location of a config file`,
       type: 'string',
+    },
+    check: {
+      demandOption: false,
+      default: false,
+      describe: `Return a non-0 exit code if formatting has an effect on one or more files`,
+      type: 'boolean',
     },
     write: {
       alias: 'w',
