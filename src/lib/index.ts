@@ -1,4 +1,4 @@
-import { Config, Json } from '../types';
+import { Config, PackageJson } from '../types';
 
 import * as defaults from './defaults';
 import sort from './sort';
@@ -8,7 +8,7 @@ import validate from './validate';
 export { defaults };
 
 export default async function format(
-  pkg: { [k: string]: Json },
+  pkg: { [k: string]: PackageJson },
   options: Config = {},
   filePath?: string
 ) {

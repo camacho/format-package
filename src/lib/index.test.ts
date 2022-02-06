@@ -6,7 +6,7 @@ jest.mock('./sort', () => mockSort);
 jest.mock('./transform', () => mockTransform);
 jest.mock('./validate', () => mockValidate);
 
-import { Formatter, Json, Order } from '../types';
+import { Formatter, PackageJson, Order } from '../types';
 
 import * as defaults from './defaults';
 import sort from './sort';
@@ -71,7 +71,7 @@ describe('format', () => {
 
     const pkg = { name: 'test' };
 
-    const mockFormatter = jest.fn(async (o: Json) =>
+    const mockFormatter = jest.fn(async (o: PackageJson) =>
       JSON.stringify(o)
     ) as jest.MockedFunction<Formatter>;
 
