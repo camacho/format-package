@@ -6,7 +6,7 @@ describe('error', () => {
   let mockProcessExit;
   let error;
 
-  beforeEach(() => {
+  beforeAll(() => {
     mockProcessExit = jest.fn();
 
     Object.defineProperty(process, 'exit', {
@@ -72,9 +72,12 @@ describe('error', () => {
   it('exits with the given status or 1', () => {
     logErrorAndExit();
     logErrorAndExit({ code: 2 });
+    logErrorAndExit(error, 3);
 
-    expect(process.exit).toHaveBeenCalledTimes(2);
     expect(process.exit).toHaveBeenCalledWith(1);
     expect(process.exit).toHaveBeenCalledWith(2);
+    expect(process.exit).toHaveBeenCalledTimes(3);
+
+    expect(process.exit).toHaveBeenCalledTimes(3);
   });
 });

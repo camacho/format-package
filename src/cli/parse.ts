@@ -27,7 +27,7 @@ const parser = yargs
       alias: 'w',
       demandOption: false,
       default: false,
-      describe: 'Write the output of ordering to the package.json file',
+      describe: 'Write the output of formatting to the file',
       type: 'boolean',
     },
     verbose: {

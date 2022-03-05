@@ -6,17 +6,25 @@ function formatError(message) {
   return [chalk.bgRed.white(' ERROR '), message].join(' ');
 }
 
-export default function logErrorAndExit(error?: LogError) {
+export default function logErrorAndExit(error?: LogError, exitCode = 1): void {
   if (typeof error === 'string') {
     console.error(formatError(error));
-    process.exit(1);
+    process.exit(exitCode);
   }
+
   if (error) {
-    console.error(formatError(error.stderr || error.stdout || error));
-    process.exit(error.code || 1);
+    console.error(
+      formatError(
+        error.stderr?.trim() ||
+          error.stdout?.trim() ||
+          // error.stack?.split('\n')[2].trim() ||
+          error
+      )
+    );
+    process.exit(error.code ?? exitCode);
   } else {
     // Wrapped in an else statement for testing
     console.error(formatError('Something went wrong!'));
-    process.exit(1);
+    process.exit(exitCode);
   }
 }

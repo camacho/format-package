@@ -295,7 +295,11 @@ format(pkg, options).then((formattedPkg) =>
 
 `transformations` is a map of `package.json` keys and corresponding _synchronous_ or _asynchronous_ functions that take a **key** and **value** and return a **key** and **value** to be written to `package.json`.
 
-The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
+The default transformations map has:
+
+- `scripts` function that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts)
+- `exports` function that ensures the ordering remains the same
+- `*` function that sorts the value alphabetically if possible
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/transformations.ts) -->
 <!-- The below code snippet is automatically added from ./src/lib/defaults/transformations.ts -->
@@ -318,7 +322,6 @@ const transformations: Transformations = {
   // Order of exports keys matters
   // https://github.com/camacho/format-package/issues/116
   exports: (key, prevValue) => [key, prevValue],
-
   // Special case for all keys without transforms
   '*': (key, value) => [key, alphabetize(value)],
 };
@@ -328,7 +331,7 @@ export default transformations;
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
-The `*...rest*` value is considered special. It is the function that will be used for `package.json` keys that are not found.
+The `*` value is considered special. It is the function that will be used for `package.json` keys that are not found.
 
 **Note:** Any `package.json` property that is an object **and** does not have a defined transformation will use the `*` transformation function. If a `*` default function is not defined, alphabetize will be used.
 

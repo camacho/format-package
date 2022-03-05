@@ -38,9 +38,9 @@ export const handleFile =
 
     const elapsed = endTimer();
 
-    // Only console if explicitly declared or content
-    // is not being written and there is no check that
-    // content has changed
+    // Only console if explicitly declared OR
+    // content is not being written and there
+    // is no check that content has changed
     if (verbose || (!write && !check)) {
       console.log(nextPkg);
     } else if (!check) {
@@ -55,10 +55,6 @@ export const handleFile =
   };
 
 export async function execute(argv: string[]): Promise<number> {
-  // Track possible exit code change from the
-  // --check flag being set
-  let exitCode = 0;
-
   try {
     const {
       files: globs,
@@ -100,28 +96,24 @@ export async function execute(argv: string[]): Promise<number> {
     const filesChanged = Boolean(changedFiles.length);
 
     if (options.check) {
-      // If files would change, exit with non-zero code
-      exitCode = filesChanged ? 2 : 0;
+      if (filesChanged) {
+        logErrorAndExit(
+          `${changedFiles.length} ${pluralize(
+            'file',
+            changedFiles.length
+          )} different.`,
+          2
+        );
 
-      // Only care about messaging if not writing files
-      if (!options.write) {
-        if (filesChanged) {
-          logErrorAndExit(
-            `${changedFiles.length} ${pluralize(
-              'file',
-              changedFiles.length
-            )} different.`
-          );
-        } else {
-          // If there are no different files console
-          console.log('🔍  0 files changed');
-        }
-
-        // No need to proceed forward since
-        // there is no information to share
-        // about formatting the files
-        return exitCode;
+        return 2;
       }
+
+      console.log('0 files changed');
+
+      // No need to proceed forward since
+      // there is no information to share
+      // about formatting the files
+      return 0;
     }
 
     /* istanbul ignore next */
@@ -131,10 +123,12 @@ export async function execute(argv: string[]): Promise<number> {
       }`
     );
   } catch (err) {
-    logErrorAndExit(err);
+    console.log('got here');
+    logErrorAndExit(err, 1);
+    return 1;
   }
 
-  return exitCode;
+  return 0;
 }
 
 /* istanbul ignore next */

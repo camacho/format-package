@@ -79,8 +79,7 @@ describe('cli', () => {
   it('catches errors', async () => {
     expect.assertions(3);
 
-    await expect(cli.execute(null as any)).resolves.toEqual(2);
-
+    await expect(cli.execute(null as any)).resolves.toEqual(1);
     expect(mockLogErrorAndExit).toHaveBeenCalled();
     expect(mockConsoleWarn).toHaveBeenCalledTimes(1);
   });
@@ -91,16 +90,16 @@ describe('cli', () => {
       await expect(cli.execute(['--check'])).resolves.toEqual(0);
     });
 
-    it('should return `1` exit code if formatting changed the file', async () => {
+    it('should return `2` exit code if formatting changed the file', async () => {
       expect.assertions(1);
       mockFormat.mockReturnValueOnce('not the argument value');
-      await expect(cli.execute(['--check', '--write'])).resolves.toEqual(1);
+      await expect(cli.execute(['--check', '--write'])).resolves.toEqual(2);
     });
 
-    it('should return `1` exit code if formatting would change the file', async () => {
+    it('should return `2` exit code if formatting would change the file', async () => {
       expect.assertions(1);
       mockFormat.mockReturnValueOnce('not the argument value');
-      await expect(cli.execute(['--check'])).resolves.toEqual(1);
+      await expect(cli.execute(['--check'])).resolves.toEqual(2);
     });
 
     it('should pluralize the messaging if formatting might change multiple files', async () => {
@@ -108,7 +107,7 @@ describe('cli', () => {
       mockGlobby.mockReturnValueOnce(['package1.json', 'package2.json']);
       mockFormat.mockImplementation(() => `foo${mockFormat.mock.calls.length}`);
       await cli.execute(['--check']);
-      expect(mockLogErrorAndExit).toHaveBeenCalledWith('2 files different.');
+      expect(mockLogErrorAndExit).toHaveBeenCalledWith('2 files different.', 2);
     });
 
     it('should not print the contents by default', async () => {
@@ -124,7 +123,7 @@ describe('cli', () => {
       expect(mockConsoleLog).toHaveBeenCalledWith({
         name: 'foo0',
       });
-      expect(mockConsoleLog).toHaveBeenLastCalledWith('🔍  0 files changed');
+      expect(mockConsoleLog).toHaveBeenLastCalledWith('0 files changed');
     });
   });
 });
