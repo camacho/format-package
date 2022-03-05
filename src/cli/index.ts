@@ -12,6 +12,7 @@ import { pluralize } from '../utils/strings';
 import parser from './parse';
 import * as configSearch from './config';
 import logErrorAndExit from './error';
+import chalk from 'chalk';
 
 export const handleFile =
   (
@@ -45,7 +46,9 @@ export const handleFile =
       console.log(nextPkg);
     } else if (!check) {
       console.log(
-        `${path.relative('', filePath)} (${elapsed.milliseconds.toFixed(2)}ms)`
+        `${chalk.gray(
+          path.relative('', filePath)
+        )} ${elapsed.milliseconds.toFixed(0)}ms`
       );
     }
 
@@ -118,8 +121,8 @@ export async function execute(argv: string[]): Promise<number> {
 
     /* istanbul ignore next */
     console.log(
-      `✏️   Formatted ${files.length} ${pluralize('file', files.length)}${
-        isDefault ? '.' : ` with ${filepath}.`
+      `Formatted ${files.length} ${pluralize('file', files.length)}${
+        isDefault ? '' : ` with ${filepath}.`
       }`
     );
   } catch (err) {
