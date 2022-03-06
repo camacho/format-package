@@ -71,6 +71,7 @@
       "extends": "plugin:jest/recommended",
       "files": ["**/**.test.ts", "tests/**/**.{j,t}s"],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
         "import/first": "off",
         "import/no-extraneous-dependencies": "off",
         "import/no-unassigned-import": "off",

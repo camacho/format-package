@@ -16,6 +16,7 @@
   "homepage": "https://github.com/camacho/format-package#readme",
   "author": "Patrick Camacho <patrick@daftdevelopers.com>",
   "contributors": [
+    "Alexandre Germain",
     "Peter Chanthamynavong <peterkc@gmail.com>"
   ],
   "keywords": [
@@ -85,8 +86,8 @@
     },
     "preset": "ts-jest",
     "setupFilesAfterEnv": [
-      "jest-extended",
-      "<rootDir>/scripts/jest-setup.ts"
+      "<rootDir>/scripts/jest-setup.ts",
+      "jest-extended"
     ],
     "snapshotSerializers": [
       "jest-snapshot-serializer-ansi"
@@ -96,9 +97,9 @@
       "<rootDir>/node_modules/"
     ],
     "watchPlugins": [
+      "jest-watch-master",
       "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname",
-      "jest-watch-master"
+      "jest-watch-typeahead/testname"
     ]
   },
   "dependencies": {

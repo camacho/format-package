@@ -1,4 +1,6 @@
-// Basically PackageJson
+// Made it easier to handle intertwined
+// types by co-locating them in same file
+
 export type Alphabetizable =
   | null
   | undefined
@@ -8,14 +10,8 @@ export type Alphabetizable =
   | Partial<{ [key: string]: Alphabetizable }>
   | Alphabetizable[];
 
-export type PackageJson =
-  | null
-  | undefined
-  | boolean
-  | number
-  | string
-  | Partial<{ [key: string]: PackageJson }>
-  | PackageJson[];
+// Same as values that can be alphabetized
+export type PackageJson = Alphabetizable;
 
 export type Order = [string, ...string[]];
 

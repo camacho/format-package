@@ -307,7 +307,7 @@ The default transformations map has:
 ```ts
 import sortScripts from 'sort-scripts';
 
-import { Transformations } from '../../types';
+import { PackageJson, Transformations } from '../../types';
 import { alphabetize } from '../../utils/object';
 
 const transformations: Transformations = {
@@ -322,7 +322,8 @@ const transformations: Transformations = {
   // Order of exports keys matters
   // https://github.com/camacho/format-package/issues/116
   exports: (key, prevValue) => [key, prevValue],
-  // Special case for all keys without transforms
+
+  // Special case for all keys without defined transforms
   '*': (key, value) => [key, alphabetize(value)],
 };
 

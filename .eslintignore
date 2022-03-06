@@ -2,4 +2,3 @@ node_modules/
 coverage/
 build/
 __fixtures__/
-**/*.d.ts
