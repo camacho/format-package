@@ -57,15 +57,13 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 ### Command Line
 
-This module provides a simple CLI:
+This module provides a simple CLI that can be run directly, with [`npx`](https://docs.npmjs.com/cli/v8/commands/npx), or with [Yarn](https://yarnpkg.com/):
 
 ```sh
 ./node_modules/.bin/format-package --help
-```
-
-If combined with [Yarn](https://yarnpkg.com/), it can be run as:
-
-```sh
+# or
+npx format-package --help
+# or
 yarn format-package --help
 ```
 
@@ -307,7 +305,7 @@ The default transformations map has:
 ```ts
 import sortScripts from 'sort-scripts';
 
-import { PackageJson, Transformations } from '../../types';
+import { Transformations } from '../../types';
 import { alphabetize } from '../../utils/object';
 
 const transformations: Transformations = {
