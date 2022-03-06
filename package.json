@@ -16,8 +16,8 @@
   "homepage": "https://github.com/camacho/format-package#readme",
   "author": "Patrick Camacho <patrick@daftdevelopers.com>",
   "contributors": [
-    "Alexandre Germain",
-    "Peter Chanthamynavong <peterkc@gmail.com>"
+    "Peter Chanthamynavong <peterkc@gmail.com>",
+    "Alexandre Germain (https://gerkindev.github.io/devblog/)"
   ],
   "keywords": [
     "format",
@@ -63,15 +63,12 @@
   "lint-staged": {
     "*.{js,ts}": [
       "eslint",
-      "git add",
       "prettier --write"
     ],
     "*.json": [
-      "git add",
       "prettier --write"
     ],
     "**/package.json": [
-      "git add",
       "yarn format-package"
     ]
   },
@@ -86,8 +83,8 @@
     },
     "preset": "ts-jest",
     "setupFilesAfterEnv": [
-      "<rootDir>/scripts/jest-setup.ts",
-      "jest-extended"
+      "jest-extended",
+      "<rootDir>/scripts/jest-setup.ts"
     ],
     "snapshotSerializers": [
       "jest-snapshot-serializer-ansi"
@@ -97,9 +94,9 @@
       "<rootDir>/node_modules/"
     ],
     "watchPlugins": [
-      "jest-watch-master",
       "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
+      "jest-watch-typeahead/testname",
+      "jest-watch-master"
     ]
   },
   "dependencies": {
