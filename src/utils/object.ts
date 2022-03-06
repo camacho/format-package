@@ -32,63 +32,10 @@ export function alphabetize(value: unknown): Alphabetizable {
     return value;
   }
 
+  // Don't change the order of arrays
+  // as position is important
   if (Array.isArray(value)) {
-    type OrderedAlphabetized = {
-      nulls: null[];
-      undefineds: undefined[];
-      booleans: boolean[];
-      numbers: number[];
-      strings: string[];
-      objects: Alphabetizable[];
-    };
-
-    const alphabetizedValues = value.map(alphabetize).reduce(
-      // Once each child is ordered we can alphabetize the parent
-      (acc: OrderedAlphabetized, curr) => {
-        if (curr === null) {
-          acc.nulls.push(curr);
-        } else if (curr === undefined) {
-          acc.undefineds.push(curr);
-        } else if (!Number.isNaN(curr) && typeof curr === 'number') {
-          acc.numbers.push(curr);
-        } else if (typeof curr === 'boolean') {
-          acc.booleans.push(curr);
-        } else if (typeof curr === 'string') {
-          acc.strings.push(curr);
-        } else {
-          acc.objects.push(curr);
-        }
-
-        return acc;
-      },
-      {
-        nulls: [],
-        undefineds: [],
-        numbers: [],
-        booleans: [],
-        strings: [],
-        objects: [],
-      }
-    ) as OrderedAlphabetized;
-
-    // Put an order to the array top level
-    // - nulls
-    // - undefineds
-    // - booleans sorted
-    // - strings sorted alphabetically
-    // - objects sorted alphabetically when
-    //   turned to strings using JSON.stringify
-    return [
-      ...alphabetizedValues.nulls,
-      ...alphabetizedValues.booleans,
-      ...alphabetizedValues.numbers,
-      ...alphabetizedValues.strings.sort((a: string, b: string) =>
-        a.localeCompare(b)
-      ),
-      ...alphabetizedValues.objects.sort((a, b) =>
-        JSON.stringify(a).localeCompare(JSON.stringify(b))
-      ),
-    ];
+    return value.map(alphabetize);
   }
 
   if (isSortableObject(value)) {

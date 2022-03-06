@@ -50,12 +50,12 @@ describe('object', () => {
               `);
 
         expect(alphabetize(['foo', 'bar', 'baz'])).toMatchInlineSnapshot(`
-                  Array [
-                    "bar",
-                    "baz",
-                    "foo",
-                  ]
-              `);
+          Array [
+            "foo",
+            "bar",
+            "baz",
+          ]
+        `);
       });
     });
 
@@ -83,7 +83,7 @@ describe('object', () => {
       expect(alphabetize(undefined as any)).toEqual(undefined);
     });
 
-    it('handles mix of types', () => {
+    it('handles mix of types while preserving order', () => {
       const obj = [
         'foo',
         {
@@ -115,31 +115,32 @@ describe('object', () => {
 
       expect(alphabetize(obj)).toMatchInlineSnapshot(`
         Array [
-          null,
-          true,
-          false,
-          1,
-          5,
-          "bar",
           "foo",
-          Array [
-            false,
-            1,
-            "hello",
-            "world",
-            Object {
-              "qux": "foo",
-              "unknown": null,
-            },
-            Object {},
-          ],
           Object {
             "baz": Object {
               "qux": "foo",
             },
             "foo": undefined,
           },
+          Array [
+            "hello",
+            1,
+            Object {
+              "qux": "foo",
+              "unknown": null,
+            },
+            "world",
+            false,
+            Object {},
+          ],
+          "bar",
+          true,
+          1,
+          undefined,
           Object {},
+          null,
+          5,
+          false,
         ]
       `);
     });
