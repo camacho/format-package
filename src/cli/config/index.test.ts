@@ -95,6 +95,11 @@ describe('config', () => {
         filepath: configPath,
       });
     });
+
+    it('provides an error if config cannot be loaded', async () => {
+      const configPath = 'dummy';
+      return expect(loadConfig(configPath)).rejects.toThrowError();
+    });
   });
 
   describe('search', () => {
@@ -163,6 +168,19 @@ describe('config', () => {
         }),
         filepath: configDefault.filepath,
       }));
+
+    it('should handle loading a blank config', () => {
+      const configPath = `${__dirname}/__fixtures__/blank-config.js`;
+
+      return expect(
+        search({
+          configPath,
+        })
+      ).resolves.toMatchObject({
+        error: expect.any(Error),
+        filepath: configDefault.filepath,
+      });
+    });
 
     it('should return when configPath passes schema validation', () => {
       const configPath = `${__dirname}/__fixtures__/valid-config-order.js`;

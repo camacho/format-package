@@ -1,6 +1,6 @@
 import sortScripts from 'sort-scripts';
 
-import { Transformations } from '../../types';
+import { PackageJson, Transformations } from '../../types';
 import { alphabetize } from '../../utils/object';
 
 const transformations: Transformations = {

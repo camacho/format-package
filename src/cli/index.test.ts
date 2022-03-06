@@ -107,7 +107,7 @@ describe('cli', () => {
       mockGlobby.mockReturnValueOnce(['package1.json', 'package2.json']);
       mockFormat.mockImplementation(() => `foo${mockFormat.mock.calls.length}`);
       await cli.execute(['--check']);
-      expect(mockLogErrorAndExit).toHaveBeenCalledWith('2 files different.', 2);
+      expect(mockConsoleLog).toHaveBeenCalledWith('2 files different.');
     });
 
     it('should not print the contents by default', async () => {
@@ -124,6 +124,16 @@ describe('cli', () => {
         name: 'foo0',
       });
       expect(mockConsoleLog).toHaveBeenLastCalledWith('0 files changed');
+    });
+
+    it('should handle errors', async () => {
+      expect.assertions(1);
+
+      mockFormat.mockImplementationOnce(() => {
+        throw new Error('foo');
+      });
+
+      await expect(cli.execute(['--check'])).resolves.toEqual(1);
     });
   });
 });

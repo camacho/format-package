@@ -6,10 +6,10 @@ function formatError(message) {
   return [chalk.bgRed.white(' ERROR '), message].join(' ');
 }
 
-export default function logErrorAndExit(error?: LogError, exitCode = 1): void {
+export default function logError(error?: LogError): void {
   if (typeof error === 'string') {
     console.error(formatError(error));
-    process.exit(exitCode);
+    return;
   }
 
   if (error) {
@@ -21,10 +21,8 @@ export default function logErrorAndExit(error?: LogError, exitCode = 1): void {
           error
       )
     );
-    process.exit(error.code ?? exitCode);
-  } else {
-    // Wrapped in an else statement for testing
-    console.error(formatError('Something went wrong!'));
-    process.exit(exitCode);
+    return;
   }
+  // Wrapped in an else statement for testing
+  console.error(formatError('Something went wrong!'));
 }

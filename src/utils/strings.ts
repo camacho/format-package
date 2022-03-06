@@ -6,6 +6,3 @@ export function pluralize(
 ): string {
   return count === 1 ? subject : plural;
 }
-
-export const isStringArray = (value: unknown): value is string[] =>
-  Array.isArray(value) && value.every((item) => typeof item === 'string');

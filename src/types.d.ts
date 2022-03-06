@@ -1,8 +1,19 @@
-export type PackageJson =
-  | string
-  | number
-  | boolean
+// Basically PackageJson
+export type Alphabetizable =
   | null
+  | undefined
+  | boolean
+  | number
+  | string
+  | Partial<{ [key: string]: Alphabetizable }>
+  | Alphabetizable[];
+
+export type PackageJson =
+  | null
+  | undefined
+  | boolean
+  | number
+  | string
   | Partial<{ [key: string]: PackageJson }>
   | PackageJson[];
 

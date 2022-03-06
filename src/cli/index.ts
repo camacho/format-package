@@ -4,6 +4,7 @@ import path from 'path';
 
 import fs from 'fs-extra';
 import globby from 'globby';
+import chalk from 'chalk';
 
 import format from '../lib';
 import { timer } from '../utils/timer';
@@ -11,8 +12,7 @@ import { pluralize } from '../utils/strings';
 
 import parser from './parse';
 import * as configSearch from './config';
-import logErrorAndExit from './error';
-import chalk from 'chalk';
+import logError from './error';
 
 export const handleFile =
   (
@@ -100,12 +100,11 @@ export async function execute(argv: string[]): Promise<number> {
 
     if (options.check) {
       if (filesChanged) {
-        logErrorAndExit(
+        console.log(
           `${changedFiles.length} ${pluralize(
             'file',
             changedFiles.length
-          )} different.`,
-          2
+          )} different.`
         );
 
         return 2;
@@ -126,8 +125,7 @@ export async function execute(argv: string[]): Promise<number> {
       }`
     );
   } catch (err) {
-    console.log('got here');
-    logErrorAndExit(err, 1);
+    logError(err);
     return 1;
   }
 
