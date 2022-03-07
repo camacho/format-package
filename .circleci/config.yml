@@ -3,7 +3,7 @@ aliases:
   - &default-setup
     working_directory: *working-directory
     docker:
-      - image: 'circleci/node:10'
+      - image: 'circleci/node:14'
   - &default-steps
     - checkout
     - attach_workspace:
@@ -86,33 +86,36 @@ jobs:
 
 workflows:
   version: 2
-  build:
+  static-analysis:
     jobs:
       - setup
       - update-lockfile:
           requires:
             - setup
       - format:
-          requires:
-            - setup
+        requires:
+          - setup
       - git-status:
-          requires:
-            - setup
-            - format
+        requires:
+          - setup
+          - update-lockfile
+          - format
       - type-check:
-          requires:
-            - setup
+        requires:
+          - setup
       - lint:
-          requires:
-            - setup
-            - type-check
+        requires:
+          - setup
+  test:
+    jobs:
+      - setup
       - test:
-          requires:
-            - setup
-            - type-check
+        requires:
+          - setup
+  build:
+    jobs:
+      - setup
       - build-and-run:
           requires:
             - setup
-            - type-check
-            - lint
-            - test
+            - update-lockfile
