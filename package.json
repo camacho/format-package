@@ -43,7 +43,7 @@
     "clean": "npm-run-all clean-build clean-packages",
     "clean-build": "rimraf ./build",
     "clean-packages": "rimraf ./node_modules",
-    "dev": "ts-node-dev --respawn --transpileOnly -- ./src/cli/index.ts",
+    "dev": "ts-node ./src/cli/index.ts",
     "docs": "ts-node ./scripts/markdown.ts",
     "format": "npm-run-all format-package format-source",
     "format-docs": "prettier --write '**/*.md'",
@@ -122,7 +122,6 @@
     "@types/prettier": "^2.4.2",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
-    "codecov": "^3.8.3",
     "eslint": "^8.4.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^16.1.0",
@@ -151,7 +150,6 @@
     "prettier": "^2.5.1",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
-    "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.3"
   }
 }
