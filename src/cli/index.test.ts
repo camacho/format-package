@@ -12,7 +12,7 @@ jest.mock('./error', () => mockLogErrorAndExit);
 jest.mock('../lib', () => mockFormat);
 
 describe('cli', () => {
-  let mockReadJSONSync;
+  let mockReadFileSync;
   let mockWriteFileSync;
   let mockConsoleLog;
   let mockConsoleWarn;
@@ -22,25 +22,27 @@ describe('cli', () => {
   });
 
   beforeAll(() => {
-    mockReadJSONSync = jest.spyOn(fs, 'readJSONSync');
+    mockReadFileSync = jest.spyOn(fs, 'readFileSync');
     mockWriteFileSync = jest.spyOn(fs, 'writeFileSync');
     mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue(undefined);
     mockConsoleWarn = jest.spyOn(console, 'warn').mockReturnValue(undefined);
   });
 
   beforeEach(() => {
-    mockReadJSONSync.mockImplementation(() => ({
-      name: `foo${mockFormat.mock.calls.length}`,
-    }));
+    mockReadFileSync.mockImplementation(() =>
+      JSON.stringify({
+        name: `foo-${mockFormat.mock.calls.length}`,
+      })
+    );
     mockWriteFileSync.mockReturnValue(undefined);
-    mockFormat.mockImplementation((value) => value);
+    mockFormat.mockImplementation((value) => JSON.stringify(value));
   });
 
   afterEach(() => {
     mockFormat.mockClear();
     mockGlobby.mockClear();
     mockLogErrorAndExit.mockClear();
-    mockReadJSONSync.mockClear();
+    mockReadFileSync.mockClear();
     mockWriteFileSync.mockClear();
     mockConsoleLog.mockClear();
     mockConsoleWarn.mockClear();
@@ -60,12 +62,21 @@ describe('cli', () => {
     expect(configSpy).toHaveBeenCalled();
   });
 
-  it('writes the contents', async () => {
+  it('writes the contents if the file changed', async () => {
+    expect.assertions(1);
+
+    mockFormat.mockImplementationOnce(() => 'value2');
+    await cli.execute(['--write']);
+
+    expect(fs.writeFileSync).toHaveBeenCalled();
+  });
+
+  it('does not write the contents if the contents do not change', async () => {
     expect.assertions(1);
 
     await cli.execute(['--write']);
 
-    expect(fs.writeFileSync).toHaveBeenCalled();
+    expect(fs.writeFileSync).not.toHaveBeenCalled();
   });
 
   it('prints the contents if verbose is set', async () => {
@@ -118,12 +129,12 @@ describe('cli', () => {
 
     it('should print the contents if verbose is set', async () => {
       expect.assertions(3);
+
       await cli.execute(['--verbose', '--check']);
+
       expect(mockConsoleLog).toHaveBeenCalledTimes(2);
-      expect(mockConsoleLog).toHaveBeenCalledWith({
-        name: 'foo0',
-      });
-      expect(mockConsoleLog).toHaveBeenLastCalledWith('0 files changed');
+      expect(mockConsoleLog).toHaveBeenCalledWith('{"name":"foo-0"}');
+      expect(mockConsoleLog).toHaveBeenLastCalledWith('0 files different');
     });
 
     it('should handle errors', async () => {

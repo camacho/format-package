@@ -30,10 +30,12 @@ export const handleFile =
   async (filePath: string): Promise<boolean> => {
     const endTimer = timer()();
 
-    const prevPkg = fs.readJSONSync(filePath, { encoding: 'utf8' });
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const prevPkg = JSON.parse(fileContents);
     const nextPkg = await format(prevPkg, config, filePath);
+    const changed = nextPkg !== fileContents;
 
-    if (write) {
+    if (write && changed) {
       fs.writeFileSync(filePath, nextPkg, 'utf8');
     }
 
@@ -52,9 +54,7 @@ export const handleFile =
       );
     }
 
-    // This checks the content of the package is structured the same
-    // but it does not check the formatting
-    return JSON.stringify(nextPkg) !== JSON.stringify(prevPkg);
+    return changed;
   };
 
 export async function execute(argv: string[]): Promise<number> {
@@ -63,7 +63,9 @@ export async function execute(argv: string[]): Promise<number> {
       files: globs,
       config: configPath,
       ignore,
-      ...options
+      verbose,
+      write,
+      check,
     } = parser(argv);
 
     const { config, filepath, isDefault } = await configSearch.search({
@@ -79,7 +81,7 @@ export async function execute(argv: string[]): Promise<number> {
 
     // Handle all files and get a list of
     // those whose contents would/did change
-    const configuredFileHandler = handleFile(options, config);
+    const configuredFileHandler = handleFile({ verbose, write, check }, config);
 
     const changedFiles = (
       await Promise.all(
@@ -98,7 +100,7 @@ export async function execute(argv: string[]): Promise<number> {
 
     const filesChanged = Boolean(changedFiles.length);
 
-    if (options.check) {
+    if (check) {
       if (filesChanged) {
         console.log(
           `${changedFiles.length} ${pluralize(
@@ -110,7 +112,7 @@ export async function execute(argv: string[]): Promise<number> {
         return 2;
       }
 
-      console.log('0 files changed');
+      console.log('0 files different');
 
       // No need to proceed forward since
       // there is no information to share
@@ -118,11 +120,15 @@ export async function execute(argv: string[]): Promise<number> {
       return 0;
     }
 
+    const relevantFiles = write ? changedFiles : files;
+    const relevantAction = write ? 'Updated' : 'Formatted';
+
     /* istanbul ignore next */
     console.log(
-      `Formatted ${files.length} ${pluralize('file', files.length)}${
-        isDefault ? '' : ` with ${filepath}.`
-      }`
+      `${relevantAction} ${relevantFiles.length} ${pluralize(
+        'file',
+        relevantFiles.length
+      )}${isDefault ? '' : ` with ${filepath}.`}`
     );
   } catch (err) {
     logError(err);
