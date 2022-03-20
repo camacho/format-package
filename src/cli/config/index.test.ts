@@ -95,24 +95,27 @@ describe('config', () => {
         filepath: configPath,
       });
     });
+
+    it('provides an error if config cannot be loaded', async () => {
+      const configPath = 'dummy';
+      return expect(loadConfig(configPath)).rejects.toThrowError();
+    });
   });
 
   describe('search', () => {
-    it('should return config', () => {
-      return expect(search()).resolves.toMatchObject({
+    it('should return config', () =>
+      expect(search()).resolves.toMatchObject({
         filepath: configDefault.filepath,
-      });
-    });
+      }));
 
-    it('should return default config on exception', () => {
+    it('should return default config on exception', () =>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return expect(search({ searchFrom: {} as any })).resolves.toMatchObject({
+      expect(search({ searchFrom: {} as any })).resolves.toMatchObject({
         filepath: configDefault.filepath,
         error: {
           message: 'expected filepath to be a string',
         },
-      });
-    });
+      }));
 
     it('should return config specified with configPath', () => {
       const configPath = `${process.cwd()}/examples/format-package-json/format-package.json`;
@@ -154,8 +157,8 @@ describe('config', () => {
       });
     });
 
-    it('should return default when configPath is not valid', () => {
-      return expect(
+    it('should return default when configPath is not valid', () =>
+      expect(
         search({
           configPath: {} as any,
         })
@@ -163,6 +166,18 @@ describe('config', () => {
         error: expect.objectContaining({
           name: 'Error',
         }),
+        filepath: configDefault.filepath,
+      }));
+
+    it('should handle loading a blank config', () => {
+      const configPath = `${__dirname}/__fixtures__/blank-config.js`;
+
+      return expect(
+        search({
+          configPath,
+        })
+      ).resolves.toMatchObject({
+        error: expect.any(Error),
         filepath: configDefault.filepath,
       });
     });

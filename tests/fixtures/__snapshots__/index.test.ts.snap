@@ -15,6 +15,7 @@ exports[`Fixtures Formatting "basic.json" produces an expected output: basic.jso
   \\"homepage\\": \\"https://github.com/camacho/format-package#readme\\",
   \\"author\\": \\"Patrick <patrick@daftdevelopers.com>\\",
   \\"bin\\": \\"lib/cli/index.js\\",
+  \\"type\\": \\"module\\",
   \\"main\\": \\"lib/index.js\\",
   \\"dependencies\\": {
     \\"chalk\\": \\"^2.1.0\\",

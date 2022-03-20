@@ -13,8 +13,8 @@ export default function sort(
   );
 
   // We need a place to put the keys that aren't in the ordered list
-  // If the order list has a special `...rest` string in it, we will insert the
-  // extra keys there - otherwise put at the end of the list
+  // If the order list has a special `...rest` string in it, we will
+  // insert the extra keys there - otherwise put at the end of the list
   let restIndex = orderedKeys.indexOf(restKey);
   let restCut = 1;
 

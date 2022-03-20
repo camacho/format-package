@@ -1,18 +1,18 @@
-import * as convertHrtime from 'convert-hrtime';
+export function timer() {
+  return () => {
+    const start = process.hrtime.bigint();
+    return () => {
+      const diff = process.hrtime.bigint() - start;
+      const nanoseconds = diff;
+      const number = Number(nanoseconds);
+      const milliseconds = number / 1000000;
+      const seconds = number / 1000000000;
 
-type HrtimeResponse = [number, number];
-
-export default class Timer {
-  private startTime: HrtimeResponse | undefined;
-
-  public start(): HrtimeResponse {
-    this.startTime = process.hrtime() as HrtimeResponse;
-    return this.startTime;
-  }
-
-  public end(): convertHrtime.HRTime {
-    const elapsed = convertHrtime(process.hrtime(this.startTime));
-    this.startTime = undefined;
-    return elapsed;
-  }
+      return {
+        seconds,
+        milliseconds,
+        nanoseconds,
+      };
+    };
+  };
 }

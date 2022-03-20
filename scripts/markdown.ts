@@ -1,11 +1,11 @@
-import * as path from 'path';
+import path from 'path';
 
-import * as execa from 'execa';
-import * as markdownMagic from 'markdown-magic';
-import * as SCRIPTS from 'markdown-magic-package-scripts';
-import * as PRETTIER from 'markdown-magic-prettier';
-import * as ENGINES from 'markdown-magic-engines';
-import * as INSTALL from 'markdown-magic-install-command';
+import execa from 'execa';
+import markdownMagic from 'markdown-magic';
+import SCRIPTS from 'markdown-magic-package-scripts';
+import PRETTIER from 'markdown-magic-prettier';
+import ENGINES from 'markdown-magic-engines';
+import INSTALL from 'markdown-magic-install-command';
 
 import { JSONPROP, REGION } from './markdown-transformers';
 

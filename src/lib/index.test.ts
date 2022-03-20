@@ -2,9 +2,11 @@ const mockSort = jest.fn((keys) => keys);
 const mockTransform = jest.fn((k, v) => [k, v]);
 const mockValidate = jest.fn();
 
-jest.mock('./sort', () => ({ default: mockSort }));
-jest.mock('./transform', () => ({ default: mockTransform }));
-jest.mock('./validate', () => ({ default: mockValidate }));
+jest.mock('./sort', () => mockSort);
+jest.mock('./transform', () => mockTransform);
+jest.mock('./validate', () => mockValidate);
+
+import { Formatter, PackageJson, Order } from '../types';
 
 import * as defaults from './defaults';
 import sort from './sort';
@@ -68,11 +70,16 @@ describe('format', () => {
     expect.assertions(4);
 
     const pkg = { name: 'test' };
+
+    const mockFormatter = jest.fn(async (o: PackageJson) =>
+      JSON.stringify(o)
+    ) as jest.MockedFunction<Formatter>;
+
     const options = {
-      formatter: jest.fn((o) => JSON.stringify(o)),
-      order: ['...rest', 'name'],
+      formatter: mockFormatter,
+      order: ['...rest', 'name'] as Order,
       transformations: {
-        name: (key, value) => [key, value.toUpperCase()],
+        name: (key, value) => [key, value.toUpperCase()] as [string, string],
       },
     };
 

@@ -1,10 +1,10 @@
-import * as path from 'path';
+import path from 'path';
 
-import * as fs from 'fs-extra';
-import * as JSON5 from 'json5';
+import fs from 'fs-extra';
+import JSON5 from 'json5';
 
 // stolen from markdown-magic/lib/transforms/code.js
-export function REGION(content, options, config) {
+export function REGION(_: unknown, options, config) {
   let code;
   let { syntax } = options;
 

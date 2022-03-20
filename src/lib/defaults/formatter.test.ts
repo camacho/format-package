@@ -8,14 +8,13 @@ describe('formatter', () => {
   });
 
   describe('with prettier', () => {
-    it('formats the object with prettier settings', () => {
-      return expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
+    it('formats the object with prettier settings', () =>
+      expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
         "{
           \\"foo\\": \\"bar\\"
         }
         "
-      `);
-    });
+      `));
 
     it('gracefully handles options not being found', () => {
       const prettier = require('prettier');
@@ -34,24 +33,22 @@ describe('formatter', () => {
     beforeAll(() => {
       // Hack to make prettier not be found when attempting
       // to dynamically import the dependency
-      jest.doMock('prettier', (false as any) as undefined);
+      jest.doMock('prettier', false as any);
     });
 
     afterAll(() => {
       jest.unmock('prettier');
     });
 
-    it('formats the object using JSON.stringify', () => {
-      return expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
+    it('formats the object using JSON.stringify', () =>
+      expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
         "{
           \\"foo\\": \\"bar\\"
         }
         "
-      `);
-    });
+      `));
 
-    it('has a new line at the end', () => {
-      return expect(formatter({ foo: 'bar' })).resolves.toMatch(/\n$/);
-    });
+    it('has a new line at the end', () =>
+      expect(formatter({ foo: 'bar' })).resolves.toMatch(/\n$/));
   });
 });

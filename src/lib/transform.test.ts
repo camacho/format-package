@@ -1,19 +1,17 @@
-import transform, { Transformation } from './transform';
+import { Transformation } from '../types';
+
+import transform from './transform';
 
 describe('transform', () => {
-  it('alphabetizes the object if no transformation is provided', () => {
+  it('uses a catch all transform if none is specified for the key', () => {
     const key = 'foo';
     const value = { qux: 'baz', bar: 'foo' };
 
-    return expect(transform(key, value)).resolves.toMatchInlineSnapshot(`
-      Array [
-        "foo",
-        Object {
-          "bar": "foo",
-          "qux": "baz",
-        },
-      ]
-    `);
+    return expect(
+      transform(key, value, {
+        '*': (k, v) => [k, v],
+      })
+    ).resolves.toEqual([key, value]);
   });
 
   it('uses the transformation by key', async () => {
@@ -22,10 +20,10 @@ describe('transform', () => {
     const key = 'foo';
     const value = 'prev';
     const transformations = {
-      foo: (jest.fn((k: string) => [
+      foo: jest.fn((k: string, _) => [
         k,
         'transformed',
-      ]) as any) as Transformation,
+      ]) as jest.MockedFunction<Transformation>,
     };
 
     await expect(transform(key, value, transformations)).resolves
@@ -39,10 +37,14 @@ describe('transform', () => {
     expect(transformations.foo).toHaveBeenCalledWith(key, value);
   });
 
-  it('returns the untransformed values otherwise', () => {
-    const key = 'foo';
-    const value = 'bar';
+  describe('default transform', () => {
+    it('uses the given default transform function', () => {
+      const key = 'foo';
+      const value = ['baz', 'bar'];
 
-    return expect(transform(key, value)).resolves.toEqual([key, value]);
+      return expect(
+        transform(key, value, { '*': (k, v) => [k, v] })
+      ).resolves.toEqual([key, ['baz', 'bar']]);
+    });
   });
 });

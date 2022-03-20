@@ -1,6 +1,8 @@
-import * as path from 'path';
+import path from 'path';
 
-async function formatter(obj: any, filePath?: string): Promise<string> {
+import { Formatter } from '../../types';
+
+const formatter: Formatter = async (obj, filePath) => {
   const content = JSON.stringify(obj, null, 2);
 
   // Try to use prettier if it can be imported,
@@ -25,6 +27,6 @@ async function formatter(obj: any, filePath?: string): Promise<string> {
     parser: 'json',
     printWidth: 0,
   });
-}
+};
 
-export { formatter as default };
+export default formatter;

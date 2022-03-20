@@ -1,5 +1,7 @@
-import * as sortScripts from 'sort-scripts';
-import { Transformations } from '../transform';
+import sortScripts from 'sort-scripts';
+
+import { Transformations } from '../../types';
+import { alphabetize } from '../../utils/object';
 
 const transformations: Transformations = {
   scripts(key, prevValue) {
@@ -10,6 +12,12 @@ const transformations: Transformations = {
 
     return [key, nextValue];
   },
+  // Order of exports keys matters
+  // https://github.com/camacho/format-package/issues/116
+  exports: (key, prevValue) => [key, prevValue],
+
+  // Special case for all keys without defined transforms
+  '*': (key, value) => [key, alphabetize(value)],
 };
 
-export { transformations as default };
+export default transformations;

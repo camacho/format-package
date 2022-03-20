@@ -1,3 +1,5 @@
+import { Config, PackageJson } from '../types';
+
 import * as defaults from './defaults';
 import sort from './sort';
 import transform from './transform';
@@ -6,8 +8,8 @@ import validate from './validate';
 export { defaults };
 
 export default async function format(
-  pkg: { [k: string]: any },
-  options: { [k: string]: any } = {},
+  pkg: { [k: string]: PackageJson },
+  options: Config = {},
   filePath?: string
 ) {
   const { order, transformations, formatter } = {
@@ -15,10 +17,10 @@ export default async function format(
     ...options,
   };
 
-  const sortedKeys = sort(Object.keys(pkg), order);
+  const nextKeys = sort(Object.keys(pkg), order);
 
   const transformedPkg = await Promise.all(
-    sortedKeys.map((key) => transform(key, pkg[key], transformations))
+    nextKeys.map((key) => transform(key, pkg[key], transformations))
   );
 
   const nextPkg = transformedPkg.reduce(

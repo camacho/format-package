@@ -1,11 +1,11 @@
-import * as path from 'path';
+import path from 'path';
 
-import * as fs from 'fs-extra';
-import * as glob from 'globby';
+import fs from 'fs-extra';
+import globby from 'globby';
 
 import { execute } from '../../src/cli';
 
-const fixtures = glob.sync('*.json', {
+const fixtures = globby.sync('*.json', {
   absolute: false,
   cwd: __dirname,
 });

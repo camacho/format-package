@@ -11,6 +11,7 @@
   },
   "homepage": "https://github.com/camacho/format-package#readme",
   "author": "Patrick <patrick@daftdevelopers.com>",
+  "type": "module",
   "bin": "lib/cli/index.js",
   "main": "lib/index.js",
   "dependencies": {

@@ -1,18 +1,10 @@
-import logErrorAndExit from './error';
+import logError from './error';
 
 describe('error', () => {
-  const processExit = process.exit;
   let mockConsoleError;
-  let mockProcessExit;
   let error;
 
-  beforeEach(() => {
-    mockProcessExit = jest.fn();
-
-    Object.defineProperty(process, 'exit', {
-      value: mockProcessExit,
-    });
-
+  beforeAll(() => {
     mockConsoleError = jest.spyOn(console, 'error').mockReturnValue(undefined);
   });
 
@@ -22,51 +14,46 @@ describe('error', () => {
 
   afterEach(() => {
     mockConsoleError.mockClear();
-    mockProcessExit.mockClear();
   });
 
   afterAll(() => {
-    Object.defineProperty(process, 'exit', { value: processExit });
     mockConsoleError.mockRestore();
   });
 
+  it('prints out strings as error messages', () => {
+    logError('hello');
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
+      `" ERROR  hello"`
+    );
+  });
+
   it('logs generic message and exists with 1 when called without error', () => {
-    logErrorAndExit();
+    logError();
     expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
       `" ERROR  Something went wrong!"`
     );
-    expect(process.exit).toHaveBeenCalledWith(1);
   });
 
   it('prints stderr', () => {
     error.stderr = 'Stderr message.';
-    logErrorAndExit(error);
-    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
-      `" ERROR  Stderr message."`
-    );
-  });
-
-  it('prints stdout', () => {
-    error.stdout = 'Stdout message.';
-    logErrorAndExit(error);
-    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
-      `" ERROR  Stdout message."`
-    );
-  });
-
-  it('prints message', () => {
-    logErrorAndExit(error);
+    logError(error);
     expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
       `" ERROR  Error: Standard message."`
     );
   });
 
-  it('exits with the given status or 1', () => {
-    logErrorAndExit();
-    logErrorAndExit({ code: 2 });
+  it('prints stdout', () => {
+    error.stdout = 'Stdout message.';
+    logError(error);
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
+      `" ERROR  Error: Standard message."`
+    );
+  });
 
-    expect(process.exit).toHaveBeenCalledTimes(2);
-    expect(process.exit).toHaveBeenCalledWith(1);
-    expect(process.exit).toHaveBeenCalledWith(2);
+  it('prints message', () => {
+    logError(error);
+    expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
+      `" ERROR  Error: Standard message."`
+    );
   });
 });

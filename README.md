@@ -52,20 +52,18 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 
-- **node**: >=10
+- **node**: >=14.0.0
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
 
-This module provides a simple CLI:
+This module provides a simple CLI that can be run directly, with [`npx`](https://docs.npmjs.com/cli/v8/commands/npx), or with [Yarn](https://yarnpkg.com/):
 
 ```sh
 ./node_modules/.bin/format-package --help
-```
-
-If combined with [Yarn](https://yarnpkg.com/), it can be run as:
-
-```sh
+# or
+npx format-package --help
+# or
 yarn format-package --help
 ```
 
@@ -98,7 +96,7 @@ It returns a newly sorted and formatted `package.json` string.
 #!/usr/bin/env node
 
 const fs = require('fs');
-const format = require('format-package');
+const format = require('format-package').default;
 const pkg = require('<path-to-package.json>');
 
 async function formatPackage(pkg, filePath) {
@@ -137,13 +135,16 @@ Options are expected to be passed in as a keyed object:
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
 
 const options = {
   order: [],
   transformations: {},
-  formatter: (v) => v.toString(),
+  formatter: (pkg) => pkg.toString(),
 };
 
 format(pkg, options).then((formattedPkg) => console.log(formattedPkg));
@@ -158,8 +159,11 @@ The `format-package` module also exports its defaults to help with configuration
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
 
 const {
   defaults: { order: defaultOrder },
@@ -209,7 +213,9 @@ The default order is:
   "keywords",
   "bin",
   "man",
+  "type",
   "main",
+  "exports",
   "module",
   "browser",
   "files",
@@ -238,8 +244,12 @@ The `...rest` value is considered special. It marks the location where the remai
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
+
 const options = {
   order: [
     'name',
@@ -283,14 +293,20 @@ format(pkg, options).then((formattedPkg) =>
 
 `transformations` is a map of `package.json` keys and corresponding _synchronous_ or _asynchronous_ functions that take a **key** and **value** and return a **key** and **value** to be written to `package.json`.
 
-The default transformations map has a `scripts` method that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts).
+The default transformations map has:
+
+- `scripts` function that sorts the scripts in a sensical way using ['sort-scripts'](https://github.com/camacho/sort-scripts)
+- `exports` function that ensures the ordering remains the same
+- `*` function that sorts the value alphabetically if possible
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/transformations.ts) -->
 <!-- The below code snippet is automatically added from ./src/lib/defaults/transformations.ts -->
 
 ```ts
-import * as sortScripts from 'sort-scripts';
-import { Transformations } from '../transform';
+import sortScripts from 'sort-scripts';
+
+import { Transformations } from '../../types';
+import { alphabetize } from '../../utils/object';
 
 const transformations: Transformations = {
   scripts(key, prevValue) {
@@ -301,22 +317,33 @@ const transformations: Transformations = {
 
     return [key, nextValue];
   },
+  // Order of exports keys matters
+  // https://github.com/camacho/format-package/issues/116
+  exports: (key, prevValue) => [key, prevValue],
+
+  // Special case for all keys without defined transforms
+  '*': (key, value) => [key, alphabetize(value)],
 };
 
-export { transformations as default };
+export default transformations;
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
 
-**Notes:** Any `package.json` property that is an object **and** does not have a defined transformation will be alphabetically sorted.
+The `*` value is considered special. It is the function that will be used for `package.json` keys that are not found.
+
+**Note:** Any `package.json` property that is an object **and** does not have a defined transformation will use the `*` transformation function. If a `*` default function is not defined, alphabetize will be used.
 
 Additional transformations or overrides can be passed in:
 
 <!-- AUTO-GENERATED-CONTENT:START (PRETTIER) -->
 
 ```js
-const format = require('format-package');
-const pkg = require('<path-to-package.json>');
+import format from 'format-package';
+import pkg from '<path-to-package.json>';
+// or
+// const format = require('format-package').default;
+// const pkg = require('<path-to-package.json>');
 
 const options = {
   transformations: {
@@ -353,9 +380,11 @@ By default, the formatter will try to use [`prettier`](https://github.com/pretti
 <!-- The below code snippet is automatically added from ./src/lib/defaults/formatter.ts -->
 
 ```ts
-import * as path from 'path';
+import path from 'path';
 
-async function formatter(obj: any, filePath?: string): Promise<string> {
+import { Formatter } from '../../types';
+
+const formatter: Formatter = async (obj, filePath) => {
   const content = JSON.stringify(obj, null, 2);
 
   // Try to use prettier if it can be imported,
@@ -370,6 +399,7 @@ async function formatter(obj: any, filePath?: string): Promise<string> {
   let config = await prettier.resolveConfig(
     filePath ? path.dirname(filePath) : process.cwd()
   );
+
   if (!config) {
     config = {};
   }
@@ -379,9 +409,9 @@ async function formatter(obj: any, filePath?: string): Promise<string> {
     parser: 'json',
     printWidth: 0,
   });
-}
+};
 
-export { formatter as default };
+export default formatter;
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END *-->
@@ -521,15 +551,24 @@ order:
 
 An effective integration of this plugin could look like this:
 
+`.husky/pre-commit`:
+
+```sh
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx lint-staged
+```
+
+`package.json`:
+
 ```json
 {
-  "lint-staged": {
-    "package.json": ["format-package -w", "git add"]
+  "scripts": {
+    "format:pkg": "format-package -w"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+  "lint-staged": {
+    "package.json": ["format-package -w"]
   },
   "devDependencies": {
     "format-package": "latest",
@@ -545,7 +584,7 @@ This configuration combines:
 - [husky](https://github.com/typicode/husky) for githook integrations
 - [format-package](https://github.com/camacho/format-package) to format `package.json`
 
-Together, these modules ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
+Together, they ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
 
 ```sh
 yarn format:pkg
@@ -582,6 +621,7 @@ These scripts can be run via `yarn` or `npm run`:
 | `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                            |
 | `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build                 |
 | `lint`           | lint the application code                                                                                                   |
+| `prepare`        | `husky install`                                                                                                             |
 | `prepublishOnly` | make sure the package is in good state before publishing                                                                    |
 | `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                           |
 | `start`          | run the cli from `build` directory                                                                                          |
