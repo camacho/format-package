@@ -16,8 +16,8 @@
   "homepage": "https://github.com/camacho/format-package#readme",
   "author": "Patrick Camacho <patrick@daftdevelopers.com>",
   "contributors": [
-    "Peter Chanthamynavong <peterkc@gmail.com>",
-    "Alexandre Germain (https://gerkindev.github.io/devblog/)"
+    "Alexandre Germain (https://gerkindev.github.io/devblog/)",
+    "Peter Chanthamynavong <peterkc@gmail.com>"
   ],
   "keywords": [
     "format",
@@ -34,8 +34,7 @@
     "build",
     "CHANGELOG.md",
     "LICENSE",
-    "README.md",
-    "yarn.lock"
+    "README.md"
   ],
   "scripts": {
     "prebuild": "yarn run clean-build",
@@ -49,7 +48,7 @@
     "format": "npm-run-all format-package format-source",
     "format-docs": "prettier --write '**/*.md'",
     "format-package": "ts-node ./src/cli/index.ts -w package.json",
-    "format-source": "prettier \"**/**{js,json,ts}\" --write",
+    "format-source": "prettier \"**/**{js,json,ts,yml}\" --write",
     "gamut": "npm-run-all reset format lint type-check test build start",
     "lint": "eslint . --ext .ts,.js",
     "prepare": "husky install",
@@ -65,7 +64,7 @@
       "eslint",
       "prettier --write"
     ],
-    "*.json": [
+    "*.{yml,md,json}": [
       "prettier --write"
     ],
     "**/package.json": [

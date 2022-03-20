@@ -38,7 +38,7 @@ describe('error', () => {
     error.stderr = 'Stderr message.';
     logError(error);
     expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
-      `" ERROR  Stderr message."`
+      `" ERROR  Error: Standard message."`
     );
   });
 
@@ -46,7 +46,7 @@ describe('error', () => {
     error.stdout = 'Stdout message.';
     logError(error);
     expect(mockConsoleError.mock.calls[0][0]).toMatchInlineSnapshot(
-      `" ERROR  Stdout message."`
+      `" ERROR  Error: Standard message."`
     );
   });
 

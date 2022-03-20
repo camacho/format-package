@@ -33,11 +33,4 @@ export type Config = {
   formatter?: Formatter;
 };
 
-export type LogError =
-  | string
-  | (Error & {
-      stderr?: string;
-      stdout?: string;
-      code?: number;
-    })
-  | { stderr?: string; stdout?: string; code?: number };
+export type LogError = Error | string;

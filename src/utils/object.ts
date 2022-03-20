@@ -39,16 +39,14 @@ export function alphabetize(value: unknown): Alphabetizable {
   }
 
   if (isSortableObject(value)) {
-    return Object.keys(value)
-      .sort((a: string, b: string) => a.localeCompare(b))
-      .reduce(
-        (acc, key: string) => ({
-          ...acc,
-          [key]: alphabetize(value[key]),
-        }),
+    return Object.keys(value).reduce(
+      (acc, key: string) => ({
+        ...acc,
+        [key]: alphabetize(value[key]),
+      }),
 
-        {}
-      );
+      {}
+    );
   }
 
   return value;

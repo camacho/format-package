@@ -11,6 +11,6 @@ export default async function transform(
   transformations: Transformations
 ): Promise<[string, PackageJson]> {
   // If there are no transformations, use the default transform
-  const transformation = transformations[prevKey] || transformations['*'];
+  const transformation = transformations[prevKey] ?? transformations['*'];
   return transformation(prevKey, prevValue);
 }

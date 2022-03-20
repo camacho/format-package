@@ -13,14 +13,7 @@ export default function logError(error?: LogError): void {
   }
 
   if (error) {
-    console.error(
-      formatError(
-        error.stderr?.trim() ||
-          error.stdout?.trim() ||
-          // error.stack?.split('\n')[2].trim() ||
-          error
-      )
-    );
+    console.error(formatError(`${error.name}: ${error.message}`));
     return;
   }
   // Wrapped in an else statement for testing
