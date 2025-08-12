@@ -5,7 +5,7 @@
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 
 ```sh
-yarn add -D format-package prettier@^2.0.0
+yarn add -D format-package prettier@^2.0.0 || ^3.0.0
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -52,7 +52,7 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 
-- **node**: >=14.0.0
+- **node**: >=22.0.0
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
@@ -99,20 +99,10 @@ const fs = require('fs');
 const format = require('format-package').default;
 const pkg = require('<path-to-package.json>');
 
-async function formatPackage(pkg, filePath) {
+const formatPackage = async (pkg, filePath) => {
   const formattedPkg = await format(pkg, options);
-
-  return new Promise((resolve, reject) => {
-    fs.writeFile('<path-to-package.json>', formattedPkg, (error) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-
-      resolve();
-    });
-  });
-}
+  fs.promises.writeFile(filePath, formattedPkg, 'utf8');
+};
 
 formatPackage(pkg).catch((error) => {
   console.error(error);
@@ -547,7 +537,10 @@ order:
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Integrating
+## Integrating'
+
+> [!WARNING]
+> This section is outdated. Please refer to the [husky](https://typicode.github.io/husky/#/) documentation for the latest integration instructions.
 
 An effective integration of this plugin could look like this:
 
