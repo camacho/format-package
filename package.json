@@ -37,7 +37,7 @@
     "README.md"
   ],
   "scripts": {
-    "prebuild": "yarn run clean-build",
+    "prebuild": "npm run clean-build",
     "build": "tsc",
     "postbuild": "chmod +x ./build/cli/index.js",
     "clean": "npm-run-all clean-build clean-packages",
@@ -52,8 +52,8 @@
     "gamut": "npm-run-all reset format lint type-check test build start",
     "lint": "eslint . --ext .ts,.js",
     "prepare": "husky install",
-    "prepublishOnly": "yarn gamut",
-    "reset": "yarn run clean && yarn install",
+    "prepublishOnly": "npm run gamut",
+    "reset": "npm run clean && npm install",
     "start": "node ./build/cli/index.js",
     "test": "jest",
     "type-check": "tsc --noEmit",
@@ -68,7 +68,7 @@
       "prettier --write"
     ],
     "**/package.json": [
-      "yarn format-package"
+      "npm run format-package"
     ]
   },
   "jest": {
@@ -97,6 +97,21 @@
       "jest-watch-typeahead/testname",
       "jest-watch-master"
     ]
+  },
+  "overrides": {
+    "markdown-magic-engines": {
+      "markdown-magic": "$markdown-magic"
+    },
+    "markdown-magic-install-command": {
+      "markdown-magic": "$markdown-magic"
+    },
+    "markdown-magic-package-scripts": {
+      "markdown-magic": "$markdown-magic"
+    },
+    "markdown-magic-prettier": {
+      "markdown-magic": "$markdown-magic",
+      "prettier": "$prettier"
+    }
   },
   "dependencies": {
     "@hapi/joi": "^15.1.1",

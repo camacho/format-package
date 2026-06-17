@@ -42,7 +42,7 @@ function stageChanges(
 
   if (!files.length) return;
 
-  execa.sync('yarn', ['format-docs']);
+  execa.sync('npm', ['run', 'format-docs']);
   execa.sync('git', ['add', ...files]);
 }
 
