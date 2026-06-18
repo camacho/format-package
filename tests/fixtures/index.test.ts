@@ -1,9 +1,12 @@
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
 import fs from 'fs-extra';
 import globby from 'globby';
 
-import { execute } from '../../src/cli';
+import { execute } from '../../src/cli/index.ts';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const fixtures = globby.sync('*.json', {
   absolute: false,
@@ -18,10 +21,10 @@ describe('Fixtures', () => {
   let mockProcessExit;
 
   beforeAll(() => {
-    mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue(undefined);
-    mockConsoleError = jest.spyOn(console, 'error').mockReturnValue(undefined);
-    mockWriteFile = jest.spyOn(fs, 'writeFileSync').mockReturnValue(undefined);
-    mockProcessExit = jest.fn();
+    mockConsoleLog = vi.spyOn(console, 'log').mockReturnValue(undefined);
+    mockConsoleError = vi.spyOn(console, 'error').mockReturnValue(undefined);
+    mockWriteFile = vi.spyOn(fs, 'writeFileSync').mockReturnValue(undefined);
+    mockProcessExit = vi.fn();
     Object.defineProperty(process, 'exit', { value: mockProcessExit });
   });
 

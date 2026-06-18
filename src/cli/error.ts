@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { LogError } from '../types';
+import type { LogError } from '../types.ts';
 
 function formatError(message) {
   return [chalk.bgRed.white(' ERROR '), message].join(' ');

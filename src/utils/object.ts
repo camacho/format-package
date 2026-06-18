@@ -1,4 +1,4 @@
-import { Alphabetizable } from '../types';
+import type { Alphabetizable } from '../types.ts';
 
 function isSortableObject(
   value: unknown

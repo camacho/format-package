@@ -1,4 +1,5 @@
-import { resolve, join } from 'path';
+import { resolve, join, dirname } from 'path';
+import { fileURLToPath } from 'node:url';
 
 import {
   configDefault,
@@ -7,8 +8,9 @@ import {
   resolveModuleOrPath,
   searchPlaces,
   search,
-} from '.';
+} from './index.ts';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(__dirname, '../../../');
 const examplesDir = join(rootDir, 'examples');
 

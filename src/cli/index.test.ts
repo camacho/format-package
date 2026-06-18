@@ -1,15 +1,20 @@
-const mockFormat = jest.fn((value) => value);
-const mockGlobby = jest.fn(() => ['config.json']);
-const mockLogErrorAndExit = jest.fn();
+const { mockFormat, mockGlobby, mockLogErrorAndExit } = vi.hoisted(() => ({
+  mockFormat: vi.fn((value) => value),
+  mockGlobby: vi.fn(() => ['config.json']),
+  mockLogErrorAndExit: vi.fn(),
+}));
 
 import fs from 'fs-extra';
 
-import * as config from './config';
-import * as cli from '.';
+import * as config from './config/index.ts';
+import * as cli from './index.ts';
 
-jest.mock('globby', () => mockGlobby);
-jest.mock('./error', () => mockLogErrorAndExit);
-jest.mock('../lib', () => mockFormat);
+vi.mock('globby', () => ({ default: mockGlobby }));
+vi.mock('./error', () => ({ default: mockLogErrorAndExit }));
+vi.mock('../lib', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../lib/index.ts')>();
+  return { ...actual, default: mockFormat };
+});
 
 describe('cli', () => {
   let mockReadFileSync;
@@ -22,10 +27,10 @@ describe('cli', () => {
   });
 
   beforeAll(() => {
-    mockReadFileSync = jest.spyOn(fs, 'readFileSync');
-    mockWriteFileSync = jest.spyOn(fs, 'writeFileSync');
-    mockConsoleLog = jest.spyOn(console, 'log').mockReturnValue(undefined);
-    mockConsoleWarn = jest.spyOn(console, 'warn').mockReturnValue(undefined);
+    mockReadFileSync = vi.spyOn(fs, 'readFileSync');
+    mockWriteFileSync = vi.spyOn(fs, 'writeFileSync');
+    mockConsoleLog = vi.spyOn(console, 'log').mockReturnValue(undefined);
+    mockConsoleWarn = vi.spyOn(console, 'warn').mockReturnValue(undefined);
   });
 
   beforeEach(() => {
@@ -56,7 +61,7 @@ describe('cli', () => {
   it('parses arguments', async () => {
     expect.assertions(1);
 
-    const configSpy = jest.spyOn(config, 'search');
+    const configSpy = vi.spyOn(config, 'search');
     await cli.execute(['--verbose']);
 
     expect(configSpy).toHaveBeenCalled();

@@ -1,20 +1,41 @@
 import { resolve } from 'path';
+import { fileURLToPath } from 'node:url';
 import fs from 'fs-extra';
 
 import cosmiconfig from 'cosmiconfig';
 import Joi from '@hapi/joi';
-import { ValidationError } from '@hapi/joi/lib/errors';
 import resolveFrom from 'resolve-from';
 import JSON5 from 'json5';
 
-import { Config } from '../../types';
+import type { Config } from '../../types.ts';
 
-import { defaults } from '../../lib';
-import JoiConfigSchema from './schema';
+import { defaults } from '../../lib/index.ts';
+import JoiConfigSchema from './schema.ts';
+
+// @hapi/joi v15 does not export a ValidationError constructor — it creates plain
+// Error objects and stamps `.name = 'ValidationError'` on them at runtime.
+// We replicate that shape here so callers can `new ValidationError(msg)`.
+class ValidationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ValidationError';
+  }
+}
+
+// Shared shape returned by both search strategies: a resolved config plus
+// metadata about where it came from. All fields optional because the default
+// fallback, a found file, and an empty result each populate a different subset.
+export interface SearchResult {
+  config?: unknown;
+  filepath?: string;
+  isDefault?: boolean;
+  isEmpty?: boolean;
+  error?: unknown;
+}
 
 export const configDefault = {
   config: defaults,
-  filepath: require.resolve('../../lib/defaults'),
+  filepath: fileURLToPath(new URL('../../lib/defaults/', import.meta.url)),
   isDefault: true,
 };
 
@@ -154,7 +175,7 @@ const searchWithoutConfigPath = async ({
   searchFrom,
 }: {
   searchFrom: string;
-}): Promise<{ [key: string]: unknown }> => {
+}): Promise<SearchResult> => {
   // Configure the explorer with pre-defined properties above
   const explorer = cosmiconfig(configModuleName, {
     packageProp: configModuleName,
@@ -193,7 +214,7 @@ export const search = async (
     configPath?: string;
     searchFrom?: string;
   } = { searchFrom: process.cwd() }
-) =>
+): Promise<SearchResult> =>
   // Configuration loading is dependent on whether the
   // config path is given or if it has to be found
   configPath

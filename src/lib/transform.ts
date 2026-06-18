@@ -1,4 +1,4 @@
-import { Transformations, PackageJson } from '../types';
+import type { Transformations, PackageJson } from '../types.ts';
 
 // All transformers receive:
 //   * the key they matched on

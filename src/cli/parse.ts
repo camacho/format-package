@@ -1,6 +1,6 @@
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 
-const parser = yargs
+const parser = yargs()
   .command(['format [files..]', '*'], 'Format files', (commandYargs) =>
     commandYargs.positional('files', {
       default: ['**/package.json'],

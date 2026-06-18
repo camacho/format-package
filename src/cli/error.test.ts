@@ -1,11 +1,11 @@
-import logError from './error';
+import logError from './error.ts';
 
 describe('error', () => {
   let mockConsoleError;
   let error;
 
   beforeAll(() => {
-    mockConsoleError = jest.spyOn(console, 'error').mockReturnValue(undefined);
+    mockConsoleError = vi.spyOn(console, 'error').mockReturnValue(undefined);
   });
 
   beforeEach(() => {

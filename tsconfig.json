@@ -6,14 +6,19 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ESNext"],
-    "module": "CommonJS",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "build",
     "resolveJsonModule": true,
+    "rewriteRelativeImportExtensions": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
     "rootDir": "src",
     "sourceMap": true,
+    "strict": false,
     "strictNullChecks": true,
-    "target": "es2016",
-    "types": ["jest", "node"]
+    "target": "es2022",
+    "types": ["node", "vitest/globals"]
   },
   "exclude": [
     "node_modules/",

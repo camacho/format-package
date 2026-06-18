@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
 import fs from 'fs-extra';
 import globby from 'globby';
 import chalk from 'chalk';
 
-import format from '../lib';
-import { timer } from '../utils/timer';
-import { pluralize } from '../utils/strings';
+import format from '../lib/index.ts';
+import { timer } from '../utils/timer.ts';
+import { pluralize } from '../utils/strings.ts';
 
-import parser from './parse';
-import * as configSearch from './config';
-import logError from './error';
+import parser from './parse.ts';
+import * as configSearch from './config/index.ts';
+import logError from './error.ts';
 
 export const handleFile =
   (
@@ -139,5 +140,7 @@ export async function execute(argv: string[]): Promise<number> {
 }
 
 /* istanbul ignore next */
-if (require.main === module)
+// ESM equivalent of `require.main === module`
+const isMain = process.argv[1] === fileURLToPath(import.meta.url);
+if (isMain)
   execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));

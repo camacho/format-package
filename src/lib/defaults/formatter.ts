@@ -1,18 +1,21 @@
 import path from 'path';
 
-import { Formatter } from '../../types';
+import type { Formatter } from '../../types.ts';
 
 const formatter: Formatter = async (obj, filePath) => {
   const content = JSON.stringify(obj, null, 2);
 
   // Try to use prettier if it can be imported,
   // otherwise add a new line at the end
-  let prettier;
+  let prettierMod;
   try {
-    prettier = require('prettier');
+    prettierMod = await import('prettier');
   } catch (error) {
     return `${content}\n`;
   }
+
+  // prettier@2 is CJS; under ESM the callable API lands on .default
+  const prettier = prettierMod.default ?? prettierMod;
 
   let config = await prettier.resolveConfig(
     filePath ? path.dirname(filePath) : process.cwd()

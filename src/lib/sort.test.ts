@@ -1,4 +1,4 @@
-import sort from './sort';
+import sort from './sort.ts';
 
 describe('sort', () => {
   let order;

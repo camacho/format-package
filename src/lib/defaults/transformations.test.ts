@@ -1,8 +1,8 @@
 import sortScripts from 'sort-scripts';
-import transformations from './transformations';
+import transformations from './transformations.ts';
 
-jest.mock('sort-scripts');
-const mockSortScripts = sortScripts as jest.Mock;
+vi.mock('sort-scripts', () => ({ default: vi.fn() }));
+const mockSortScripts = vi.mocked(sortScripts);
 
 describe('default transformations', () => {
   describe('scripts', () => {
@@ -44,10 +44,10 @@ describe('default transformations', () => {
         )
       ).toMatchInlineSnapshot(`
         "[
-          \\"exports\\",
+          "exports",
           {
-            \\"foo\\": \\"bar\\",
-            \\"baz\\": \\"qux\\"
+            "foo": "bar",
+            "baz": "qux"
           }
         ]"
       `);

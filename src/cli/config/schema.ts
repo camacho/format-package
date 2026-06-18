@@ -1,4 +1,4 @@
-import * as Joi from '@hapi/joi';
+import Joi from '@hapi/joi';
 
 // region Joi Schema
 const JoiConfigSchema = Joi.object({

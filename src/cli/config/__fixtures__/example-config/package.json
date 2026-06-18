@@ -1,4 +1,5 @@
 {
   "name": "example-config",
+  "type": "commonjs",
   "main": "./index.js"
 }
