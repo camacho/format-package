@@ -7,7 +7,6 @@ function isSortableObject(
     return false;
   }
 
-  // eslint-disable-next-line no-use-before-define, @typescript-eslint/no-use-before-define
   return Object.values(value).every(isAlphabetizable);
 }
 

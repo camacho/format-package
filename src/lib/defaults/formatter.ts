@@ -10,7 +10,7 @@ const formatter: Formatter = async (obj, filePath) => {
   let prettierMod;
   try {
     prettierMod = await import('prettier');
-  } catch (error) {
+  } catch {
     return `${content}\n`;
   }
 
