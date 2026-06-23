@@ -2,10 +2,10 @@
 
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import { styleText } from 'node:util';
 
 import fs from 'fs-extra';
 import globby from 'globby';
-import chalk from 'chalk';
 
 import format from '../lib/index.ts';
 import { timer } from '../utils/timer.ts';
@@ -49,7 +49,8 @@ export const handleFile =
       console.log(nextPkg);
     } else if (!check) {
       console.log(
-        `${chalk.gray(
+        `${styleText(
+          'gray',
           path.relative('', filePath)
         )} ${elapsed.milliseconds.toFixed(0)}ms`
       );
