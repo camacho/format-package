@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import path from 'path';
+import { globSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 
 import fs from 'fs-extra';
-import globby from 'globby';
 
 import format from '../lib/index.ts';
 import { timer } from '../utils/timer.ts';
@@ -74,12 +74,15 @@ export async function execute(argv: string[]): Promise<number> {
       configPath,
     });
 
-    const files = await globby(globs, {
+    // node:fs glob replaces globby: withFileTypes gives Dirents we filter to
+    // files (globby's onlyFiles) and join to absolute paths (globby's absolute).
+    const files = globSync(globs, {
       cwd: process.cwd(),
-      onlyFiles: true,
-      ignore,
-      absolute: true,
-    });
+      exclude: ignore,
+      withFileTypes: true,
+    })
+      .filter((entry) => entry.isFile())
+      .map((entry) => path.join(entry.parentPath, entry.name));
 
     // Handle all files and get a list of
     // those whose contents would/did change

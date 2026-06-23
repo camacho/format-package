@@ -1,15 +1,27 @@
-const { mockFormat, mockGlobby, mockLogErrorAndExit } = vi.hoisted(() => ({
-  mockFormat: vi.fn((value) => value),
-  mockGlobby: vi.fn(() => ['config.json']),
-  mockLogErrorAndExit: vi.fn(),
-}));
+const { mockFormat, mockGlobSync, mockLogErrorAndExit, dirents } = vi.hoisted(
+  () => {
+    // node:fs globSync (withFileTypes) yields Dirents; the source filters to
+    // files and joins parentPath/name, so the mock returns that same shape.
+    const dirents = (...names: string[]) =>
+      names.map((name) => ({ isFile: () => true, parentPath: '/cwd', name }));
+    return {
+      mockFormat: vi.fn((value) => value),
+      mockGlobSync: vi.fn(() => dirents('config.json')),
+      mockLogErrorAndExit: vi.fn(),
+      dirents,
+    };
+  }
+);
 
 import fs from 'fs-extra';
 
 import * as config from './config/index.ts';
 import * as cli from './index.ts';
 
-vi.mock('globby', () => ({ default: mockGlobby }));
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>();
+  return { ...actual, globSync: mockGlobSync };
+});
 vi.mock('./error', () => ({ default: mockLogErrorAndExit }));
 vi.mock('../lib', async (importOriginal) => {
   const actual = await importOriginal<typeof import('../lib/index.ts')>();
@@ -45,7 +57,7 @@ describe('cli', () => {
 
   afterEach(() => {
     mockFormat.mockClear();
-    mockGlobby.mockClear();
+    mockGlobSync.mockClear();
     mockLogErrorAndExit.mockClear();
     mockReadFileSync.mockClear();
     mockWriteFileSync.mockClear();
@@ -120,7 +132,9 @@ describe('cli', () => {
 
     it('should pluralize the messaging if formatting might change multiple files', async () => {
       expect.assertions(1);
-      mockGlobby.mockReturnValueOnce(['package1.json', 'package2.json']);
+      mockGlobSync.mockReturnValueOnce(
+        dirents('package1.json', 'package2.json')
+      );
       mockFormat.mockImplementation(() => `foo${mockFormat.mock.calls.length}`);
       await cli.execute(['--check']);
       expect(mockConsoleLog).toHaveBeenCalledWith('2 files different.');

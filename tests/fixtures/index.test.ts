@@ -1,15 +1,14 @@
 import path from 'path';
+import { globSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import fs from 'fs-extra';
-import globby from 'globby';
 
 import { execute } from '../../src/cli/index.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const fixtures = globby.sync('*.json', {
-  absolute: false,
+const fixtures = globSync('*.json', {
   cwd: __dirname,
 });
 
