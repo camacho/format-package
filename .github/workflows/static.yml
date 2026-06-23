@@ -3,24 +3,21 @@ on: [push, pull_request]
 jobs:
   lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: ['14', '16']
-    name: Node v${{ matrix.node }} static analysis
+    name: Static analysis
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          node-version: '24'
+          cache: 'npm'
       - name: 'Install dependencies'
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: 'Lint'
-        run: yarn lint
+        run: npm run lint
       - name: 'Type check'
-        run: yarn tsc --noEmit
+        run: npm run type-check
       - name: 'Formatting'
         run: |
-          yarn prettier . --check --ignore-unknown
-          yarn dev --check
+          npx prettier . --check --ignore-unknown
+          npm run dev -- --check

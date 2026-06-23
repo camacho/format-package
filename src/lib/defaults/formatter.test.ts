@@ -19,9 +19,8 @@ describe('formatter', () => {
     it('gracefully handles options not being found', async () => {
       vi.resetModules();
       vi.doMock('prettier', async () => {
-        const actual = await vi.importActual<typeof import('prettier')>(
-          'prettier'
-        );
+        const actual =
+          await vi.importActual<typeof import('prettier')>('prettier');
         return {
           ...actual,
           resolveConfig: vi.fn(() => null),
