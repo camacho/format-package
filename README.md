@@ -5,7 +5,7 @@
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 
 ```sh
-yarn add -D format-package prettier@^2.0.0 || ^3.0.0
+npm install -D format-package prettier@^2.0.0 || ^3.0.0
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -52,7 +52,8 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 <!-- AUTO-GENERATED-CONTENT:START (ENGINES) -->
 
-- **node**: >=22.0.0
+- **node**: >=22.18.0
+
 <!-- AUTO-GENERATED-CONTENT:END -->
 
 ### Command Line
@@ -295,8 +296,8 @@ The default transformations map has:
 ```ts
 import sortScripts from 'sort-scripts';
 
-import { Transformations } from '../../types';
-import { alphabetize } from '../../utils/object';
+import type { Transformations } from '../../types.ts';
+import { alphabetize } from '../../utils/object.ts';
 
 const transformations: Transformations = {
   scripts(key, prevValue) {
@@ -372,19 +373,22 @@ By default, the formatter will try to use [`prettier`](https://github.com/pretti
 ```ts
 import path from 'path';
 
-import { Formatter } from '../../types';
+import type { Formatter } from '../../types.ts';
 
 const formatter: Formatter = async (obj, filePath) => {
   const content = JSON.stringify(obj, null, 2);
 
   // Try to use prettier if it can be imported,
   // otherwise add a new line at the end
-  let prettier;
+  let prettierMod;
   try {
-    prettier = require('prettier');
-  } catch (error) {
+    prettierMod = await import('prettier');
+  } catch {
     return `${content}\n`;
   }
+
+  // prettier@2 is CJS; under ESM the callable API lands on .default
+  const prettier = prettierMod.default ?? prettierMod;
 
   let config = await prettier.resolveConfig(
     filePath ? path.dirname(filePath) : process.cwd()
@@ -474,7 +478,7 @@ If no configuration is found, then the [default](src/lib/defaults/index.ts) conf
 const JoiConfigSchema = Joi.object({
   order: Joi.array().min(1).unique().optional(),
   transformations: Joi.object().optional(),
-  formatter: Joi.func().optional(),
+  formatter: Joi.function().optional(),
 });
 ```
 
@@ -598,29 +602,29 @@ These scripts can be run via `yarn` or `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
 
-| Script           | Description                                                                                                                 |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `prebuild`       | clean the `build` directory to prevent dangling artifacts                                                                   |
-| `build`          | transpile TypeScript files in the `src` directory into JavaScript files in the `build` directory                            |
-| `postbuild`      | make `build/cli/index.js` file executable                                                                                   |
-| `clean`          | remove `build` and `node_modules` directories                                                                               |
-| `clean-build`    | remove `build` directory                                                                                                    |
-| `clean-packages` | `rimraf ./node_modules`                                                                                                     |
-| `dev`            | run [`ts-node-dev`](https://github.com/whitecolor/ts-node-dev) with `src/cli/index.ts` entrypoint                           |
-| `docs`           | update auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files            |
-| `format`         | format application code                                                                                                     |
-| `format-docs`    | format documentation                                                                                                        |
-| `format-package` | format package.json files                                                                                                   |
-| `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                            |
-| `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build                 |
-| `lint`           | lint the application code                                                                                                   |
-| `prepare`        | `husky install`                                                                                                             |
-| `prepublishOnly` | make sure the package is in good state before publishing                                                                    |
-| `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                           |
-| `start`          | run the cli from `build` directory                                                                                          |
-| `test`           | run tests for the application                                                                                               |
-| `type-check`     | check source types                                                                                                          |
-| `watch`          | run [`ts-node-dev`](https://github.com/whitecolor/ts-node-dev) with provided entrypoint, e.g. `yarn watch src/cli/index.ts` |
+| Script           | Description                                                                                                      |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `prebuild`       | clean the `build` directory to prevent dangling artifacts                                                        |
+| `build`          | transpile TypeScript files in the `src` directory into JavaScript files in the `build` directory                 |
+| `postbuild`      | make `build/cli/index.js` file executable                                                                        |
+| `clean`          | remove `build` and `node_modules` directories                                                                    |
+| `clean-build`    | remove `build` directory                                                                                         |
+| `clean-packages` | remove `node_modules` directory                                                                                  |
+| `dev`            | run `src/cli/index.ts` directly with `node` (native TypeScript)                                                  |
+| `docs`           | update auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
+| `format`         | format application code                                                                                          |
+| `format-docs`    | format documentation                                                                                             |
+| `format-package` | format package.json files                                                                                        |
+| `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                 |
+| `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build      |
+| `lint`           | lint the application code                                                                                        |
+| `prepare`        | `husky install`                                                                                                  |
+| `prepublishOnly` | make sure the package is in good state before publishing                                                         |
+| `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                |
+| `start`          | run the cli from `build` directory                                                                               |
+| `test`           | run tests for the application                                                                                    |
+| `type-check`     | check source types                                                                                               |
+| `watch`          | run `node --watch` on `src/cli/index.ts` for live reload                                                         |
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
