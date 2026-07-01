@@ -128,7 +128,7 @@ describe('config', () => {
       });
     });
 
-    it('should return default when configPath fails schema validation with no order property', () => {
+    it('should return default when configPath fails schema validation with an invalid order property', () => {
       const configPath = `${__dirname}/__fixtures__/invalid-config.js`;
 
       return expect(
@@ -138,6 +138,19 @@ describe('config', () => {
       ).resolves.toMatchObject({
         error: expect.any(Error),
         filepath: configDefault.filepath,
+      });
+    });
+
+    it('accepts a config without an order property (uses the default order)', () => {
+      const configPath = `${__dirname}/__fixtures__/partial-config.js`;
+
+      return expect(
+        search({
+          configPath,
+        })
+      ).resolves.toMatchObject({
+        error: undefined,
+        filepath: configPath,
       });
     });
 
@@ -174,8 +187,9 @@ describe('config', () => {
           configPath,
         })
       ).resolves.toMatchObject({
-        error: expect.any(Error),
+        error: undefined,
         filepath: configDefault.filepath,
+        isDefault: true,
       });
     });
 

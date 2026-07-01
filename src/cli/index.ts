@@ -143,6 +143,5 @@ export async function execute(argv: string[]): Promise<number> {
 
 /* istanbul ignore next */
 // ESM equivalent of `require.main === module`
-const isMain = process.argv[1] === fileURLToPath(import.meta.url);
-if (isMain)
+if (process.argv[1] === fileURLToPath(import.meta.url))
   execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));

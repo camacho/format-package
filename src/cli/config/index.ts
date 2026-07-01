@@ -6,20 +6,8 @@ import { cosmiconfig, type CosmiconfigResult } from 'cosmiconfig';
 import resolveFrom from 'resolve-from';
 import JSON5 from 'json5';
 
-import type { Config } from '../../types.ts';
-
 import { defaults } from '../../lib/index.ts';
 import JoiConfigSchema from './schema.ts';
-
-// @hapi/joi v15 does not export a ValidationError constructor — it creates plain
-// Error objects and stamps `.name = 'ValidationError'` on them at runtime.
-// We replicate that shape here so callers can `new ValidationError(msg)`.
-class ValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ValidationError';
-  }
-}
 
 // Shared shape returned by both search strategies: a resolved config plus
 // metadata about where it came from. All fields optional because the default
@@ -38,23 +26,10 @@ export const configDefault = {
   isDefault: true,
 };
 
-export const validateConfig = (
-  config: unknown
-): Config & { error?: ValidationError } => {
-  const result = JoiConfigSchema.validate(config);
-
-  if (result.error) {
-    return result;
-  }
-
-  if (!Array.isArray((config as Config).order)) {
-    return {
-      error: new ValidationError('Empty order property.'),
-    };
-  }
-
-  return result;
-};
+// Order is required by the schema, so joi reports a missing or duplicate order
+// as a ValidationError — no separate check or custom error class needed.
+export const validateConfig = (config: unknown) =>
+  JoiConfigSchema.validate(config);
 
 export const configModuleName = 'format-package';
 
@@ -147,7 +122,13 @@ const searchWithConfigPath = async ({
 
     // Load and validate the configuration file contents
     const result = await loadConfig(resolvedPath);
-    const { error } = validateConfig(result?.config);
+
+    // A missing or empty config file resolves to the default config.
+    if (!result || result.isEmpty) {
+      return { ...configDefault, error: undefined };
+    }
+
+    const { error } = validateConfig(result.config);
 
     // NOTE: This validation error handling is more strict than when a config
     //       path is not provided, as the intention is clearly expressed
