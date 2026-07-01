@@ -88,8 +88,8 @@
     }
   },
   "dependencies": {
-    "@hapi/joi": "^15.1.1",
     "cosmiconfig": "^9.0.2",
+    "joi": "^18.2.3",
     "json5": "^2.2.0",
     "resolve-from": "^5.0.0",
     "sort-scripts": "^1.0.1",
@@ -102,7 +102,6 @@
     "@eslint/js": "^10.0.1",
     "@types/cosmiconfig": "^5.0.3",
     "@types/fs-extra": "^11.0.4",
-    "@types/hapi__joi": "^15.0.3",
     "@types/node": "^24.13.2",
     "@vitest/coverage-v8": "^4.1.9",
     "@vitest/eslint-plugin": "^1.6.20",

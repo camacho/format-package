@@ -3,7 +3,6 @@ import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { cosmiconfig, type CosmiconfigResult } from 'cosmiconfig';
-import Joi from '@hapi/joi';
 import resolveFrom from 'resolve-from';
 import JSON5 from 'json5';
 
@@ -42,7 +41,7 @@ export const configDefault = {
 export const validateConfig = (
   config: unknown
 ): Config & { error?: ValidationError } => {
-  const result = Joi.validate(config, JoiConfigSchema);
+  const result = JoiConfigSchema.validate(config);
 
   if (result.error) {
     return result;

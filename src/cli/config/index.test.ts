@@ -121,7 +121,7 @@ describe('config', () => {
 
       return expect(search({ configPath })).resolves.toMatchObject({
         filepath: configPath,
-        error: null,
+        error: undefined,
         config: expect.objectContaining({
           order: expect.any(Array),
         }),
@@ -187,7 +187,7 @@ describe('config', () => {
           configPath,
         })
       ).resolves.toMatchObject({
-        error: null,
+        error: undefined,
         filepath: configPath,
       });
     });
@@ -201,7 +201,7 @@ describe('config', () => {
           searchFrom,
         })
       ).resolves.toMatchObject({
-        error: null,
+        error: undefined,
         filepath: `${searchFrom}/${configPath}`,
         config: expect.objectContaining({
           order: expect.any(Array),
@@ -214,7 +214,7 @@ describe('config', () => {
       const searchFrom = `${examplesDir}/format-package-json5`;
 
       return expect(search({ searchFrom })).resolves.toMatchObject({
-        error: null,
+        error: undefined,
         filepath: `${searchFrom}/${configPath}`,
         config: expect.objectContaining({
           order: expect.any(Array),
