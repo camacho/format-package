@@ -1,6 +1,6 @@
 import { resolve } from 'path';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import fs from 'fs-extra';
 
 import cosmiconfig from 'cosmiconfig';
 import Joi from '@hapi/joi';
@@ -79,7 +79,7 @@ export const resolveModuleOrPath = ({
 
   if (!resolvedPath) {
     resolvedPath = resolve(configPath);
-    resolvedPath = fs.existsSync(resolvedPath) ? resolvedPath : undefined;
+    resolvedPath = existsSync(resolvedPath) ? resolvedPath : undefined;
   }
 
   return resolvedPath;
@@ -89,7 +89,7 @@ export const loadJson5 = (
   filepath: string
 ): Promise<{ [k: string]: string | boolean }> => {
   try {
-    const buf = fs.readFileSync(filepath, { encoding: 'utf8' });
+    const buf = readFileSync(filepath, { encoding: 'utf8' });
     return JSON5.parse(buf);
   } catch (err) {
     err.message = `JSON Error in ${filepath}:\n${err.message}`;

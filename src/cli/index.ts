@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 
 import path from 'path';
-import { globSync } from 'node:fs';
+import { globSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
-
-import fs from 'fs-extra';
 
 import format from '../lib/index.ts';
 import { timer } from '../utils/timer.ts';
@@ -31,13 +29,13 @@ export const handleFile =
   async (filePath: string): Promise<boolean> => {
     const endTimer = timer()();
 
-    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const fileContents = readFileSync(filePath, 'utf8');
     const prevPkg = JSON.parse(fileContents);
     const nextPkg = await format(prevPkg, config, filePath);
     const changed = nextPkg !== fileContents;
 
     if (write && changed) {
-      fs.writeFileSync(filePath, nextPkg, 'utf8');
+      writeFileSync(filePath, nextPkg, 'utf8');
     }
 
     const elapsed = endTimer();

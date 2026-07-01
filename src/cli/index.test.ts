@@ -1,26 +1,36 @@
-const { mockFormat, mockGlobSync, mockLogErrorAndExit, dirents } = vi.hoisted(
-  () => {
-    // node:fs globSync (withFileTypes) yields Dirents; the source filters to
-    // files and joins parentPath/name, so the mock returns that same shape.
-    const dirents = (...names: string[]) =>
-      names.map((name) => ({ isFile: () => true, parentPath: '/cwd', name }));
-    return {
-      mockFormat: vi.fn((value) => value),
-      mockGlobSync: vi.fn(() => dirents('config.json')),
-      mockLogErrorAndExit: vi.fn(),
-      dirents,
-    };
-  }
-);
-
-import fs from 'fs-extra';
+const {
+  mockFormat,
+  mockGlobSync,
+  mockReadFileSync,
+  mockWriteFileSync,
+  mockLogErrorAndExit,
+  dirents,
+} = vi.hoisted(() => {
+  // node:fs globSync (withFileTypes) yields Dirents; the source filters to
+  // files and joins parentPath/name, so the mock returns that same shape.
+  const dirents = (...names: string[]) =>
+    names.map((name) => ({ isFile: () => true, parentPath: '/cwd', name }));
+  return {
+    mockFormat: vi.fn((value) => value),
+    mockGlobSync: vi.fn(() => dirents('config.json')),
+    mockReadFileSync: vi.fn(),
+    mockWriteFileSync: vi.fn(),
+    mockLogErrorAndExit: vi.fn(),
+    dirents,
+  };
+});
 
 import * as config from './config/index.ts';
 import * as cli from './index.ts';
 
 vi.mock('node:fs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('node:fs')>();
-  return { ...actual, globSync: mockGlobSync };
+  return {
+    ...actual,
+    globSync: mockGlobSync,
+    readFileSync: mockReadFileSync,
+    writeFileSync: mockWriteFileSync,
+  };
 });
 vi.mock('./error', () => ({ default: mockLogErrorAndExit }));
 vi.mock('../lib', async (importOriginal) => {
@@ -29,8 +39,6 @@ vi.mock('../lib', async (importOriginal) => {
 });
 
 describe('cli', () => {
-  let mockReadFileSync;
-  let mockWriteFileSync;
   let mockConsoleLog;
   let mockConsoleWarn;
 
@@ -39,8 +47,6 @@ describe('cli', () => {
   });
 
   beforeAll(() => {
-    mockReadFileSync = vi.spyOn(fs, 'readFileSync');
-    mockWriteFileSync = vi.spyOn(fs, 'writeFileSync');
     mockConsoleLog = vi.spyOn(console, 'log').mockReturnValue(undefined);
     mockConsoleWarn = vi.spyOn(console, 'warn').mockReturnValue(undefined);
   });
@@ -85,7 +91,7 @@ describe('cli', () => {
     mockFormat.mockImplementationOnce(() => 'value2');
     await cli.execute(['--write']);
 
-    expect(fs.writeFileSync).toHaveBeenCalled();
+    expect(mockWriteFileSync).toHaveBeenCalled();
   });
 
   it('does not write the contents if the contents do not change', async () => {
@@ -93,7 +99,7 @@ describe('cli', () => {
 
     await cli.execute(['--write']);
 
-    expect(fs.writeFileSync).not.toHaveBeenCalled();
+    expect(mockWriteFileSync).not.toHaveBeenCalled();
   });
 
   it('prints the contents if verbose is set', async () => {
