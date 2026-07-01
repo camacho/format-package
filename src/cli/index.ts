@@ -126,7 +126,7 @@ export async function execute(argv: string[]): Promise<number> {
     const relevantFiles = write ? changedFiles : files;
     const relevantAction = write ? 'Updated' : 'Formatted';
 
-    /* istanbul ignore next */
+    /* v8 ignore next */
     console.log(
       `${relevantAction} ${relevantFiles.length} ${pluralize(
         'file',
@@ -141,7 +141,7 @@ export async function execute(argv: string[]): Promise<number> {
   return 0;
 }
 
-/* istanbul ignore next */
 // ESM equivalent of `require.main === module`
+/* v8 ignore next 2 -- CLI entry point, exercised by the binary not unit tests */
 if (process.argv[1] === fileURLToPath(import.meta.url))
   execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));

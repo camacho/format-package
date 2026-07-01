@@ -14,7 +14,9 @@ const formatter: Formatter = async (obj, filePath) => {
     return `${content}\n`;
   }
 
-  // prettier@2 is CJS; under ESM the callable API lands on .default
+  // prettier@2 is CJS; under ESM the callable API lands on .default. The
+  // fallback covers a pure-ESM prettier with no default export.
+  /* v8 ignore next -- defensive interop fallback */
   const prettier = prettierMod.default ?? prettierMod;
 
   let config = await prettier.resolveConfig(
