@@ -65,7 +65,7 @@ This module provides a simple CLI that can be run directly, with [`npx`](https:/
 # or
 npx format-package --help
 # or
-yarn format-package --help
+npx format-package --help
 ```
 
 It can also be used as part of an [npm script](https://docs.npmjs.com/misc/scripts):
@@ -82,7 +82,7 @@ It can also be used as part of an [npm script](https://docs.npmjs.com/misc/scrip
 ```
 
 ```sh
-yarn format:pkg
+npm run format:pkg
 ```
 
 ### Module
@@ -96,13 +96,13 @@ It returns a newly sorted and formatted `package.json` string.
 ```js
 #!/usr/bin/env node
 
-const fs = require('fs');
-const format = require('format-package').default;
-const pkg = require('<path-to-package.json>');
+import { writeFile } from 'node:fs/promises';
+import format from 'format-package';
+import pkg from '<path-to-package.json>' with { type: 'json' };
 
 const formatPackage = async (pkg, filePath) => {
   const formattedPkg = await format(pkg, options);
-  fs.promises.writeFile(filePath, formattedPkg, 'utf8');
+  await writeFile(filePath, formattedPkg, 'utf8');
 };
 
 formatPackage(pkg).catch((error) => {
@@ -127,10 +127,7 @@ Options are expected to be passed in as a keyed object:
 
 ```js
 import format from 'format-package';
-import pkg from '<path-to-package.json>';
-// or
-// const format = require('format-package').default;
-// const pkg = require('<path-to-package.json>');
+import pkg from '<path-to-package.json>' with { type: 'json' };
 
 const options = {
   order: [],
@@ -236,10 +233,7 @@ The `...rest` value is considered special. It marks the location where the remai
 
 ```js
 import format from 'format-package';
-import pkg from '<path-to-package.json>';
-// or
-// const format = require('format-package').default;
-// const pkg = require('<path-to-package.json>');
+import pkg from '<path-to-package.json>' with { type: 'json' };
 
 const options = {
   order: [
@@ -331,10 +325,7 @@ Additional transformations or overrides can be passed in:
 
 ```js
 import format from 'format-package';
-import pkg from '<path-to-package.json>';
-// or
-// const format = require('format-package').default;
-// const pkg = require('<path-to-package.json>');
+import pkg from '<path-to-package.json>' with { type: 'json' };
 
 const options = {
   transformations: {
@@ -415,7 +406,7 @@ export default formatter;
 The CLI accepts a series of files or globs to be formatted, as well as a set of options.
 
 ```sh
-yarn format-package "**/package.json"
+npx format-package "**/package.json"
 ```
 
 Options can also be passed as environment variables and are used in the following order of precedence:
@@ -438,7 +429,7 @@ FORMAT_PACKAGE_VERBOSE=true
 You can also see the available options in the terminal by running:
 
 ```sh
-yarn format-package --help
+npx format-package --help
 ```
 
 ## Configuration Files
@@ -541,19 +532,13 @@ order:
 
 <!-- AUTO-GENERATED-CONTENT:END -->
 
-## Integrating'
-
-> [!WARNING]
-> This section is outdated. Please refer to the [husky](https://typicode.github.io/husky/#/) documentation for the latest integration instructions.
+## Integrating
 
 An effective integration of this plugin could look like this:
 
 `.husky/pre-commit`:
 
 ```sh
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 npx lint-staged
 ```
 
@@ -562,7 +547,8 @@ npx lint-staged
 ```json
 {
   "scripts": {
-    "format:pkg": "format-package -w"
+    "format:pkg": "format-package -w",
+    "prepare": "husky"
   },
   "lint-staged": {
     "package.json": ["format-package -w"]
@@ -584,7 +570,7 @@ This configuration combines:
 Together, they ensure the `package.json` file is automatically formatted if it changes and provides an easy [package.json script](https://docs.npmjs.com/misc/scripts) for manual use:
 
 ```sh
-yarn format:pkg
+npm run format:pkg
 ```
 
 ## Development
@@ -593,12 +579,12 @@ Clone the repo and install dependencies to get started with development:
 
 ```sh
 git clone git@github.com:camacho/format-package.git
-yarn install
+npm install
 ```
 
 ### Scripts
 
-These scripts can be run via `yarn` or `npm run`:
+These scripts can be run via `npm run`:
 
 <!-- AUTO-GENERATED-CONTENT:START (SCRIPTS) -->
 
@@ -618,7 +604,7 @@ These scripts can be run via `yarn` or `npm run`:
 | `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                 |
 | `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build      |
 | `lint`           | lint the application code                                                                                        |
-| `prepare`        | `husky install`                                                                                                  |
+| `prepare`        | `husky`                                                                                                          |
 | `prepublishOnly` | make sure the package is in good state before publishing                                                         |
 | `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                |
 | `start`          | run the cli from `build` directory                                                                               |
