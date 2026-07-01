@@ -10,9 +10,9 @@ can be dropped and automatically run through the `format-package` CLI to verify
 the output.
 
 To add a new test, just create a new `JSON` file in the `fixtures` directory and
-run `yarn test --watch`. A snapshot will automatically be created for each
+run `npm test`. A snapshot will automatically be created for each
 fixture file found and any changes in output will cause the tests to fail until
-their snapshots are updated (`yarn test -u`).
+their snapshots are updated (`npm test -- -u`).
 
 In addition, custom `.test.ts` files can be added here and will be run as part
 of the test suite.

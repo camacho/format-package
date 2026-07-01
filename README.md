@@ -58,12 +58,10 @@ It is configurable to allow teams to pick the order that work best for them, and
 
 ### Command Line
 
-This module provides a simple CLI that can be run directly, with [`npx`](https://docs.npmjs.com/cli/v8/commands/npx), or with [Yarn](https://yarnpkg.com/):
+This module provides a simple CLI that can be run directly or with [`npx`](https://docs.npmjs.com/cli/v8/commands/npx):
 
 ```sh
 ./node_modules/.bin/format-package --help
-# or
-npx format-package --help
 # or
 npx format-package --help
 ```
