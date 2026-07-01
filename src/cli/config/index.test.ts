@@ -113,9 +113,7 @@ describe('config', () => {
     it('should return default config on exception', () =>
       expect(search({ searchFrom: {} as any })).resolves.toMatchObject({
         filepath: configDefault.filepath,
-        error: {
-          message: 'expected filepath to be a string',
-        },
+        error: expect.any(Error),
       }));
 
     it('should return config specified with configPath', () => {
@@ -164,9 +162,7 @@ describe('config', () => {
           configPath: {} as any,
         })
       ).resolves.toMatchObject({
-        error: expect.objectContaining({
-          name: 'Error',
-        }),
+        error: expect.any(Error),
         filepath: configDefault.filepath,
       }));
 

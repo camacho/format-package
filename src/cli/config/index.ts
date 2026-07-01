@@ -2,7 +2,7 @@ import { resolve } from 'path';
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-import cosmiconfig from 'cosmiconfig';
+import { cosmiconfig, type CosmiconfigResult } from 'cosmiconfig';
 import Joi from '@hapi/joi';
 import resolveFrom from 'resolve-from';
 import JSON5 from 'json5';
@@ -98,12 +98,12 @@ export const loadJson5 = (
 };
 
 const createCosmiconfigLoader = () => ({
-  '.json': { sync: loadJson5 },
+  '.json': loadJson5,
 });
 
 export const loadConfig = async (
   configPath: string
-): Promise<cosmiconfig.CosmiconfigResult> => {
+): Promise<CosmiconfigResult> => {
   const explorer = cosmiconfig(configModuleName, {
     loaders: createCosmiconfigLoader(),
   });

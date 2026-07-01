@@ -89,7 +89,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.1.1",
-    "cosmiconfig": "^5.2.1",
+    "cosmiconfig": "^9.0.2",
     "json5": "^2.2.0",
     "resolve-from": "^5.0.0",
     "sort-scripts": "^1.0.1",
