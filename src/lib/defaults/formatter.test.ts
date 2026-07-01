@@ -1,4 +1,3 @@
-// Make TypeScript treat as commonjs
 let formatter;
 
 describe('formatter', () => {
@@ -47,7 +46,9 @@ describe('formatter', () => {
     });
 
     afterAll(() => {
-      vi.unmock('prettier');
+      // doUnmock (not the hoisted unmock) so it actually runs here in afterAll,
+      // pairing with the doMock above.
+      vi.doUnmock('prettier');
     });
 
     it('formats the object using JSON.stringify', () =>
