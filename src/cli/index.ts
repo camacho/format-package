@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import path from 'path';
-import { globSync, readFileSync, writeFileSync } from 'node:fs';
+import { globSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { styleText } from 'node:util';
 
@@ -138,6 +138,9 @@ export async function execute(argv: string[]): Promise<number> {
   return 0;
 }
 
-/* v8 ignore next 2 */
-if (process.argv[1] === fileURLToPath(import.meta.url))
+/* v8 ignore next 3 -- entry-point guard; realpathSync resolves the bin symlink so global/npx installs match */
+if (
+  process.argv[1] &&
+  realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)
+)
   execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));
