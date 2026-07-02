@@ -22,54 +22,50 @@
   "keywords": [
     "format",
     "order",
+    "sort",
+    "standardize",
     "organize",
     "package",
     "package.json",
     "prettier",
     "prettify"
   ],
-  "bin": "build/cli/index.js",
+  "bin": "dist/cli/index.js",
   "type": "module",
-  "main": "build/lib/index.js",
+  "main": "dist/lib/index.js",
   "files": [
-    "build",
+    "dist",
     "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "prebuild": "npm run clean-build",
-    "build": "tsc",
-    "postbuild": "chmod +x ./build/cli/index.js",
-    "clean": "npm run clean-build && npm run clean-packages",
-    "clean-build": "rm -rf ./build",
-    "clean-packages": "rm -rf ./node_modules",
+    "prebuild": "rm -rf ./dist",
+    "build": "tsc --project tsconfig.build.json",
+    "postbuild": "chmod +x ./dist/cli/index.js",
     "dev": "node ./src/cli/index.ts",
     "docs": "node ./scripts/markdown.ts",
-    "format": "npm run format-package && npm run format-source",
-    "format-docs": "prettier --write '**/*.md'",
-    "format-package": "node ./src/cli/index.ts -w package.json",
-    "format-source": "prettier \"**/**{js,json,ts,yml}\" --write",
+    "format": "npm run dev -- -w package.json && prettier --write --ignore-unknown .",
     "gamut": "npm run reset && npm run format && npm run lint && npm run type-check && npm run test && npm run build && npm run start",
     "lint": "eslint .",
     "prepare": "husky",
     "prepublishOnly": "npm run gamut",
-    "reset": "npm run clean && npm install",
-    "start": "node ./build/cli/index.js",
+    "reset": "rm -rf ./node_modules ./dist && npm install",
+    "start": "node ./dist/cli/index.js",
     "test": "vitest run",
     "type-check": "tsc --noEmit",
     "watch": "node --watch ./src/cli/index.ts"
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint",
+      "eslint --fix",
       "prettier --write"
     ],
     "*.{yml,md,json}": [
       "prettier --write"
     ],
     "**/package.json": [
-      "npm run format-package"
+      "npm run dev -- -w package.json"
     ]
   },
   "overrides": {

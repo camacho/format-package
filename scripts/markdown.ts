@@ -44,7 +44,7 @@ function stageChanges(
 
   if (!files.length) return;
 
-  execa.sync('npm', ['run', 'format-docs']);
+  execa.sync('npx', ['prettier', '--write', ...files]);
   execa.sync('git', ['add', ...files]);
 }
 

@@ -12,8 +12,7 @@ import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescrip
 export default tseslint.config(
   {
     ignores: [
-      'build/**',
-      'examples/**',
+      'dist/**',
       // CJS cosmiconfig fixtures (intentionally non-ESM, validated by tests)
       'src/cli/config/__fixtures__/**',
     ],

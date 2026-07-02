@@ -118,6 +118,22 @@ describe('cli', () => {
     expect(mockConsoleWarn).toHaveBeenCalledTimes(1);
   });
 
+  it('reports the config filepath when a non-default config is used', async () => {
+    expect.assertions(1);
+
+    vi.spyOn(config, 'search').mockResolvedValueOnce({
+      config: {},
+      filepath: '/path/to/format-package.json',
+      isDefault: false,
+    });
+
+    await cli.execute([]);
+
+    expect(mockConsoleLog).toHaveBeenCalledWith(
+      'Formatted 1 file with /path/to/format-package.json.'
+    );
+  });
+
   describe('`--check` flag', () => {
     it('should return `0` exit code if formatting would not change the file', async () => {
       expect.assertions(1);

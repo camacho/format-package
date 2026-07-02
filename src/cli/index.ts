@@ -13,7 +13,7 @@ import parser from './parse.ts';
 import * as configSearch from './config/index.ts';
 import logError from './error.ts';
 
-export const handleFile =
+export const configureFileHandler =
   (
     {
       write,
@@ -72,8 +72,6 @@ export async function execute(argv: string[]): Promise<number> {
       configPath,
     });
 
-    // node:fs glob replaces globby: withFileTypes gives Dirents we filter to
-    // files (globby's onlyFiles) and join to absolute paths (globby's absolute).
     const files = globSync(globs, {
       cwd: process.cwd(),
       exclude: ignore,
@@ -84,7 +82,7 @@ export async function execute(argv: string[]): Promise<number> {
 
     // Handle all files and get a list of
     // those whose contents would/did change
-    const configuredFileHandler = handleFile({ verbose, write, check }, config);
+    const fileHandler = configureFileHandler({ verbose, write, check }, config);
 
     const changedFiles = (
       await Promise.all(
@@ -92,7 +90,7 @@ export async function execute(argv: string[]): Promise<number> {
           .map((file) => path.resolve(file))
           .map(async (filePath) => {
             const resolvedFilePath = path.resolve(filePath);
-            const changed = await configuredFileHandler(resolvedFilePath);
+            const changed = await fileHandler(resolvedFilePath);
             return {
               changed,
               filePath: resolvedFilePath,
@@ -126,7 +124,6 @@ export async function execute(argv: string[]): Promise<number> {
     const relevantFiles = write ? changedFiles : files;
     const relevantAction = write ? 'Updated' : 'Formatted';
 
-    /* v8 ignore next */
     console.log(
       `${relevantAction} ${relevantFiles.length} ${pluralize(
         'file',
@@ -141,7 +138,6 @@ export async function execute(argv: string[]): Promise<number> {
   return 0;
 }
 
-// ESM equivalent of `require.main === module`
-/* v8 ignore next 2 -- CLI entry point, exercised by the binary not unit tests */
+/* v8 ignore next 2 */
 if (process.argv[1] === fileURLToPath(import.meta.url))
   execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));
