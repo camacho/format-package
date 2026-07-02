@@ -146,10 +146,7 @@ The `format-package` module also exports its defaults to help with configuration
 
 ```js
 import format from 'format-package';
-import pkg from '<path-to-package.json>';
-// or
-// const format = require('format-package').default;
-// const pkg = require('<path-to-package.json>');
+import pkg from '<path-to-package.json>' with { type: 'json' };
 
 const {
   defaults: { order: defaultOrder },
