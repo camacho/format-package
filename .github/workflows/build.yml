@@ -19,4 +19,4 @@ jobs:
       - name: 'Build'
         run: npm run build
       - name: 'Run'
-        run: ./build/cli/index.js package.json --check
+        run: ./dist/cli/index.js package.json --check
