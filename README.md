@@ -593,6 +593,7 @@ These scripts can be run via `npm run`:
 | `format`         | format application code                                                                                          |
 | `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build      |
 | `lint`           | lint the application code                                                                                        |
+| `prepack`        | build the package before it is packed for `npm pack` or `npm publish`                                            |
 | `prepare`        | `husky`                                                                                                          |
 | `prepublishOnly` | make sure the package is in good state before publishing                                                         |
 | `reset`          | clean `dist` directory and reset the `node_modules` dependencies                                                 |
