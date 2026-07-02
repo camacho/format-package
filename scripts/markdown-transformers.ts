@@ -1,6 +1,6 @@
 import path from 'path';
+import { readFileSync } from 'node:fs';
 
-import fs from 'fs-extra';
 import JSON5 from 'json5';
 
 // stolen from markdown-magic/lib/transforms/code.js
@@ -16,7 +16,7 @@ export function REGION(_: unknown, options, config) {
   const filePath = path.join(fileDir, options.src);
 
   try {
-    code = fs.readFileSync(filePath, 'utf8');
+    code = readFileSync(filePath, 'utf8');
   } catch (e) {
     console.log(`FILE NOT FOUND ${filePath}`);
     throw e;
@@ -66,7 +66,7 @@ export function JSONPROP(content, options, config) {
   const filePath = path.join(fileDir, options.src);
 
   try {
-    code = fs.readFileSync(filePath, 'utf8');
+    code = readFileSync(filePath, 'utf8');
   } catch (e) {
     console.log(`FILE NOT FOUND ${filePath}`);
     throw e;

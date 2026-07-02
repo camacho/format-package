@@ -1,11 +1,10 @@
-import 'jest-extended';
-import { alphabetize } from './object';
+import { alphabetize } from './object.ts';
 
 describe('object', () => {
   describe('alphabetize', () => {
     it('does not alphabetize non-objects', () => {
       expect(() => alphabetize(() => {})).toThrowErrorMatchingInlineSnapshot(
-        `"Value is not able to be alphabetized"`
+        `[Error: Value is not able to be alphabetized]`
       );
     });
 

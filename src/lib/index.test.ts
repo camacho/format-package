@@ -1,18 +1,20 @@
-const mockSort = jest.fn((keys) => keys);
-const mockTransform = jest.fn((k, v) => [k, v]);
-const mockValidate = jest.fn();
+const { mockSort, mockTransform, mockValidate } = vi.hoisted(() => ({
+  mockSort: vi.fn((keys) => keys),
+  mockTransform: vi.fn((k, v) => [k, v]),
+  mockValidate: vi.fn(),
+}));
 
-jest.mock('./sort', () => mockSort);
-jest.mock('./transform', () => mockTransform);
-jest.mock('./validate', () => mockValidate);
+vi.mock('./sort', () => ({ default: mockSort }));
+vi.mock('./transform', () => ({ default: mockTransform }));
+vi.mock('./validate', () => ({ default: mockValidate }));
 
-import { Formatter, PackageJson, Order } from '../types';
+import { Formatter, PackageJson, Order } from '../types.ts';
 
-import * as defaults from './defaults';
-import sort from './sort';
-import transform from './transform';
-import validate from './validate';
-import format, { defaults as exportedDefaults } from '.';
+import * as defaults from './defaults/index.ts';
+import sort from './sort.ts';
+import transform from './transform.ts';
+import validate from './validate.ts';
+import format, { defaults as exportedDefaults } from './index.ts';
 
 describe('format', () => {
   beforeEach(() => {
@@ -59,8 +61,8 @@ describe('format', () => {
 
     return expect(format(pkg)).resolves.toMatchInlineSnapshot(`
               "{
-                \\"name\\": \\"test\\",
-                \\"foo\\": \\"bar\\"
+                "name": "test",
+                "foo": "bar"
               }
               "
             `);
@@ -71,9 +73,9 @@ describe('format', () => {
 
     const pkg = { name: 'test' };
 
-    const mockFormatter = jest.fn(async (o: PackageJson) =>
+    const mockFormatter = vi.fn(async (o: PackageJson) =>
       JSON.stringify(o)
-    ) as jest.MockedFunction<Formatter>;
+    ) as unknown as Formatter;
 
     const options = {
       formatter: mockFormatter,
@@ -85,7 +87,7 @@ describe('format', () => {
 
     const result = await format(pkg, options);
 
-    expect(result).toMatchInlineSnapshot(`"{\\"name\\":\\"test\\"}"`);
+    expect(result).toMatchInlineSnapshot(`"{"name":"test"}"`);
     expect(sort).toHaveBeenCalledWith(expect.any(Array), options.order);
     expect(transform).toHaveBeenCalledWith(
       'name',

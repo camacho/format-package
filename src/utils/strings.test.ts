@@ -1,4 +1,4 @@
-import { pluralize } from './strings';
+import { pluralize } from './strings.ts';
 
 describe('string utils', () => {
   describe('pluralize', () => {

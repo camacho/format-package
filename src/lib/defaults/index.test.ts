@@ -1,4 +1,4 @@
-import { transformations, order, formatter } from '.';
+import { transformations, order, formatter } from './index.ts';
 
 describe('defaults', () => {
   it('exposes a transformations object', () => {

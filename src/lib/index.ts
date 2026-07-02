@@ -1,9 +1,9 @@
-import { Config, PackageJson } from '../types';
+import type { Config, PackageJson } from '../types.ts';
 
-import * as defaults from './defaults';
-import sort from './sort';
-import transform from './transform';
-import validate from './validate';
+import * as defaults from './defaults/index.ts';
+import sort from './sort.ts';
+import transform from './transform.ts';
+import validate from './validate.ts';
 
 export { defaults };
 

@@ -1,4 +1,5 @@
 import path from 'path';
+import { fileURLToPath } from 'node:url';
 
 import execa from 'execa';
 import markdownMagic from 'markdown-magic';
@@ -7,8 +8,9 @@ import PRETTIER from 'markdown-magic-prettier';
 import ENGINES from 'markdown-magic-engines';
 import INSTALL from 'markdown-magic-install-command';
 
-import { JSONPROP, REGION } from './markdown-transformers';
+import { JSONPROP, REGION } from './markdown-transformers.ts';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const globs = [`${root}/**/**.md`, `!${root}/node_modules/**`];
 
@@ -42,7 +44,7 @@ function stageChanges(
 
   if (!files.length) return;
 
-  execa.sync('yarn', ['format-docs']);
+  execa.sync('npx', ['prettier', '--write', ...files]);
   execa.sync('git', ['add', ...files]);
 }
 

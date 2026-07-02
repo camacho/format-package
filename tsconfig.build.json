@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": "src",
+    // No vitest types in the build output
+    "types": ["node"]
+  },
+  "exclude": ["**/tests/", "**/*.test.ts", "**/__fixtures__/**"],
+  "include": ["src", "**/*.json"]
+}

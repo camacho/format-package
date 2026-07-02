@@ -1,30 +1,24 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "erasableSyntaxOnly": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["ESNext"],
-    "module": "CommonJS",
-    "outDir": "build",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
     "resolveJsonModule": true,
-    "rootDir": "src",
+    "rewriteRelativeImportExtensions": true,
     "sourceMap": true,
+    "strict": false,
     "strictNullChecks": true,
-    "target": "es2016",
-    "types": ["jest", "node"]
+    "target": "es2022",
+    "types": ["node", "vitest/globals"]
   },
-  "exclude": [
-    "node_modules/",
-    ".github/",
-    ".husky/",
-    ".yarn/",
-    "**/tests/",
-    "**/**.test.ts/",
-    "**/__fixtures__/**",
-    "**/__mocks__/**",
-    "build/"
-  ],
-  "include": ["src/", "src/**/*.json"]
+  "exclude": ["coverage", "node_modules", "dist"],
+  "include": ["src", "tests", "scripts", "examples", "src/**/*.json"]
 }

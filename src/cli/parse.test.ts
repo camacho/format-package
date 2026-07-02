@@ -1,4 +1,4 @@
-import parse from './parse';
+import parse from './parse.ts';
 
 describe('parse', () => {
   it('parses positional files', () => {

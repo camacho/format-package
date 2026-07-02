@@ -1,20 +1,19 @@
 #!/usr/bin/env node
 
 import path from 'path';
+import { globSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { styleText } from 'node:util';
 
-import fs from 'fs-extra';
-import globby from 'globby';
-import chalk from 'chalk';
+import format from '../lib/index.ts';
+import { timer } from '../utils/timer.ts';
+import { pluralize } from '../utils/strings.ts';
 
-import format from '../lib';
-import { timer } from '../utils/timer';
-import { pluralize } from '../utils/strings';
+import parser from './parse.ts';
+import * as configSearch from './config/index.ts';
+import logError from './error.ts';
 
-import parser from './parse';
-import * as configSearch from './config';
-import logError from './error';
-
-export const handleFile =
+export const configureFileHandler =
   (
     {
       write,
@@ -30,13 +29,13 @@ export const handleFile =
   async (filePath: string): Promise<boolean> => {
     const endTimer = timer()();
 
-    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const fileContents = readFileSync(filePath, 'utf8');
     const prevPkg = JSON.parse(fileContents);
     const nextPkg = await format(prevPkg, config, filePath);
     const changed = nextPkg !== fileContents;
 
     if (write && changed) {
-      fs.writeFileSync(filePath, nextPkg, 'utf8');
+      writeFileSync(filePath, nextPkg, 'utf8');
     }
 
     const elapsed = endTimer();
@@ -48,7 +47,8 @@ export const handleFile =
       console.log(nextPkg);
     } else if (!check) {
       console.log(
-        `${chalk.gray(
+        `${styleText(
+          'gray',
           path.relative('', filePath)
         )} ${elapsed.milliseconds.toFixed(0)}ms`
       );
@@ -72,16 +72,17 @@ export async function execute(argv: string[]): Promise<number> {
       configPath,
     });
 
-    const files = await globby(globs, {
+    const files = globSync(globs, {
       cwd: process.cwd(),
-      onlyFiles: true,
-      ignore,
-      absolute: true,
-    });
+      exclude: ignore,
+      withFileTypes: true,
+    })
+      .filter((entry) => entry.isFile())
+      .map((entry) => path.join(entry.parentPath, entry.name));
 
     // Handle all files and get a list of
     // those whose contents would/did change
-    const configuredFileHandler = handleFile({ verbose, write, check }, config);
+    const fileHandler = configureFileHandler({ verbose, write, check }, config);
 
     const changedFiles = (
       await Promise.all(
@@ -89,7 +90,7 @@ export async function execute(argv: string[]): Promise<number> {
           .map((file) => path.resolve(file))
           .map(async (filePath) => {
             const resolvedFilePath = path.resolve(filePath);
-            const changed = await configuredFileHandler(resolvedFilePath);
+            const changed = await fileHandler(resolvedFilePath);
             return {
               changed,
               filePath: resolvedFilePath,
@@ -123,7 +124,6 @@ export async function execute(argv: string[]): Promise<number> {
     const relevantFiles = write ? changedFiles : files;
     const relevantAction = write ? 'Updated' : 'Formatted';
 
-    /* istanbul ignore next */
     console.log(
       `${relevantAction} ${relevantFiles.length} ${pluralize(
         'file',
@@ -138,6 +138,9 @@ export async function execute(argv: string[]): Promise<number> {
   return 0;
 }
 
-/* istanbul ignore next */
-if (require.main === module)
+/* v8 ignore next 3 -- entry-point guard; realpathSync resolves the bin symlink so global/npx installs match */
+if (
+  process.argv[1] &&
+  realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)
+)
   execute(process.argv.slice(2)).then((exitCode) => process.exit(exitCode));

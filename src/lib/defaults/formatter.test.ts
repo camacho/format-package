@@ -1,28 +1,35 @@
-// Make TypeScript treat as commonjs
 let formatter;
 
 describe('formatter', () => {
-  beforeEach(() => {
-    jest.resetModules();
-    formatter = require('./formatter').default;
+  beforeEach(async () => {
+    vi.resetModules();
+    formatter = (await import('./formatter.ts')).default;
   });
 
   describe('with prettier', () => {
     it('formats the object with prettier settings', () =>
       expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
         "{
-          \\"foo\\": \\"bar\\"
+          "foo": "bar"
         }
         "
       `));
 
-    it('gracefully handles options not being found', () => {
-      const prettier = require('prettier');
-      jest.spyOn(prettier, 'resolveConfig').mockImplementation(() => null);
+    it('gracefully handles options not being found', async () => {
+      vi.resetModules();
+      vi.doMock('prettier', async () => {
+        const actual =
+          await vi.importActual<typeof import('prettier')>('prettier');
+        return {
+          ...actual,
+          resolveConfig: vi.fn(() => null),
+        };
+      });
+      formatter = (await import('./formatter.ts')).default;
 
       return expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
         "{
-          \\"foo\\": \\"bar\\"
+          "foo": "bar"
         }
         "
       `);
@@ -33,17 +40,21 @@ describe('formatter', () => {
     beforeAll(() => {
       // Hack to make prettier not be found when attempting
       // to dynamically import the dependency
-      jest.doMock('prettier', false as any);
+      vi.doMock('prettier', () => {
+        throw new Error('Cannot find module prettier');
+      });
     });
 
     afterAll(() => {
-      jest.unmock('prettier');
+      // doUnmock (not the hoisted unmock) so it actually runs here in afterAll,
+      // pairing with the doMock above.
+      vi.doUnmock('prettier');
     });
 
     it('formats the object using JSON.stringify', () =>
       expect(formatter({ foo: 'bar' })).resolves.toMatchInlineSnapshot(`
         "{
-          \\"foo\\": \\"bar\\"
+          "foo": "bar"
         }
         "
       `));

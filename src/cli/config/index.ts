@@ -1,40 +1,35 @@
 import { resolve } from 'path';
-import fs from 'fs-extra';
+import { existsSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
-import cosmiconfig from 'cosmiconfig';
-import Joi from '@hapi/joi';
-import { ValidationError } from '@hapi/joi/lib/errors';
+import { cosmiconfig, type CosmiconfigResult } from 'cosmiconfig';
 import resolveFrom from 'resolve-from';
 import JSON5 from 'json5';
 
-import { Config } from '../../types';
+import { defaults } from '../../lib/index.ts';
+import JoiConfigSchema from './schema.ts';
 
-import { defaults } from '../../lib';
-import JoiConfigSchema from './schema';
+// Shared shape returned by both search strategies: a resolved config plus
+// metadata about where it came from. All fields optional because the default
+// fallback, a found file, and an empty result each populate a different subset.
+export interface SearchResult {
+  config?: unknown;
+  filepath?: string;
+  isDefault?: boolean;
+  isEmpty?: boolean;
+  error?: unknown;
+}
 
 export const configDefault = {
   config: defaults,
-  filepath: require.resolve('../../lib/defaults'),
+  filepath: fileURLToPath(new URL('../../lib/defaults/', import.meta.url)),
   isDefault: true,
 };
 
-export const validateConfig = (
-  config: unknown
-): Config & { error?: ValidationError } => {
-  const result = Joi.validate(config, JoiConfigSchema);
-
-  if (result.error) {
-    return result;
-  }
-
-  if (!Array.isArray((config as Config).order)) {
-    return {
-      error: new ValidationError('Empty order property.'),
-    };
-  }
-
-  return result;
-};
+// Order is required by the schema, so joi reports a missing or duplicate order
+// as a ValidationError — no separate check or custom error class needed.
+export const validateConfig = (config: unknown) =>
+  JoiConfigSchema.validate(config);
 
 export const configModuleName = 'format-package';
 
@@ -58,7 +53,7 @@ export const resolveModuleOrPath = ({
 
   if (!resolvedPath) {
     resolvedPath = resolve(configPath);
-    resolvedPath = fs.existsSync(resolvedPath) ? resolvedPath : undefined;
+    resolvedPath = existsSync(resolvedPath) ? resolvedPath : undefined;
   }
 
   return resolvedPath;
@@ -68,7 +63,7 @@ export const loadJson5 = (
   filepath: string
 ): Promise<{ [k: string]: string | boolean }> => {
   try {
-    const buf = fs.readFileSync(filepath, { encoding: 'utf8' });
+    const buf = readFileSync(filepath, { encoding: 'utf8' });
     return JSON5.parse(buf);
   } catch (err) {
     err.message = `JSON Error in ${filepath}:\n${err.message}`;
@@ -77,12 +72,12 @@ export const loadJson5 = (
 };
 
 const createCosmiconfigLoader = () => ({
-  '.json': { sync: loadJson5 },
+  '.json': loadJson5,
 });
 
 export const loadConfig = async (
   configPath: string
-): Promise<cosmiconfig.CosmiconfigResult> => {
+): Promise<CosmiconfigResult> => {
   const explorer = cosmiconfig(configModuleName, {
     loaders: createCosmiconfigLoader(),
   });
@@ -127,7 +122,13 @@ const searchWithConfigPath = async ({
 
     // Load and validate the configuration file contents
     const result = await loadConfig(resolvedPath);
-    const { error } = validateConfig(result?.config);
+
+    // A missing or empty config file resolves to the default config.
+    if (!result || result.isEmpty) {
+      return { ...configDefault, error: undefined };
+    }
+
+    const { error } = validateConfig(result.config);
 
     // NOTE: This validation error handling is more strict than when a config
     //       path is not provided, as the intention is clearly expressed
@@ -154,7 +155,7 @@ const searchWithoutConfigPath = async ({
   searchFrom,
 }: {
   searchFrom: string;
-}): Promise<{ [key: string]: unknown }> => {
+}): Promise<SearchResult> => {
   // Configure the explorer with pre-defined properties above
   const explorer = cosmiconfig(configModuleName, {
     packageProp: configModuleName,
@@ -193,7 +194,7 @@ export const search = async (
     configPath?: string;
     searchFrom?: string;
   } = { searchFrom: process.cwd() }
-) =>
+): Promise<SearchResult> =>
   // Configuration loading is dependent on whether the
   // config path is given or if it has to be found
   configPath

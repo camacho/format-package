@@ -1,4 +1,5 @@
-import { resolve, join } from 'path';
+import { resolve, join, dirname } from 'path';
+import { fileURLToPath } from 'node:url';
 
 import {
   configDefault,
@@ -7,8 +8,9 @@ import {
   resolveModuleOrPath,
   searchPlaces,
   search,
-} from '.';
+} from './index.ts';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(__dirname, '../../../');
 const examplesDir = join(rootDir, 'examples');
 
@@ -109,12 +111,9 @@ describe('config', () => {
       }));
 
     it('should return default config on exception', () =>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(search({ searchFrom: {} as any })).resolves.toMatchObject({
         filepath: configDefault.filepath,
-        error: {
-          message: 'expected filepath to be a string',
-        },
+        error: expect.any(Error),
       }));
 
     it('should return config specified with configPath', () => {
@@ -122,14 +121,14 @@ describe('config', () => {
 
       return expect(search({ configPath })).resolves.toMatchObject({
         filepath: configPath,
-        error: null,
+        error: undefined,
         config: expect.objectContaining({
           order: expect.any(Array),
         }),
       });
     });
 
-    it('should return default when configPath fails schema validation with no order property', () => {
+    it('should return default when configPath fails schema validation with an invalid order property', () => {
       const configPath = `${__dirname}/__fixtures__/invalid-config.js`;
 
       return expect(
@@ -139,6 +138,19 @@ describe('config', () => {
       ).resolves.toMatchObject({
         error: expect.any(Error),
         filepath: configDefault.filepath,
+      });
+    });
+
+    it('accepts a config without an order property (uses the default order)', () => {
+      const configPath = `${__dirname}/__fixtures__/partial-config.js`;
+
+      return expect(
+        search({
+          configPath,
+        })
+      ).resolves.toMatchObject({
+        error: undefined,
+        filepath: configPath,
       });
     });
 
@@ -163,9 +175,7 @@ describe('config', () => {
           configPath: {} as any,
         })
       ).resolves.toMatchObject({
-        error: expect.objectContaining({
-          name: 'Error',
-        }),
+        error: expect.any(Error),
         filepath: configDefault.filepath,
       }));
 
@@ -177,8 +187,9 @@ describe('config', () => {
           configPath,
         })
       ).resolves.toMatchObject({
-        error: expect.any(Error),
+        error: undefined,
         filepath: configDefault.filepath,
+        isDefault: true,
       });
     });
 
@@ -190,7 +201,7 @@ describe('config', () => {
           configPath,
         })
       ).resolves.toMatchObject({
-        error: null,
+        error: undefined,
         filepath: configPath,
       });
     });
@@ -204,7 +215,7 @@ describe('config', () => {
           searchFrom,
         })
       ).resolves.toMatchObject({
-        error: null,
+        error: undefined,
         filepath: `${searchFrom}/${configPath}`,
         config: expect.objectContaining({
           order: expect.any(Array),
@@ -217,7 +228,7 @@ describe('config', () => {
       const searchFrom = `${examplesDir}/format-package-json5`;
 
       return expect(search({ searchFrom })).resolves.toMatchObject({
-        error: null,
+        error: undefined,
         filepath: `${searchFrom}/${configPath}`,
         config: expect.objectContaining({
           order: expect.any(Array),

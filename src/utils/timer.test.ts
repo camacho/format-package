@@ -1,4 +1,4 @@
-import { timer } from './timer';
+import { timer } from './timer.ts';
 
 describe('timer util', () => {
   it('provides the elapsed time', () => {

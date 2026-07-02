@@ -62,4 +62,4 @@ typings/
 .idea
 
 # TypeScript Build
-build/
+dist/

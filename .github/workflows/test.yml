@@ -5,22 +5,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['14', '16']
+        node: ['22', '24']
     name: Node v${{ matrix.node }} test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: 'yarn'
+          cache: 'npm'
       - name: 'Install dependencies'
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: 'Test'
-        run: yarn test --runInBand --ci
-      - name: 'Upload code coverage'
-        # https://github.com/codecov/codecov-action/issues/40
-        if: matrix.node-version == '16'
-        uses: codecov/codecov-action@v2
-        with:
-          fail_ci_if_error: true # optional (default = false)
+        run: npm test

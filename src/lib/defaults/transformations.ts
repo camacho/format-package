@@ -1,7 +1,7 @@
 import sortScripts from 'sort-scripts';
 
-import { Transformations } from '../../types';
-import { alphabetize } from '../../utils/object';
+import type { Transformations } from '../../types.ts';
+import { alphabetize } from '../../utils/object.ts';
 
 const transformations: Transformations = {
   scripts(key, prevValue) {

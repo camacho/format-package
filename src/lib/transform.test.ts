@@ -1,6 +1,6 @@
-import { Transformation } from '../types';
+import { Transformation } from '../types.ts';
 
-import transform from './transform';
+import transform from './transform.ts';
 
 describe('transform', () => {
   it('uses a catch all transform if none is specified for the key', () => {
@@ -20,10 +20,10 @@ describe('transform', () => {
     const key = 'foo';
     const value = 'prev';
     const transformations = {
-      foo: jest.fn((k: string, _) => [
+      foo: vi.fn((k: string, _) => [
         k,
         'transformed',
-      ]) as jest.MockedFunction<Transformation>,
+      ]) as unknown as Transformation,
     };
 
     await expect(transform(key, value, transformations)).resolves
