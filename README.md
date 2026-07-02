@@ -588,26 +588,20 @@ These scripts can be run via `npm run`:
 
 | Script           | Description                                                                                                      |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `prebuild`       | clean the `build` directory to prevent dangling artifacts                                                        |
-| `build`          | transpile TypeScript files in the `src` directory into JavaScript files in the `build` directory                 |
-| `postbuild`      | make `build/cli/index.js` file executable                                                                        |
-| `clean`          | remove `build` and `node_modules` directories                                                                    |
-| `clean-build`    | remove `build` directory                                                                                         |
-| `clean-packages` | remove `node_modules` directory                                                                                  |
+| `prebuild`       | clean the `dist` directory to prevent dangling artifacts                                                         |
+| `build`          | transpile TypeScript files in the `src` directory into JavaScript files in the `dist` directory                  |
+| `postbuild`      | make `dist/cli/index.js` file executable                                                                         |
 | `dev`            | run `src/cli/index.ts` directly with `node` (native TypeScript)                                                  |
 | `docs`           | update auto-generated-content blocks in [Markdown](https://guides.github.com/features/mastering-markdown/) files |
 | `format`         | format application code                                                                                          |
-| `format-docs`    | format documentation                                                                                             |
-| `format-package` | format package.json files                                                                                        |
-| `format-source`  | format source content using [prettier](<(https://github.com/prettier/prettier)>)                                 |
 | `gamut`          | run the full gamut of checks - reset environment, generate docs, format and lint code, run tests, and build      |
 | `lint`           | lint the application code                                                                                        |
 | `prepare`        | `husky`                                                                                                          |
 | `prepublishOnly` | make sure the package is in good state before publishing                                                         |
-| `reset`          | clean `build` directory and reset the `node_modules` dependencies                                                |
-| `start`          | run the cli from `build` directory                                                                               |
+| `reset`          | clean `dist` directory and reset the `node_modules` dependencies                                                 |
+| `start`          | run the cli from `dist` directory                                                                                |
 | `test`           | run tests for the application                                                                                    |
-| `type-check`     | check source types                                                                                               |
+| `type-check`     | check repository types                                                                                           |
 | `watch`          | run `node --watch` on `src/cli/index.ts` for live reload                                                         |
 
 <!-- AUTO-GENERATED-CONTENT:END -->
