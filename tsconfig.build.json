@@ -7,6 +7,6 @@
     // No vitest types in the build output
     "types": ["node"]
   },
-  "exclude": ["**/tests/", "**/**.test.ts/"],
+  "exclude": ["**/tests/", "**/*.test.ts", "**/__fixtures__/**"],
   "include": ["src", "**/*.json"]
 }

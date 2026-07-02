@@ -48,6 +48,7 @@
     "format": "npm run dev -- -w package.json && prettier --write --ignore-unknown .",
     "gamut": "npm run reset && npm run format && npm run lint && npm run type-check && npm run test && npm run build && npm run start",
     "lint": "eslint .",
+    "prepack": "npm run build",
     "prepare": "husky",
     "prepublishOnly": "npm run gamut",
     "reset": "rm -rf ./node_modules ./dist && npm install",
