@@ -3,16 +3,30 @@ import { readFileSync } from 'node:fs';
 
 import JSON5 from 'json5';
 
+interface TransformOptions {
+  src?: string;
+  syntax?: string;
+  region?: string;
+  header?: string;
+  prop?: string;
+}
+
+interface TransformArgs {
+  content: unknown;
+  options: TransformOptions;
+  srcPath: string;
+}
+
 // stolen from markdown-magic/lib/transforms/code.js
-export function REGION(_: unknown, options, config) {
-  let code;
+export function REGION({ options, srcPath }: TransformArgs): string | false {
+  let code: string;
   let { syntax } = options;
 
   if (!options.src) {
     return false;
   }
 
-  const fileDir = path.dirname(config.originalPath);
+  const fileDir = path.dirname(srcPath);
   const filePath = path.join(fileDir, options.src);
 
   try {
@@ -26,7 +40,7 @@ export function REGION(_: unknown, options, config) {
     syntax = path.extname(filePath).replace(/^./, '');
   }
 
-  const region = options.region.replace(/['"]/g, '');
+  const region = (options.region ?? '').replace(/['"]/g, '');
 
   const pattern = new RegExp(
     `([^]*?)?/{2} region ${region}[\n]([^]*?)\n/{2} endregion`,
@@ -34,8 +48,8 @@ export function REGION(_: unknown, options, config) {
   );
 
   if (pattern.test(code)) {
-    code = code.match(pattern);
-    code = code[0].replace(pattern, '$2');
+    const match = code.match(pattern);
+    code = match ? match[0].replace(pattern, '$2') : code;
   } else {
     throw new Error(`Region not found: ${region}.`);
   }
@@ -54,19 +68,19 @@ ${code}
 \`\`\``;
 }
 
-export function JSONPROP(content, options, config) {
-  let code;
+export function JSONPROP({ options, srcPath }: TransformArgs): string | false {
   let { syntax } = options;
 
   if (!options.src) {
     return false;
   }
 
-  const fileDir = path.dirname(config.originalPath);
+  const fileDir = path.dirname(srcPath);
   const filePath = path.join(fileDir, options.src);
 
+  let raw: string;
   try {
-    code = readFileSync(filePath, 'utf8');
+    raw = readFileSync(filePath, 'utf8');
   } catch (e) {
     console.log(`FILE NOT FOUND ${filePath}`);
     throw e;
@@ -76,9 +90,9 @@ export function JSONPROP(content, options, config) {
     syntax = path.extname(filePath).replace(/^./, '');
   }
 
-  code = JSON5.parse(code);
-  code = code[`${options.prop}`] || code;
-  code = JSON.stringify(code, null, 2);
+  const parsed = JSON5.parse(raw) as Record<string, unknown>;
+  const code = (options.prop && parsed[options.prop]) || parsed;
+  const stringified = JSON.stringify(code, null, 2);
 
   let header = '';
   if (options.header) {
@@ -87,6 +101,6 @@ export function JSONPROP(content, options, config) {
 
   return `<!-- The below code snippet is automatically added from ${options.src} -->
 \`\`\`${syntax}${header}
-${code}
+${stringified}
 \`\`\``;
 }

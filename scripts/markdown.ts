@@ -1,8 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
-import execa from 'execa';
-import markdownMagic from 'markdown-magic';
+import { markdownMagic } from 'markdown-magic';
 import SCRIPTS from 'markdown-magic-package-scripts';
 import PRETTIER from 'markdown-magic-prettier';
 import ENGINES from 'markdown-magic-engines';
@@ -16,6 +16,7 @@ const globs = [`${root}/**/**.md`, `!${root}/node_modules/**`];
 
 // Add any configurations here
 const config = {
+  matchWord: 'AUTO-GENERATED-CONTENT',
   transforms: {
     SCRIPTS,
     PRETTIER,
@@ -28,24 +29,13 @@ const config = {
 
 const target = process.argv[2] || globs;
 
-function stageChanges(
-  error: Error,
-  output: {
-    outputFilePath: string;
-  }[]
-): void {
-  if (error) {
-    throw error;
-  }
-
-  const files = output
-    .map((data) => data.outputFilePath)
-    .filter((file) => !!file);
-
+function stageChanges(files: string[]): void {
   if (!files.length) return;
 
-  execa.sync('npx', ['prettier', '--write', ...files]);
-  execa.sync('git', ['add', ...files]);
+  execFileSync('npx', ['prettier', '--write', ...files]);
+  execFileSync('git', ['add', ...files]);
 }
 
-markdownMagic(target, config, stageChanges);
+const { filesChanged } = await markdownMagic(target, config);
+
+stageChanges(filesChanged);
