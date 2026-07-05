@@ -5,7 +5,7 @@
 <!-- AUTO-GENERATED-CONTENT:START (INSTALL:flags=["-D"]) -->
 
 ```sh
-npm install -D format-package prettier@^2.0.0 || ^3.0.0
+npm add -D format-package "prettier@^2.0.0 || ^3.0.0"
 ```
 
 <!-- AUTO-GENERATED-CONTENT:END -->
@@ -176,7 +176,6 @@ The most meaningful part of this utility is an ordered array of keys that are us
 The default order is:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/order.json) -->
-<!-- The below code snippet is automatically added from ./src/lib/defaults/order.json -->
 
 ```json
 [
@@ -280,7 +279,6 @@ The default transformations map has:
 - `*` function that sorts the value alphabetically if possible
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/transformations.ts) -->
-<!-- The below code snippet is automatically added from ./src/lib/defaults/transformations.ts -->
 
 ```ts
 import sortScripts from 'sort-scripts';
@@ -354,7 +352,6 @@ A custom _synchronous_ or _asynchronous_ formatter can be supplied that will pro
 By default, the formatter will try to use [`prettier`](https://github.com/prettier/prettier) if it is installed, and will fallback to `JSON.stringify` if the [peer dependency](https://nodejs.org/es/blog/npm/peer-dependencies/) is not found:
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./src/lib/defaults/formatter.ts) -->
-<!-- The below code snippet is automatically added from ./src/lib/defaults/formatter.ts -->
 
 ```ts
 import path from 'path';
@@ -373,7 +370,9 @@ const formatter: Formatter = async (obj, filePath) => {
     return `${content}\n`;
   }
 
-  // prettier@2 is CJS; under ESM the callable API lands on .default
+  // prettier@2 is CJS; under ESM the callable API lands on .default. The
+  // fallback covers a pure-ESM prettier with no default export.
+  /* v8 ignore next -- defensive interop fallback */
   const prettier = prettierMod.default ?? prettierMod;
 
   let config = await prettier.resolveConfig(
@@ -490,7 +489,6 @@ Supported configuration formats: JSON, JSON5, JS, and YAML.
 ### with format-package.json
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-json/format-package.json) -->
-<!-- The below code snippet is automatically added from ./examples/format-package-json/format-package.json -->
 
 ```json
 {
@@ -503,7 +501,6 @@ Supported configuration formats: JSON, JSON5, JS, and YAML.
 ### with `format-package.js` or `format-package.config.js`
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-config-js/format-package.config.js) -->
-<!-- The below code snippet is automatically added from ./examples/format-package-config-js/format-package.config.js -->
 
 ```js
 module.exports = {
@@ -516,7 +513,6 @@ module.exports = {
 ### with format-package.{yml,yaml}, format-package.config.{yml,yaml}
 
 <!-- AUTO-GENERATED-CONTENT:START (CODE:src=./examples/format-package-config-yml/format-package.config.yml) -->
-<!-- The below code snippet is automatically added from ./examples/format-package-config-yml/format-package.config.yml -->
 
 ```yml
 order:
